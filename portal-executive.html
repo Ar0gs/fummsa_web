@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Portal – FUMMSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#4a0a1e;--maroon-mid:#800f30;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;--cream:#FAF7F2;
+  --warm-white:#FFFDF9;--charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.14);--success:#2a6b4a;--danger:#B04A2A;--info:#1a4a6b;
+  --serif:'Source Serif 4',Georgia,serif;--sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);--sb-width:256px;--top-h:60px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:#EDE8E2;color:var(--charcoal);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top-h);background:var(--maroon-dark);display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 0;z-index:500;border-bottom:2px solid rgba(196,146,42,0.3);}
+.topbar-brand{display:flex;align-items:center;gap:12px;width:var(--sb-width);padding:0 20px;border-right:1px solid rgba(255,255,255,0.08);height:100%;}
+.topbar-brand img{width:34px;height:34px;border-radius:50%;object-fit:contain;}
+.topbar-brand-text{font-family:var(--serif);color:white;font-size:1rem;font-weight:600;}
+.topbar-brand-text small{display:block;font-family:var(--sans);font-size:0.58rem;color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-notify{position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.7);font-size:1rem;transition:all 0.2s;}
+.topbar-notify:hover{background:rgba(255,255,255,0.12);}
+.notify-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--gold);border-radius:50%;border:1.5px solid var(--maroon-dark);}
+.topbar-user{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:2px solid white;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--maroon-dark);font-size:0.85rem;overflow:hidden;flex-shrink:0;}
+.user-avatar img{width:100%;height:100%;object-fit:cover;}
+.user-meta{text-align:right;}
+.user-name{font-size:0.8rem;font-weight:600;color:white;}
+.user-role{font-size:0.62rem;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase;}
+.btn-logout{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:2px;font-family:var(--sans);font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:white;}
+.hamburger-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:white;font-size:1.2rem;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--sb-width);background:white;border-right:1.5px solid var(--rule);overflow-y:auto;z-index:400;transition:transform 0.3s var(--ease);}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:var(--rule);}
+.sidebar-section{padding:16px 12px 4px;}
+.sb-label{font-size:0.58rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:6px 8px 4px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:3px;font-size:0.8rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;user-select:none;}
+.sb-link:hover{color:var(--maroon);background:rgba(107,15,43,0.04);}
+.sb-link.active{color:var(--maroon);background:rgba(107,15,43,0.06);border-left-color:var(--maroon);font-weight:600;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--maroon);color:white;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sb-divider{height:1px;background:var(--rule);margin:8px 16px;}
+
+/* MAIN */
+.main-wrap{margin-left:var(--sb-width);margin-top:var(--top-h);min-height:calc(100vh - var(--top-h));padding:28px;}
+.page-section{display:none;animation:fadeIn 0.3s ease both;}
+.page-section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* EXECUTIVE PROFILE BANNER */
+.exec-banner{background:linear-gradient(135deg, var(--maroon-dark) 0%, #2a0610 100%);border-radius:6px;padding:32px 40px;display:flex;align-items:center;gap:32px;margin-bottom:28px;position:relative;overflow:hidden;}
+.exec-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:300px;height:300px;border-radius:50%;border:1px solid rgba(196,146,42,0.12);}
+.exec-banner::after{content:'';position:absolute;right:60px;bottom:-80px;width:200px;height:200px;border-radius:50%;border:1px solid rgba(196,146,42,0.08);}
+.exec-photo{width:100px;height:100px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:2.2rem;color:var(--maroon-dark);font-weight:700;overflow:hidden;flex-shrink:0;z-index:1;}
+.exec-photo img{width:100%;height:100%;object-fit:cover;}
+.exec-info{flex:1;z-index:1;}
+.exec-title{font-size:0.72rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-light);margin-bottom:4px;}
+.exec-name{font-family:var(--serif);font-size:1.8rem;color:white;font-weight:600;line-height:1.1;}
+.exec-meta{display:flex;flex-wrap:wrap;gap:24px;margin-top:14px;}
+.emeta{font-size:0.75rem;color:rgba(255,255,255,0.6);}
+.emeta strong{display:block;font-size:0.62rem;color:rgba(255,255,255,0.35);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.exec-badge{background:rgba(196,146,42,0.2);border:1px solid rgba(196,146,42,0.4);color:var(--gold-light);padding:6px 20px;border-radius:20px;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;z-index:1;}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
+.kpi-card{background:white;border-radius:4px;padding:20px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.05);position:relative;overflow:hidden;}
+.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+.kpi-card.maroon::after{background:var(--maroon);}
+.kpi-card.gold::after{background:var(--gold);}
+.kpi-card.green::after{background:var(--success);}
+.kpi-card.blue::after{background:var(--info);}
+.kpi-card.red::after{background:var(--danger);}
+.kpi-value{font-family:var(--serif);font-size:2.2rem;font-weight:600;color:var(--maroon-dark);line-height:1;}
+.kpi-label{font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+.kpi-trend{font-size:0.72rem;margin-top:4px;}
+.kpi-trend.up{color:var(--success);}.kpi-trend.down{color:var(--danger);}.kpi-trend.neutral{color:var(--muted);}
+
+/* COMMON */
+.section-head{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--rule);}
+.portal-card{background:white;border-radius:4px;padding:24px;box-shadow:0 1px 8px rgba(107,15,43,0.06);border:1px solid var(--rule);margin-bottom:20px;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--rule);}
+.card-hd h3{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--maroon-dark);}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--rule);background:var(--cream);}
+.data-table td{font-size:0.82rem;padding:11px 14px;border-bottom:1px solid var(--rule);color:var(--charcoal);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(107,15,43,0.02);}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:none;border-radius:2px;font-family:var(--sans);font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--maroon);color:white;}.btn-primary:hover{background:var(--maroon-dark);}
+.btn-outline{background:transparent;color:var(--maroon);border:1.5px solid var(--maroon);}.btn-outline:hover{background:rgba(107,15,43,0.06);}
+.btn-gold{background:var(--gold);color:white;}.btn-gold:hover{background:var(--maroon);}
+.btn-sm{padding:6px 12px;font-size:0.68rem;}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:10px;font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.tag-green{background:#e8f5ee;color:#2a6b4a;border:1px solid rgba(42,107,74,0.2);}
+.tag-red{background:#fde8ec;color:#7a0e1e;border:1px solid rgba(176,74,42,0.2);}
+.tag-gold{background:var(--gold-pale);color:#7a5010;border:1px solid rgba(196,146,42,0.3);}
+.tag-blue{background:#e8f0fd;color:#1a4a6b;border:1px solid rgba(26,74,107,0.2);}
+.tag-grey{background:#f0ede8;color:var(--mid);border:1px solid var(--rule);}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:7px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.88rem;color:var(--charcoal);background:var(--warm-white);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--maroon);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.msg{border-radius:2px;padding:12px 16px;font-size:0.82rem;margin-top:10px;display:none;}
+.msg.error{background:#fde8ec;color:#7a0e1e;border-left:3px solid var(--danger);}
+.msg.success{background:#e8f5ee;color:#1a5c38;border-left:3px solid var(--success);}
+.msg.show{display:block;}
+
+/* Faculty cards */
+.faculty-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px;}
+.faculty-card{background:white;border-radius:4px;padding:22px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.04);border-top:3px solid var(--maroon);}
+.faculty-card:nth-child(even){border-top-color:var(--gold);}
+.faculty-name{font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:2px;}
+.faculty-dean{font-size:0.72rem;color:var(--muted);margin-bottom:14px;}
+.faculty-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.fstat{text-align:center;}
+.fstat-val{font-family:var(--serif);font-size:1.3rem;font-weight:600;color:var(--maroon-dark);}
+.fstat-lbl{font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+
+/* Approval items */
+.approval-list{display:flex;flex-direction:column;gap:12px;}
+.approval-item{background:white;border-radius:3px;padding:18px 20px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.04);display:flex;gap:16px;align-items:flex-start;}
+.approval-icon{font-size:1.6rem;flex-shrink:0;}
+.approval-body{flex:1;}
+.approval-body h4{font-size:0.9rem;font-weight:700;color:var(--charcoal);margin-bottom:3px;}
+.approval-body p{font-size:0.8rem;color:var(--muted);line-height:1.6;}
+.approval-meta{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;}
+.approval-actions{display:flex;gap:8px;flex-shrink:0;align-items:flex-start;}
+
+/* Budget chart bars */
+.budget-bar-wrap{margin-bottom:12px;}
+.budget-label{display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:5px;}
+.budget-label span:first-child{color:var(--mid);font-weight:600;}
+.budget-label span:last-child{color:var(--muted);}
+.budget-bar{height:10px;background:var(--rule);border-radius:5px;overflow:hidden;}
+.budget-fill{height:100%;border-radius:5px;transition:width 0.8s var(--ease);}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--rule);}
+.tl-item:last-child{border-bottom:none;}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--maroon);margin-top:5px;flex-shrink:0;}
+.tl-dot.gold{background:var(--gold);}
+.tl-dot.green{background:var(--success);}
+.tl-content{flex:1;}
+.tl-content h5{font-size:0.85rem;font-weight:700;color:var(--charcoal);}
+.tl-content p{font-size:0.78rem;color:var(--muted);margin-top:2px;line-height:1.5;}
+.tl-date{font-size:0.7rem;color:var(--muted);flex-shrink:0;margin-top:4px;}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.2s ease;}
+.modal-overlay.hidden{display:none;}
+.modal-box{background:white;border-radius:5px;padding:32px;max-width:560px;width:100%;position:relative;max-height:85vh;overflow-y:auto;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted);}
+.modal-title{font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--maroon-dark);margin-bottom:20px;}
+
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.main-wrap{margin-left:0;}.hamburger-toggle{display:block;}}
+@media(max-width:700px){.kpi-row{grid-template-columns:1fr 1fr;}.faculty-grid{grid-template-columns:1fr;}.form-grid{grid-template-columns:1fr;}.grid-2,.grid-3{grid-template-columns:1fr;}}
+</style>
+
+  <!-- Shared portal libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="portal-auth.js"></script>
+  <script src="portal-api.js"></script>
+  <script src="portal-shared.js"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="logo.png" alt="FUMMSA" onerror="this.style.display='none'">
+    <div class="topbar-brand-text">FUMMSA Portal<small>University Executive</small></div>
+  </div>
+  <button class="hamburger-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="topbar-right">
+    <div class="topbar-notify" onclick="showSection('approvals')">
+      <span>🔔</span><div class="notify-dot"></div>
+    </div>
+    <div class="topbar-user">
+      <div class="user-meta">
+        <div class="user-name" id="topUserName">Prof. Adewale Ogundimu</div>
+        <div class="user-role" id="topUserRole">Vice Chancellor</div>
+      </div>
+      <div class="user-avatar" id="topUserAvatar">AO</div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sb-label">Overview</div>
+    <div class="sb-link active" onclick="showSection('dashboard')"><span class="sb-icon">📊</span> Executive Dashboard</div>
+    <div class="sb-link" onclick="showSection('approvals')"><span class="sb-icon">✅</span> Pending Approvals <span class="sb-badge" id="approvalBadge">4</span></div>
+    <div class="sb-link" onclick="showSection('university-stats')"><span class="sb-icon">🏛️</span> University Overview</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Academic</div>
+    <div class="sb-link" onclick="showSection('faculties')"><span class="sb-icon">🎓</span> Faculty Reports</div>
+    <div class="sb-link" onclick="showSection('academic-calendar')"><span class="sb-icon">📅</span> Academic Calendar</div>
+    <div class="sb-link" onclick="showSection('staff-overview')"><span class="sb-icon">👥</span> Staff Overview</div>
+    <div class="sb-link" onclick="showSection('student-affairs')"><span class="sb-icon">👩‍🎓</span> Student Affairs Summary</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Finance & Admin</div>
+    <div class="sb-link" onclick="showSection('budget')"><span class="sb-icon">💰</span> Budget & Finances</div>
+    <div class="sb-link" onclick="showSection('projects')"><span class="sb-icon">🏗️</span> Capital Projects</div>
+    <div class="sb-link" onclick="showSection('audit')"><span class="sb-icon">🔍</span> Audit & Compliance</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Communication</div>
+    <div class="sb-link" onclick="showSection('broadcast')"><span class="sb-icon">📢</span> University Broadcast</div>
+    <div class="sb-link" onclick="showSection('meetings')"><span class="sb-icon">🗓️</span> Senate / Council Minutes</div>
+    <div class="sb-link" onclick="showSection('memos')"><span class="sb-icon">📄</span> Official Memos</div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sidebar-section">
+    <div class="sb-link" onclick="showSection('profile')"><span class="sb-icon">👤</span> My Profile</div>
+    <div class="sb-link" onclick="showSection('settings')"><span class="sb-icon">⚙️</span> Settings</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- ── DASHBOARD ── -->
+  <div class="page-section active" id="sec-dashboard">
+    <div class="exec-banner">
+      <div class="exec-photo" id="execPhoto"><span id="execInitials">AO</span></div>
+      <div class="exec-info">
+        <div class="exec-title" id="execTitle">Vice Chancellor</div>
+        <div class="exec-name" id="execName">Prof. Adewale Ogundimu</div>
+        <div class="exec-meta">
+          <div class="emeta"><strong>Staff ID</strong>FUMMSA/VC/001</div>
+          <div class="emeta"><strong>Office</strong>Vice Chancellor's Lodge</div>
+          <div class="emeta"><strong>Tenure</strong>2022 – Present</div>
+          <div class="emeta"><strong>Academic Session</strong>2024/2025</div>
+        </div>
+      </div>
+      <span class="exec-badge">● In Office</span>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card maroon">
+        <div class="kpi-value">1,428</div>
+        <div class="kpi-label">Total Students</div>
+        <div class="kpi-trend up">↑ 6.5% from last session</div>
+      </div>
+      <div class="kpi-card gold">
+        <div class="kpi-value">186</div>
+        <div class="kpi-label">Academic Staff</div>
+        <div class="kpi-trend up">↑ 12 new hires</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-value">94%</div>
+        <div class="kpi-label">Fee Compliance</div>
+        <div class="kpi-trend up">↑ 2% from last sem</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-value">4</div>
+        <div class="kpi-label">Faculties</div>
+        <div class="kpi-trend neutral">No change</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-value">4</div>
+        <div class="kpi-label">Pending Approvals</div>
+        <div class="kpi-trend down">Require attention</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="section-head">Pending Approvals</div>
+        <div class="approval-list" id="dashApprovalList"></div>
+        <button class="btn btn-outline" style="margin-top:12px;" onclick="showSection('approvals')">View All Approvals →</button>
+      </div>
+      <div>
+        <div class="section-head">Recent Activity Log</div>
+        <div class="portal-card" style="padding:16px 20px;">
+          <div class="timeline" id="activityLog"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── APPROVALS ── -->
+  <div class="page-section" id="sec-approvals">
+    <div class="section-head">Pending Approvals</div>
+    <div class="approval-list" id="fullApprovalList"></div>
+  </div>
+
+  <!-- ── UNIVERSITY OVERVIEW ── -->
+  <div class="page-section" id="sec-university-stats">
+    <div class="section-head">University Overview</div>
+    <div class="kpi-row">
+      <div class="kpi-card maroon"><div class="kpi-value">1,428</div><div class="kpi-label">Students</div><div class="kpi-trend up">↑ 87 new</div></div>
+      <div class="kpi-card gold"><div class="kpi-value">186</div><div class="kpi-label">Academic Staff</div></div>
+      <div class="kpi-card green"><div class="kpi-value">64</div><div class="kpi-label">Admin Staff</div></div>
+      <div class="kpi-card blue"><div class="kpi-value">4</div><div class="kpi-label">Faculties</div></div>
+      <div class="kpi-card red"><div class="kpi-value">18</div><div class="kpi-label">Departments</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="portal-card">
+        <div class="card-hd"><h3>Enrolment Trend (5 Years)</h3></div>
+        <table class="data-table">
+          <thead><tr><th>Session</th><th>Students</th><th>Staff</th><th>Change</th></tr></thead>
+          <tbody>
+            <tr><td>2020/2021</td><td>754</td><td>120</td><td><span class="tag tag-grey">Baseline</span></td></tr>
+            <tr><td>2021/2022</td><td>892</td><td>138</td><td><span class="tag tag-green">↑ 18%</span></td></tr>
+            <tr><td>2022/2023</td><td>1,042</td><td>154</td><td><span class="tag tag-green">↑ 17%</span></td></tr>
+            <tr><td>2023/2024</td><td>1,341</td><td>174</td><td><span class="tag tag-green">↑ 29%</span></td></tr>
+            <tr><td>2024/2025</td><td>1,428</td><td>186</td><td><span class="tag tag-green">↑ 6.5%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="portal-card">
+        <div class="card-hd"><h3>Gender Distribution</h3></div>
+        <div style="margin-bottom:16px;">
+          <div class="budget-bar-wrap">
+            <div class="budget-label"><span>Male Students</span><span>52% (743)</span></div>
+            <div class="budget-bar"><div class="budget-fill" style="width:52%;background:var(--info);"></div></div>
+          </div>
+          <div class="budget-bar-wrap">
+            <div class="budget-label"><span>Female Students</span><span>48% (685)</span></div>
+            <div class="budget-bar"><div class="budget-fill" style="width:48%;background:var(--maroon);"></div></div>
+          </div>
+        </div>
+        <div class="card-hd" style="border-top:1.5px solid var(--rule);padding-top:16px;margin-top:8px;"><h3 style="font-size:0.9rem;">Staff Gender Split</h3></div>
+        <div>
+          <div class="budget-bar-wrap">
+            <div class="budget-label"><span>Male Staff</span><span>61% (153)</span></div>
+            <div class="budget-bar"><div class="budget-fill" style="width:61%;background:var(--gold);"></div></div>
+          </div>
+          <div class="budget-bar-wrap">
+            <div class="budget-label"><span>Female Staff</span><span>39% (97)</span></div>
+            <div class="budget-bar"><div class="budget-fill" style="width:39%;background:var(--maroon-light);"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FACULTIES ── -->
+  <div class="page-section" id="sec-faculties">
+    <div class="section-head">Faculty Reports</div>
+    <div class="faculty-grid">
+      <div class="faculty-card">
+        <div class="faculty-name">Faculty of Basic Medical Sciences</div>
+        <div class="faculty-dean">Dean: Prof. Chibuike Okafor · 6 Departments</div>
+        <div class="faculty-stats">
+          <div class="fstat"><div class="fstat-val">524</div><div class="fstat-lbl">Students</div></div>
+          <div class="fstat"><div class="fstat-val">58</div><div class="fstat-lbl">Staff</div></div>
+          <div class="fstat"><div class="fstat-val">96%</div><div class="fstat-lbl">Fee Compliance</div></div>
+        </div>
+        <div style="margin-top:14px;"><button class="btn btn-outline btn-sm" onclick="viewFacultyReport('BMS')">Full Report</button></div>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-name">Faculty of Clinical Sciences</div>
+        <div class="faculty-dean">Dean: Prof. Amina Suleiman · 5 Departments</div>
+        <div class="faculty-stats">
+          <div class="fstat"><div class="fstat-val">412</div><div class="fstat-lbl">Students</div></div>
+          <div class="fstat"><div class="fstat-val">62</div><div class="fstat-lbl">Staff</div></div>
+          <div class="fstat"><div class="fstat-val">93%</div><div class="fstat-lbl">Fee Compliance</div></div>
+        </div>
+        <div style="margin-top:14px;"><button class="btn btn-outline btn-sm" onclick="viewFacultyReport('CS')">Full Report</button></div>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-name">Faculty of Pharmacy</div>
+        <div class="faculty-dean">Dean: Prof. Biodun Adeyemi · 4 Departments</div>
+        <div class="faculty-stats">
+          <div class="fstat"><div class="fstat-val">289</div><div class="fstat-lbl">Students</div></div>
+          <div class="fstat"><div class="fstat-val">44</div><div class="fstat-lbl">Staff</div></div>
+          <div class="fstat"><div class="fstat-val">95%</div><div class="fstat-lbl">Fee Compliance</div></div>
+        </div>
+        <div style="margin-top:14px;"><button class="btn btn-outline btn-sm" onclick="viewFacultyReport('PHM')">Full Report</button></div>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-name">Faculty of Allied Health Sciences</div>
+        <div class="faculty-dean">Dean: Prof. Ngozi Ezeh · 3 Departments</div>
+        <div class="faculty-stats">
+          <div class="fstat"><div class="fstat-val">203</div><div class="fstat-lbl">Students</div></div>
+          <div class="fstat"><div class="fstat-val">22</div><div class="fstat-lbl">Staff</div></div>
+          <div class="fstat"><div class="fstat-val">91%</div><div class="fstat-lbl">Fee Compliance</div></div>
+        </div>
+        <div style="margin-top:14px;"><button class="btn btn-outline btn-sm" onclick="viewFacultyReport('AHS')">Full Report</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ACADEMIC CALENDAR ── -->
+  <div class="page-section" id="sec-academic-calendar">
+    <div class="section-head">Academic Calendar – 2024/2025</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>1st Semester</h3><button class="btn btn-outline btn-sm" onclick="editCalendar('1st')">Edit</button></div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot gold"></div><div class="tl-content"><h5>Resumption / Registration</h5><p>Students return and complete course registration</p></div><div class="tl-date">2 Sep 2024</div></div>
+        <div class="tl-item"><div class="tl-dot green"></div><div class="tl-content"><h5>Lectures Begin</h5><p>First semester academic work commences</p></div><div class="tl-date">9 Sep 2024</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><h5>Mid-Semester Break</h5><p>One week recess</p></div><div class="tl-date">28 Oct – 1 Nov 2024</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><h5>Revision Week</h5><p>No new lectures; student study period</p></div><div class="tl-date">25 Nov 2024</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><h5>1st Semester Examinations</h5><p>CBT and written examinations</p></div><div class="tl-date">2 – 20 Dec 2024</div></div>
+        <div class="tl-item"><div class="tl-dot gold"></div><div class="tl-content"><h5>Long Vacation</h5><p>End of 1st semester</p></div><div class="tl-date">21 Dec 2024 – 12 Jan 2025</div></div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>2nd Semester</h3><button class="btn btn-outline btn-sm" onclick="editCalendar('2nd')">Edit</button></div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot gold"></div><div class="tl-content"><h5>Resumption / Registration</h5><p>Students return and complete 2nd semester registration</p></div><div class="tl-date">13 Jan 2025</div></div>
+        <div class="tl-item"><div class="tl-dot green"></div><div class="tl-content"><h5>Lectures Begin</h5><p>Second semester commences</p></div><div class="tl-date">20 Jan 2025</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><h5>Mid-Semester Break</h5><p>One week recess</p></div><div class="tl-date">17 – 21 Mar 2025</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><h5>2nd Semester Examinations</h5><p>CBT and written examinations</p></div><div class="tl-date">28 Apr – 16 May 2025</div></div>
+        <div class="tl-item"><div class="tl-dot gold"></div><div class="tl-content"><h5>Long Vacation</h5><p>End of session</p></div><div class="tl-date">17 May 2025</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STAFF OVERVIEW ── -->
+  <div class="page-section" id="sec-staff-overview">
+    <div class="section-head">Staff Overview</div>
+    <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);">
+      <div class="kpi-card maroon"><div class="kpi-value">186</div><div class="kpi-label">Academic Staff</div></div>
+      <div class="kpi-card gold"><div class="kpi-value">64</div><div class="kpi-label">Admin Staff</div></div>
+      <div class="kpi-card green"><div class="kpi-value">12</div><div class="kpi-label">Professors</div></div>
+      <div class="kpi-card blue"><div class="kpi-value">3</div><div class="kpi-label">Pending Accounts</div><div class="kpi-trend down">Awaiting approval</div></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Academic Staff by Rank</h3><button class="btn btn-outline btn-sm" onclick="downloadReport('staff')">⬇ Export</button></div>
+      <table class="data-table">
+        <thead><tr><th>Rank</th><th>Count</th><th>Male</th><th>Female</th><th>Avg. Tenure (yrs)</th></tr></thead>
+        <tbody>
+          <tr><td>Professor</td><td>12</td><td>8</td><td>4</td><td>14.2</td></tr>
+          <tr><td>Associate Professor</td><td>24</td><td>15</td><td>9</td><td>9.8</td></tr>
+          <tr><td>Senior Lecturer</td><td>48</td><td>28</td><td>20</td><td>7.1</td></tr>
+          <tr><td>Lecturer I</td><td>56</td><td>32</td><td>24</td><td>4.3</td></tr>
+          <tr><td>Lecturer II / Asst. Lecturer</td><td>46</td><td>22</td><td>24</td><td>2.1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── STUDENT AFFAIRS SUMMARY ── -->
+  <div class="page-section" id="sec-student-affairs">
+    <div class="section-head">Student Affairs Summary</div>
+    <div class="kpi-row">
+      <div class="kpi-card maroon"><div class="kpi-value">1,428</div><div class="kpi-label">Total Students</div></div>
+      <div class="kpi-card gold"><div class="kpi-value">892</div><div class="kpi-label">Hostel Residents</div></div>
+      <div class="kpi-card green"><div class="kpi-value">7</div><div class="kpi-label">Welfare Cases</div></div>
+      <div class="kpi-card blue"><div class="kpi-value">86</div><div class="kpi-label">Fee Defaulters</div></div>
+      <div class="kpi-card red"><div class="kpi-value">2</div><div class="kpi-label">Disciplinary Cases</div></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>DSA Summary Report</h3></div>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.8;margin-bottom:16px;">Summary data from the Division of Student Affairs for the current semester. Detailed breakdowns available from the DSA portal.</p>
+      <div class="grid-3">
+        <div style="background:var(--cream);padding:16px;border-radius:3px;">
+          <div style="font-size:0.7rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Hostel Occupancy</div>
+          <div class="budget-bar-wrap"><div class="budget-label"><span>Amina Hall (F)</span><span>88%</span></div><div class="budget-bar"><div class="budget-fill" style="width:88%;background:var(--success);"></div></div></div>
+          <div class="budget-bar-wrap"><div class="budget-label"><span>Kwame Block (M)</span><span>64%</span></div><div class="budget-bar"><div class="budget-fill" style="width:64%;background:var(--gold);"></div></div></div>
+          <div class="budget-bar-wrap"><div class="budget-label"><span>Pioneer Hall (PG)</span><span>41%</span></div><div class="budget-bar"><div class="budget-fill" style="width:41%;background:var(--danger);"></div></div></div>
+        </div>
+        <div style="background:var(--cream);padding:16px;border-radius:3px;">
+          <div style="font-size:0.7rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Level Distribution</div>
+          <table class="data-table" style="font-size:0.78rem;">
+            <tbody>
+              <tr><td>100 Level</td><td>342</td></tr>
+              <tr><td>200 Level</td><td>310</td></tr>
+              <tr><td>300 Level</td><td>294</td></tr>
+              <tr><td>400 Level</td><td>252</td></tr>
+              <tr><td>500 Level +</td><td>230</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="background:var(--cream);padding:16px;border-radius:3px;">
+          <div style="font-size:0.7rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Quick Actions</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <button class="btn btn-outline btn-sm" onclick="toast('Loading DSA portal summary…')">View DSA Report</button>
+            <button class="btn btn-outline btn-sm" onclick="downloadReport('welfare')">Welfare Report</button>
+            <button class="btn btn-outline btn-sm" onclick="downloadReport('hostel')">Hostel Report</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BUDGET ── -->
+  <div class="page-section" id="sec-budget">
+    <div class="section-head">Budget & Finances</div>
+    <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);">
+      <div class="kpi-card gold"><div class="kpi-value">₦2.8B</div><div class="kpi-label">Annual Budget</div><div class="kpi-trend up">FY 2024/2025</div></div>
+      <div class="kpi-card green"><div class="kpi-value">₦1.4B</div><div class="kpi-label">Expenditure YTD</div><div class="kpi-trend neutral">50% utilized</div></div>
+      <div class="kpi-card blue"><div class="kpi-value">₦964M</div><div class="kpi-label">Internally Generated</div><div class="kpi-trend up">↑ Tuition fees + grants</div></div>
+      <div class="kpi-card maroon"><div class="kpi-value">₦1.4B</div><div class="kpi-label">Remaining</div><div class="kpi-trend neutral">50% of budget</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="portal-card">
+        <div class="card-hd"><h3>Budget Allocation by Vote Head</h3></div>
+        <div class="budget-bar-wrap"><div class="budget-label"><span>Personnel Costs</span><span>₦1.2B (43%)</span></div><div class="budget-bar"><div class="budget-fill" style="width:43%;background:var(--maroon);"></div></div></div>
+        <div class="budget-bar-wrap"><div class="budget-label"><span>Capital Expenditure</span><span>₦560M (20%)</span></div><div class="budget-bar"><div class="budget-fill" style="width:20%;background:var(--gold);"></div></div></div>
+        <div class="budget-bar-wrap"><div class="budget-label"><span>Academic / Research</span><span>₦420M (15%)</span></div><div class="budget-bar"><div class="budget-fill" style="width:15%;background:var(--info);"></div></div></div>
+        <div class="budget-bar-wrap"><div class="budget-label"><span>Admin & Overhead</span><span>₦336M (12%)</span></div><div class="budget-bar"><div class="budget-fill" style="width:12%;background:var(--success);"></div></div></div>
+        <div class="budget-bar-wrap"><div class="budget-label"><span>Student Welfare</span><span>₦280M (10%)</span></div><div class="budget-bar"><div class="budget-fill" style="width:10%;background:var(--maroon-light);"></div></div></div>
+      </div>
+      <div class="portal-card">
+        <div class="card-hd"><h3>Quarterly Revenue (2024/2025)</h3></div>
+        <table class="data-table">
+          <thead><tr><th>Quarter</th><th>Revenue</th><th>Expenditure</th><th>Surplus</th></tr></thead>
+          <tbody>
+            <tr><td>Q1 (Aug–Oct)</td><td>₦342M</td><td>₦298M</td><td style="color:var(--success)">₦44M</td></tr>
+            <tr><td>Q2 (Nov–Jan)</td><td>₦312M</td><td>₦280M</td><td style="color:var(--success)">₦32M</td></tr>
+            <tr><td>Q3 (Feb–Apr)</td><td style="color:var(--muted)">—</td><td style="color:var(--muted)">—</td><td style="color:var(--muted)">Upcoming</td></tr>
+            <tr><td>Q4 (May–Jul)</td><td style="color:var(--muted)">—</td><td style="color:var(--muted)">—</td><td style="color:var(--muted)">Upcoming</td></tr>
+          </tbody>
+        </table>
+        <button class="btn btn-outline" style="margin-top:16px;" onclick="downloadReport('budget')">⬇ Full Finance Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROJECTS ── -->
+  <div class="page-section" id="sec-projects">
+    <div class="section-head">Capital Projects</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Ongoing Projects</h3><button class="btn btn-primary" onclick="openNewProjectModal()">+ Add Project</button></div>
+      <table class="data-table">
+        <thead><tr><th>Project</th><th>Contractor</th><th>Budget</th><th>Spent</th><th>Progress</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>500-Bed Student Hostel (Phase 2)</strong></td>
+            <td>BuildCo Nigeria Ltd</td>
+            <td>₦180M</td>
+            <td>₦112M (62%)</td>
+            <td><div class="budget-bar" style="width:140px;"><div class="budget-fill" style="width:62%;background:var(--gold);"></div></div></td>
+            <td><span class="tag tag-gold">In Progress</span></td>
+          </tr>
+          <tr>
+            <td><strong>ICT / CBT Centre Upgrade</strong></td>
+            <td>TechSystems Ltd</td>
+            <td>₦45M</td>
+            <td>₦40.5M (90%)</td>
+            <td><div class="budget-bar" style="width:140px;"><div class="budget-fill" style="width:90%;background:var(--success);"></div></div></td>
+            <td><span class="tag tag-green">Near Complete</span></td>
+          </tr>
+          <tr>
+            <td><strong>Faculty of Clinical Sciences Block</strong></td>
+            <td>ArchBuild Associates</td>
+            <td>₦220M</td>
+            <td>₦44M (20%)</td>
+            <td><div class="budget-bar" style="width:140px;"><div class="budget-fill" style="width:20%;background:var(--maroon);"></div></div></td>
+            <td><span class="tag tag-blue">Started</span></td>
+          </tr>
+          <tr>
+            <td><strong>Medical Library Renovation</strong></td>
+            <td>InfraBuild Co.</td>
+            <td>₦28M</td>
+            <td>₦28M (100%)</td>
+            <td><div class="budget-bar" style="width:140px;"><div class="budget-fill" style="width:100%;background:var(--success);"></div></div></td>
+            <td><span class="tag tag-green">Completed</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── AUDIT ── -->
+  <div class="page-section" id="sec-audit">
+    <div class="section-head">Audit & Compliance</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Compliance Checklist (2024/2025)</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Item</th><th>Responsible</th><th>Due Date</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Annual Financial Audit</td><td>Bursar</td><td>28 Feb 2025</td><td><span class="tag tag-gold">In Progress</span></td></tr>
+          <tr><td>MDCN Accreditation Report</td><td>Academic Registrar</td><td>31 Mar 2025</td><td><span class="tag tag-blue">Pending</span></td></tr>
+          <tr><td>NUC Compliance Report</td><td>VC's Office</td><td>30 Apr 2025</td><td><span class="tag tag-blue">Pending</span></td></tr>
+          <tr><td>Staff Personnel Audit</td><td>HR Office</td><td>31 Jan 2025</td><td><span class="tag tag-green">Completed</span></td></tr>
+          <tr><td>ICT Infrastructure Audit</td><td>ICT Director</td><td>28 Feb 2025</td><td><span class="tag tag-gold">In Progress</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── BROADCAST ── -->
+  <div class="page-section" id="sec-broadcast">
+    <div class="section-head">University Broadcast</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Compose Official Broadcast</h3></div>
+      <div class="form-group"><label>Subject</label><input type="text" id="broadcastSubject" placeholder="e.g. Message from the Vice Chancellor"></div>
+      <div class="form-group"><label>Message</label><textarea id="broadcastBody" rows="6" placeholder="Type your message…"></textarea></div>
+      <div class="form-group">
+        <label>Audience</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;" id="broadcastAudience">
+          <span class="chip selected" onclick="this.classList.toggle('selected')" style="padding:5px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;border:1.5px solid var(--rule);cursor:pointer;background:var(--maroon);color:white;border-color:var(--maroon);">All Staff</span>
+          <span class="chip selected" onclick="this.classList.toggle('selected')" style="padding:5px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;border:1.5px solid var(--rule);cursor:pointer;background:var(--maroon);color:white;border-color:var(--maroon);">All Students</span>
+          <span class="chip" onclick="this.classList.toggle('selected')" style="padding:5px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;border:1.5px solid var(--rule);cursor:pointer;color:var(--mid);background:white;">Deans</span>
+          <span class="chip" onclick="this.classList.toggle('selected')" style="padding:5px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;border:1.5px solid var(--rule);cursor:pointer;color:var(--mid);background:white;">HODs</span>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Priority</label><select id="broadcastPriority"><option>Normal</option><option>Important</option><option>Urgent</option></select></div>
+        <div class="form-group"><label>Channel</label><select><option>Portal Only</option><option>Portal + Email</option><option>Portal + Email + SMS</option></select></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-gold" onclick="sendBroadcast()">📢 Send Broadcast</button>
+        <button class="btn btn-outline" onclick="toast('Draft saved')">Save Draft</button>
+      </div>
+      <div class="msg" id="broadcastMsg"></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Sent Broadcasts</h3></div>
+      <div id="sentBroadcasts"></div>
+    </div>
+  </div>
+
+  <!-- ── MEETINGS ── -->
+  <div class="page-section" id="sec-meetings">
+    <div class="section-head">Senate / Council Minutes</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Meeting Records</h3><button class="btn btn-primary" onclick="openUploadMinutesModal()">+ Upload Minutes</button></div>
+      <table class="data-table">
+        <thead><tr><th>Meeting</th><th>Date</th><th>Type</th><th>Attendees</th><th>Minutes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>University Senate – 3rd Ordinary Meeting</strong></td><td>15 Jan 2025</td><td><span class="tag tag-blue">Senate</span></td><td>42</td><td><button class="btn btn-sm btn-outline" onclick="toast('Opening minutes PDF…')">View PDF</button></td></tr>
+          <tr><td><strong>Governing Council – Q4 2024 Meeting</strong></td><td>12 Dec 2024</td><td><span class="tag tag-gold">Council</span></td><td>18</td><td><button class="btn btn-sm btn-outline" onclick="toast('Opening minutes PDF…')">View PDF</button></td></tr>
+          <tr><td><strong>Academic Board – Results Ratification</strong></td><td>5 Dec 2024</td><td><span class="tag tag-grey">Academic Board</span></td><td>31</td><td><button class="btn btn-sm btn-outline" onclick="toast('Opening minutes PDF…')">View PDF</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── MEMOS ── -->
+  <div class="page-section" id="sec-memos">
+    <div class="section-head">Official Memos</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Draft Official Memo</h3></div>
+      <div class="form-grid">
+        <div class="form-group"><label>To</label><input type="text" placeholder="e.g. All HODs, Dean of Faculty of Pharmacy"></div>
+        <div class="form-group"><label>From</label><input type="text" value="Office of the Vice Chancellor" readonly></div>
+      </div>
+      <div class="form-group"><label>Subject</label><input type="text" placeholder="Memo subject"></div>
+      <div class="form-group"><label>Ref No.</label><input type="text" placeholder="e.g. FUMMSA/VC/2025/001"></div>
+      <div class="form-group"><label>Body</label><textarea rows="8" placeholder="Type memo body here…"></textarea></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="issueMemo()">Issue Memo</button>
+        <button class="btn btn-outline" onclick="toast('Memo saved as draft')">Save Draft</button>
+        <button class="btn btn-outline" onclick="toast('Generating memo PDF…')">Preview PDF</button>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Recent Memos</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Ref</th><th>Subject</th><th>To</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>FUMMSA/VC/2025/001</td><td>Commencement of 2nd Semester</td><td>All Staff & Students</td><td>13 Jan 2025</td><td><button class="btn btn-sm btn-outline">View</button></td></tr>
+          <tr><td>FUMMSA/VC/2024/018</td><td>End-of-Year Address</td><td>All Staff</td><td>19 Dec 2024</td><td><button class="btn btn-sm btn-outline">View</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── PROFILE ── -->
+  <div class="page-section" id="sec-profile">
+    <div class="section-head">My Profile</div>
+    <div class="portal-card" style="max-width:620px;">
+      <div class="form-grid">
+        <div class="form-group"><label>Title / Rank</label><input type="text" id="prank" value="Professor"></div>
+        <div class="form-group"><label>Position</label><input type="text" id="pposition" value="Vice Chancellor"></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>First Name</label><input type="text" id="pfirst" value="Adewale"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="plast" value="Ogundimu"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="pemail" value="vc@fummsa.edu.ng"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="pphone" value="+234 801 234 5001"></div>
+      <div class="form-group"><label>Current Password</label><input type="password" id="pcurrent" placeholder="Enter current password"></div>
+      <div class="form-grid">
+        <div class="form-group"><label>New Password</label><input type="password" id="pnew" placeholder="New password"></div>
+        <div class="form-group"><label>Confirm Password</label><input type="password" id="pconfirm" placeholder="Confirm password"></div>
+      </div>
+      <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+      <div class="msg" id="profileMsg"></div>
+    </div>
+  </div>
+
+  <!-- ── SETTINGS ── -->
+  <div class="page-section" id="sec-settings">
+    <div class="section-head">Settings</div>
+    <div class="portal-card" style="max-width:600px;">
+      <h3 style="font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;">Notification Preferences</h3>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <label style="display:flex;align-items:center;gap:12px;font-size:0.85rem;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--maroon)"> Email alerts for new approvals</label>
+        <label style="display:flex;align-items:center;gap:12px;font-size:0.85rem;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--maroon)"> Weekly executive summary digest</label>
+        <label style="display:flex;align-items:center;gap:12px;font-size:0.85rem;cursor:pointer;"><input type="checkbox" style="accent-color:var(--maroon)"> Finance alerts when budget thresholds are reached</label>
+        <label style="display:flex;align-items:center;gap:12px;font-size:0.85rem;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--maroon)"> Notifications for capital project milestones</label>
+      </div>
+      <button class="btn btn-primary" style="margin-top:20px;" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<!-- MODAL -->
+<div class="modal-overlay hidden" id="execModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('execModal')">✕</button>
+    <div class="modal-title" id="execModalTitle">Action</div>
+    <div id="execModalBody"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:24px;right:24px;background:var(--maroon-dark);color:white;padding:14px 22px;border-radius:3px;font-size:0.83rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:999;transform:translateY(80px);opacity:0;transition:all 0.3s var(--ease);max-width:320px;"></div>
+
+<script>
+// Supabase credentials loaded from supabase-config.js
+let db, user;
+
+const EXEC_ROLES={
+  executive:'Executive Member',
+  vc:'Vice Chancellor',
+  dvc:'Deputy Vice Chancellor',
+  registrar:'Registrar',
+  bursar:'Bursar',
+  provost:'Provost'
+};
+
+(function init(){
+  const currentUser = requireAuth(['executive']);
+  if (!currentUser) return;
+  try{ db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY); }catch(e){}
+  const raw=sessionStorage.getItem('fummsa_user');
+  if(raw){ user=JSON.parse(raw); applyUserData(); }
+  else { user={name:'Prof. Adewale Ogundimu',role:'vc'}; }
+  renderApprovals();
+  renderActivityLog();
+  renderSentBroadcasts();
+})();
+
+function applyUserData(){
+  if(!user) return;
+  const n=user.name||'Executive Officer';
+  const roleLabel=EXEC_ROLES[user.role]||'University Executive';
+  document.getElementById('topUserName').textContent=n;
+  document.getElementById('topUserRole').textContent=roleLabel;
+  document.getElementById('execName').textContent=n;
+  document.getElementById('execTitle').textContent=roleLabel.toUpperCase();
+  const initials=n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('topUserAvatar').textContent=initials;
+  document.getElementById('execInitials').textContent=initials;
+}
+
+function showSection(id){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  const sec=document.getElementById('sec-'+id);
+  if(sec) sec.classList.add('active');
+  event && event.currentTarget && event.currentTarget.classList && event.currentTarget.classList.add('active');
+  if(window.innerWidth<900) closeSidebar();
+}
+
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); }
+
+function toast(msg,type='success'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.style.background=type==='error'?'var(--danger)':'var(--maroon-dark)';
+  el.style.transform='translateY(0)'; el.style.opacity='1';
+  setTimeout(()=>{ el.style.transform='translateY(80px)'; el.style.opacity='0'; },3500);
+}
+
+function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+
+/* ── APPROVALS ── */
+const PENDING_APPROVALS=[
+  {id:'ap001',icon:'🎓',title:'New Lecturer Account – Dr. Segun Bamidele',subtitle:'Faculty of Clinical Sciences · Applied 15 Jan 2025',type:'Staff Account',priority:'normal'},
+  {id:'ap002',icon:'🏗️',title:'Capital Project Expenditure Request – ₦12M',subtitle:'ICT Centre Phase 2 completion funding request from ICT Director',type:'Budget Release',priority:'high'},
+  {id:'ap003',icon:'📋',title:'Programme Change Request – Pharm → MBBS',subtitle:'Student: Adaeze Obi (2022/PHM/0078) · Endorsed by Dean of Pharmacy',type:'Academic',priority:'normal'},
+  {id:'ap004',icon:'🔒',title:'Portal Policy Change – DSA Bulk Suspension',subtitle:'DSA Office requests blanket portal suspension for 86 fee defaulters',type:'Policy',priority:'high'},
+];
+
+function renderApprovals(){
+  const dashList=document.getElementById('dashApprovalList');
+  const fullList=document.getElementById('fullApprovalList');
+  if(!dashList||!fullList) return;
+
+  const html=PENDING_APPROVALS.map(a=>`
+    <div class="approval-item">
+      <span class="approval-icon">${a.icon}</span>
+      <div class="approval-body">
+        <h4>${a.title}</h4>
+        <p>${a.subtitle}</p>
+        <div class="approval-meta">
+          <span class="tag tag-${a.priority==='high'?'red':'gold'}">${a.type}</span>
+        </div>
+      </div>
+      <div class="approval-actions">
+        <button class="btn btn-success btn-sm" onclick="approveItem('${a.id}')">✓ Approve</button>
+        <button class="btn btn-outline btn-sm" onclick="viewApproval('${a.id}')">Details</button>
+      </div>
+    </div>`).join('');
+  dashList.innerHTML=html;
+  fullList.innerHTML=html;
+  document.getElementById('approvalBadge').textContent=PENDING_APPROVALS.length;
+}
+
+function approveItem(id){
+  toast('Item approved and parties notified.');
+  const idx=PENDING_APPROVALS.findIndex(a=>a.id===id);
+  if(idx>-1) PENDING_APPROVALS.splice(idx,1);
+  renderApprovals();
+}
+
+function viewApproval(id){
+  const a=PENDING_APPROVALS.find(x=>x.id===id)||{title:'Approval Details',subtitle:'No details available.',icon:'📋'};
+  document.getElementById('execModalTitle').textContent=a.title;
+  document.getElementById('execModalBody').innerHTML=`
+    <div style="font-size:0.85rem;display:flex;flex-direction:column;gap:12px;">
+      <p>${a.subtitle}</p>
+      <div><strong>Type:</strong> <span class="tag tag-gold">${a.type}</span></div>
+      <div class="form-group"><label>Add Notes / Decision Remarks</label><textarea rows="3" placeholder="Optional remarks…"></textarea></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary btn-sm" onclick="approveItem('${id}');closeModal('execModal')">✓ Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="declineItem('${id}')">✗ Decline</button>
+        <button class="btn btn-outline btn-sm" onclick="closeModal('execModal')">Close</button>
+      </div>
+    </div>`;
+  openModal('execModal');
+}
+
+function declineItem(id){
+  closeModal('execModal');
+  toast('Item declined and applicant notified.');
+  const idx=PENDING_APPROVALS.findIndex(a=>a.id===id);
+  if(idx>-1) PENDING_APPROVALS.splice(idx,1);
+  renderApprovals();
+}
+
+/* ── ACTIVITY LOG ── */
+const ACTIVITY=[
+  {dot:'gold',title:'Budget Release Approved','desc':'₦8.2M for ICT Centre Phase 1 approved','date':'Today'},
+  {dot:'green',title:'New Staff Account Activated','desc':'Dr. Fatimah Adeyemi (Lecturer) account activated','date':'Yesterday'},
+  {dot:'',title:'Senate Meeting Minutes Uploaded','desc':'3rd Ordinary Senate Meeting minutes published','date':'15 Jan 2025'},
+  {dot:'gold',title:'Academic Calendar Updated','desc':'2nd Semester dates confirmed and published','date':'12 Jan 2025'},
+  {dot:'',title:'Programme Change Approved','desc':'Adaeze Obi transfer MBBS approved','date':'10 Jan 2025'},
+];
+
+function renderActivityLog(){
+  const el=document.getElementById('activityLog');
+  if(!el) return;
+  el.innerHTML=ACTIVITY.map(a=>`
+    <div class="tl-item">
+      <div class="tl-dot ${a.dot}"></div>
+      <div class="tl-content"><h5>${a.title}</h5><p>${a.desc}</p></div>
+      <div class="tl-date">${a.date}</div>
+    </div>`).join('');
+}
+
+/* ── BROADCAST ── */
+const broadcasts=[];
+function renderSentBroadcasts(){
+  const el=document.getElementById('sentBroadcasts');
+  if(!el) return;
+  const all=[
+    {subject:'Welcome Back – 2nd Semester 2024/2025',date:'13 Jan 2025',priority:'Important',audience:'All Staff & Students'},
+    {subject:'Convocation Ceremony – Save the Date',date:'5 Dec 2024',priority:'Normal',audience:'All'},
+  ].concat(broadcasts);
+  el.innerHTML=all.map(b=>`
+    <div style="background:white;border-radius:3px;padding:14px 18px;border:1px solid var(--rule);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <strong style="font-size:0.85rem;color:var(--charcoal)">${b.subject}</strong>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">To: ${b.audience} · ${b.date}</div>
+      </div>
+      <span class="tag tag-${b.priority==='Urgent'?'red':b.priority==='Important'?'gold':'grey'}">${b.priority}</span>
+    </div>`).join('');
+}
+
+function sendBroadcast(){
+  const subject=document.getElementById('broadcastSubject').value.trim();
+  const body=document.getElementById('broadcastBody').value.trim();
+  const priority=document.getElementById('broadcastPriority').value;
+  if(!subject||!body){ showMsg('broadcastMsg','Please fill subject and message.'); return; }
+  broadcasts.unshift({subject,priority,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),audience:'All Staff & Students'});
+  renderSentBroadcasts();
+  document.getElementById('broadcastSubject').value='';
+  document.getElementById('broadcastBody').value='';
+  showMsg('broadcastMsg','Broadcast sent successfully to all selected recipients!','success');
+}
+
+/* ── OTHER ── */
+function viewFacultyReport(code){ toast(`Loading full report for ${code}…`); }
+function editCalendar(sem){ toast(`Academic calendar editor for ${sem} semester opened`); }
+function downloadReport(type){ toast(`Generating ${type} report for download…`); }
+function openNewProjectModal(){
+  document.getElementById('execModalTitle').textContent='Add Capital Project';
+  document.getElementById('execModalBody').innerHTML=`
+    <div class="form-group"><label>Project Name</label><input type="text" placeholder="e.g. New Lecture Theatre Block"></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Budget (₦)</label><input type="number" placeholder="0"></div>
+      <div class="form-group"><label>Contractor</label><input type="text" placeholder="Company name"></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Start Date</label><input type="date"></div>
+      <div class="form-group"><label>Expected Completion</label><input type="date"></div>
+    </div>
+    <button class="btn btn-primary" onclick="closeModal('execModal');toast('Project added')">Add Project</button>`;
+  openModal('execModal');
+}
+function openUploadMinutesModal(){
+  document.getElementById('execModalTitle').textContent='Upload Meeting Minutes';
+  document.getElementById('execModalBody').innerHTML=`
+    <div class="form-group"><label>Meeting Name</label><input type="text" placeholder="e.g. Senate Ordinary Meeting"></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Date</label><input type="date"></div>
+      <div class="form-group"><label>Type</label><select><option>Senate</option><option>Council</option><option>Academic Board</option><option>Other</option></select></div>
+    </div>
+    <div class="form-group"><label>Upload PDF</label><input type="file" accept=".pdf"></div>
+    <button class="btn btn-primary" onclick="closeModal('execModal');toast('Minutes uploaded')">Upload</button>`;
+  openModal('execModal');
+}
+function issueMemo(){ toast('Memo issued and distributed to recipients'); }
+function saveProfile(){ showMsg('profileMsg','Profile updated successfully.','success'); }
+function saveSettings(){ toast('Settings saved'); }
+
+function showMsg(id,msg,type='error'){
+  const el=document.getElementById(id);
+  el.textContent=msg; el.className='msg '+(type)+' show';
+}
+
+function doLogout(){
+  if(db) db.auth.signOut().catch(()=>{});
+  clearFummsaSession();
+}
+</script>
+</body>
+</html>

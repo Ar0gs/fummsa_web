@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Portal – FUMMSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#4a0a1e;--maroon-mid:#800f30;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;--cream:#FAF7F2;
+  --warm-white:#FFFDF9;--charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.14);--success:#2a6b4a;--danger:#B04A2A;--info:#1a4a6b;
+  --serif:'Source Serif 4',Georgia,serif;--sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);--sb-width:248px;--top-h:60px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:#F0EBE5;color:var(--charcoal);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top-h);background:var(--maroon-dark);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 0;z-index:500;border-bottom:2px solid rgba(196,146,42,0.25);}
+.topbar-brand{display:flex;align-items:center;gap:12px;width:var(--sb-width);padding:0 20px;border-right:1px solid rgba(255,255,255,0.08);height:100%;}
+.topbar-brand img{width:34px;height:34px;border-radius:50%;object-fit:contain;}
+.topbar-brand-text{font-family:var(--serif);color:white;font-size:1rem;font-weight:600;}
+.topbar-brand-text small{display:block;font-family:var(--sans);font-size:0.58rem;color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-notify{position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.7);font-size:1rem;transition:all 0.2s;}
+.topbar-notify:hover{background:rgba(255,255,255,0.12);}
+.notify-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--gold);border-radius:50%;border:1.5px solid var(--maroon-dark);}
+.topbar-user{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--gold-light);font-size:0.85rem;overflow:hidden;flex-shrink:0;}
+.user-avatar img{width:100%;height:100%;object-fit:cover;}
+.user-meta{text-align:right;}
+.user-name{font-size:0.8rem;font-weight:600;color:white;}
+.user-role{font-size:0.62rem;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase;}
+.btn-logout{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:2px;font-family:var(--sans);font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:white;}
+.hamburger-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:white;font-size:1.2rem;}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--sb-width);background:white;border-right:1.5px solid var(--rule);overflow-y:auto;z-index:400;transition:transform 0.3s var(--ease);}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:var(--rule);}
+.sidebar-section{padding:16px 12px 4px;}
+.sb-label{font-size:0.58rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:6px 8px 4px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:3px;font-size:0.8rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;user-select:none;}
+.sb-link:hover{color:var(--maroon);background:rgba(107,15,43,0.04);}
+.sb-link.active{color:var(--maroon);background:rgba(107,15,43,0.06);border-left-color:var(--maroon);font-weight:600;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--maroon);color:white;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sb-divider{height:1px;background:var(--rule);margin:8px 16px;}
+
+/* ── MAIN ── */
+.main-wrap{margin-left:var(--sb-width);margin-top:var(--top-h);min-height:calc(100vh - var(--top-h));padding:28px;}
+.page-section{display:none;animation:fadeIn 0.3s ease both;}
+.page-section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* PROFILE */
+.profile-header{background:var(--maroon-dark);border-radius:5px;padding:28px 32px;display:flex;align-items:center;gap:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.profile-header::before{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(196,146,42,0.15);}
+.profile-header::after{content:'';position:absolute;right:20px;bottom:-40px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(196,146,42,0.1);}
+.profile-photo{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:2rem;color:var(--gold-light);overflow:hidden;flex-shrink:0;z-index:1;}
+.profile-photo img{width:100%;height:100%;object-fit:cover;}
+.profile-info{flex:1;z-index:1;}
+.profile-name{font-family:var(--serif);font-size:1.5rem;color:white;font-weight:600;}
+.profile-sub{font-size:0.75rem;color:var(--gold-light);letter-spacing:0.1em;margin:4px 0 12px;text-transform:uppercase;}
+.profile-meta{display:flex;flex-wrap:wrap;gap:20px;}
+.pmeta-item{font-size:0.75rem;color:rgba(255,255,255,0.65);}
+.pmeta-item strong{display:block;font-size:0.65rem;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.status-active{background:rgba(42,107,74,0.3);color:#7ee0a8;border:1px solid rgba(42,107,74,0.4);}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:white;border-radius:4px;padding:20px 22px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.05);}
+.stat-value{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--maroon-dark);line-height:1;}
+.stat-label{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+.stat-sub{font-size:0.72rem;color:var(--success);margin-top:4px;}
+.stat-sub.alert{color:var(--danger);}
+
+/* COMMON */
+.section-head{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--rule);}
+.portal-card{background:white;border-radius:4px;padding:24px;box-shadow:0 1px 8px rgba(107,15,43,0.06);border:1px solid var(--rule);margin-bottom:20px;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--rule);}
+.card-hd h3{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--maroon-dark);}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--rule);background:var(--cream);}
+.data-table td{font-size:0.82rem;padding:11px 14px;border-bottom:1px solid var(--rule);color:var(--charcoal);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(107,15,43,0.02);}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:none;border-radius:2px;font-family:var(--sans);font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--maroon);color:white;}.btn-primary:hover{background:var(--maroon-dark);}
+.btn-outline{background:transparent;color:var(--maroon);border:1.5px solid var(--maroon);}.btn-outline:hover{background:rgba(107,15,43,0.06);}
+.btn-success{background:#2a6b4a;color:white;}.btn-success:hover{background:#1e4f37;}
+.btn-danger{background:var(--danger);color:white;}.btn-danger:hover{background:#8a2a1a;}
+.btn-sm{padding:6px 12px;font-size:0.68rem;}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:10px;font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.tag-green{background:#e8f5ee;color:#2a6b4a;border:1px solid rgba(42,107,74,0.2);}
+.tag-red{background:#fde8ec;color:#7a0e1e;border:1px solid rgba(176,74,42,0.2);}
+.tag-gold{background:var(--gold-pale);color:#7a5010;border:1px solid rgba(196,146,42,0.3);}
+.tag-blue{background:#e8f0fd;color:#1a4a6b;border:1px solid rgba(26,74,107,0.2);}
+.tag-grey{background:#f0ede8;color:var(--mid);border:1px solid var(--rule);}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:7px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.88rem;color:var(--charcoal);background:var(--warm-white);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--maroon);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.search-bar{display:flex;gap:10px;margin-bottom:16px;}
+.search-bar input{flex:1;padding:10px 16px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:0.85rem;color:var(--charcoal);background:white;outline:none;transition:border-color 0.2s;}
+.search-bar input:focus{border-color:var(--maroon);}
+.msg{border-radius:2px;padding:12px 16px;font-size:0.82rem;margin-top:10px;display:none;}
+.msg.error{background:#fde8ec;color:#7a0e1e;border-left:3px solid var(--danger);}
+.msg.success{background:#e8f5ee;color:#1a5c38;border-left:3px solid var(--success);}
+.msg.show{display:block;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+
+/* Hostel cards */
+.hostel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.hostel-card{background:white;border-radius:4px;padding:20px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.04);}
+.hostel-name{font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:4px;}
+.hostel-type{font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.hostel-meter{height:8px;background:var(--rule);border-radius:4px;overflow:hidden;margin:8px 0;}
+.hostel-meter-fill{height:100%;border-radius:4px;transition:width 0.6s var(--ease);}
+.fill-green{background:#2a6b4a;}.fill-gold{background:var(--gold);}.fill-red{background:var(--danger);}
+.hostel-meta{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted);}
+.hostel-meta strong{color:var(--charcoal);}
+
+/* Welfare cases */
+.case-list{display:flex;flex-direction:column;gap:10px;}
+.case-item{background:white;border-radius:3px;padding:16px 20px;border-left:4px solid var(--maroon);box-shadow:0 1px 6px rgba(107,15,43,0.04);display:flex;gap:16px;align-items:flex-start;}
+.case-item.urgent{border-left-color:var(--danger);}
+.case-item.resolved{border-left-color:var(--success);}
+.case-item.pending{border-left-color:var(--gold);}
+.case-icon{font-size:1.4rem;flex-shrink:0;}
+.case-body{flex:1;}
+.case-body h4{font-size:0.88rem;font-weight:700;color:var(--charcoal);margin-bottom:3px;}
+.case-body p{font-size:0.78rem;color:var(--muted);line-height:1.6;}
+.case-meta{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap;}
+.case-actions{display:flex;gap:8px;flex-shrink:0;align-items:center;}
+
+/* Balloting */
+.ballot-card{background:white;border-radius:4px;padding:22px;border:1px solid var(--rule);margin-bottom:14px;}
+.ballot-row{display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--rule);}
+.ballot-row:last-child{border-bottom:none;}
+.ballot-num{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--maroon-dark);width:36px;flex-shrink:0;text-align:center;}
+.ballot-info{flex:1;}
+.ballot-info h5{font-size:0.85rem;font-weight:600;color:var(--charcoal);}
+.ballot-info p{font-size:0.75rem;color:var(--muted);}
+
+/* Announcements compose */
+.compose-area{background:white;border-radius:4px;padding:24px;border:1px solid var(--rule);margin-bottom:20px;}
+.audience-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.chip{padding:5px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;border:1.5px solid var(--rule);cursor:pointer;color:var(--mid);transition:all 0.2s;user-select:none;}
+.chip.selected{background:var(--maroon);color:white;border-color:var(--maroon);}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.2s ease;}
+.modal-overlay.hidden{display:none;}
+.modal-box{background:white;border-radius:5px;padding:32px;max-width:540px;width:100%;position:relative;max-height:85vh;overflow-y:auto;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted);}
+.modal-title{font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--maroon-dark);margin-bottom:20px;}
+
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.main-wrap{margin-left:0;}.hamburger-toggle{display:block;}}
+@media(max-width:700px){.stat-row{grid-template-columns:1fr 1fr;}.hostel-grid{grid-template-columns:1fr;}.form-grid,.form-grid-3{grid-template-columns:1fr;}.grid-2,.grid-3{grid-template-columns:1fr;}}
+</style>
+
+  <!-- Shared portal libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="portal-auth.js"></script>
+  <script src="portal-api.js"></script>
+  <script src="portal-shared.js"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="logo.png" alt="FUMMSA" onerror="this.style.display='none'">
+    <div class="topbar-brand-text">FUMMSA Portal<small>Division of Student Affairs</small></div>
+  </div>
+  <button class="hamburger-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="topbar-right">
+    <div class="topbar-notify" onclick="showSection('notices')">
+      <span>🔔</span><div class="notify-dot"></div>
+    </div>
+    <div class="topbar-user">
+      <div class="user-meta">
+        <div class="user-name" id="topUserName">Dr. Amaka Okonkwo</div>
+        <div class="user-role">Div. of Student Affairs</div>
+      </div>
+      <div class="user-avatar" id="topUserAvatar">AO</div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sb-label">Main</div>
+    <div class="sb-link active" onclick="showSection('dashboard')"><span class="sb-icon">📊</span> Dashboard</div>
+    <div class="sb-link" onclick="showSection('students')"><span class="sb-icon">👩‍🎓</span> Student Records <span class="sb-badge" id="sbStudents">1,428</span></div>
+    <div class="sb-link" onclick="showSection('welfare')"><span class="sb-icon">🫂</span> Welfare Cases <span class="sb-badge" id="sbWelfare">7</span></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Accommodation</div>
+    <div class="sb-link" onclick="showSection('hostel')"><span class="sb-icon">🏠</span> Hostel Management</div>
+    <div class="sb-link" onclick="showSection('balloting')"><span class="sb-icon">🎯</span> Accommodation Balloting</div>
+    <div class="sb-link" onclick="showSection('hostel-requests')"><span class="sb-icon">📋</span> Room Requests <span class="sb-badge">12</span></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Administration</div>
+    <div class="sb-link" onclick="showSection('portal-access')"><span class="sb-icon">🔐</span> Portal Access Control</div>
+    <div class="sb-link" onclick="showSection('fees')"><span class="sb-icon">💰</span> Fee Compliance</div>
+    <div class="sb-link" onclick="showSection('disciplinary')"><span class="sb-icon">⚖️</span> Disciplinary Records</div>
+    <div class="sb-link" onclick="showSection('medical')"><span class="sb-icon">🏥</span> Medical / Clinic Reports</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Communication</div>
+    <div class="sb-link" onclick="showSection('notices')"><span class="sb-icon">📢</span> Announcements</div>
+    <div class="sb-link" onclick="showSection('requests')"><span class="sb-icon">📩</span> Student Requests <span class="sb-badge">5</span></div>
+    <div class="sb-link" onclick="showSection('reports')"><span class="sb-icon">📈</span> Reports & Analytics</div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sidebar-section">
+    <div class="sb-link" onclick="showSection('profile')"><span class="sb-icon">👤</span> My Profile</div>
+    <div class="sb-link" onclick="showSection('settings')"><span class="sb-icon">⚙️</span> Settings</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- ── DASHBOARD ── -->
+  <div class="page-section active" id="sec-dashboard">
+    <div class="profile-header">
+      <div class="profile-photo" id="profilePhoto"><span id="avatarInitials">AO</span></div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Dr. Amaka Okonkwo</div>
+        <div class="profile-sub">Director, Division of Student Affairs</div>
+        <div class="profile-meta">
+          <div class="pmeta-item"><strong>Staff ID</strong>FUMMSA/DSA/001</div>
+          <div class="pmeta-item"><strong>Office</strong>Block C, Admin Building</div>
+          <div class="pmeta-item"><strong>Email</strong>dsa@fummsa.edu.ng</div>
+          <div class="pmeta-item"><strong>Session</strong>2024/2025</div>
+        </div>
+      </div>
+      <div><span class="status-badge status-active">● Active</span></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-value">1,428</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-sub">↑ 87 from last session</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">892</div>
+        <div class="stat-label">Hostel Residents</div>
+        <div class="stat-sub">62% occupancy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">7</div>
+        <div class="stat-label">Open Welfare Cases</div>
+        <div class="stat-sub alert">↑ 2 flagged urgent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">94%</div>
+        <div class="stat-label">Fee Compliance</div>
+        <div class="stat-sub">86 students outstanding</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="section-head">Recent Welfare Cases</div>
+        <div class="case-list">
+          <div class="case-item urgent">
+            <span class="case-icon">🚨</span>
+            <div class="case-body">
+              <h4>Medical Emergency – Hostel B</h4>
+              <p>Student (2022/MED/0134) reported acute abdominal pain. Referred to university clinic.</p>
+              <div class="case-meta">
+                <span class="tag tag-red">Urgent</span>
+                <span style="font-size:0.72rem;color:var(--muted)">Today, 08:14 AM</span>
+                <button class="btn btn-sm btn-primary" onclick="openCaseModal('med001')">View</button>
+              </div>
+            </div>
+          </div>
+          <div class="case-item pending">
+            <span class="case-icon">💸</span>
+            <div class="case-body">
+              <h4>Financial Hardship Request</h4>
+              <p>Student Bello Taiwo seeking fee deferral for 2nd semester.</p>
+              <div class="case-meta">
+                <span class="tag tag-gold">Pending</span>
+                <span style="font-size:0.72rem;color:var(--muted)">Yesterday</span>
+                <button class="btn btn-sm btn-outline" onclick="openCaseModal('fin002')">Review</button>
+              </div>
+            </div>
+          </div>
+          <div class="case-item resolved">
+            <span class="case-icon">✅</span>
+            <div class="case-body">
+              <h4>Room Transfer Request – Resolved</h4>
+              <p>Adaeze Nwosu moved from Block A Rm 14 to Block C Rm 7. Approved.</p>
+              <div class="case-meta">
+                <span class="tag tag-green">Resolved</span>
+                <span style="font-size:0.72rem;color:var(--muted)">2 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-head">Hostel Occupancy Overview</div>
+        <div class="hostel-grid" style="grid-template-columns:1fr;">
+          <div class="hostel-card">
+            <div class="hostel-name">Amina Hall (Female)</div>
+            <div class="hostel-type">Block A + B · 320 Beds</div>
+            <div class="hostel-meter"><div class="hostel-meter-fill fill-green" style="width:88%"></div></div>
+            <div class="hostel-meta"><span>282 / 320 occupied</span><strong>88%</strong></div>
+          </div>
+          <div class="hostel-card">
+            <div class="hostel-name">Kwame Block (Male)</div>
+            <div class="hostel-type">Block C + D · 280 Beds</div>
+            <div class="hostel-meter"><div class="hostel-meter-fill fill-gold" style="width:64%"></div></div>
+            <div class="hostel-meta"><span>179 / 280 occupied</span><strong>64%</strong></div>
+          </div>
+          <div class="hostel-card">
+            <div class="hostel-name">Pioneer Hall (Mixed PG)</div>
+            <div class="hostel-type">Block E · 80 Beds</div>
+            <div class="hostel-meter"><div class="hostel-meter-fill fill-red" style="width:41%"></div></div>
+            <div class="hostel-meta"><span>33 / 80 occupied</span><strong>41%</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STUDENTS ── -->
+  <div class="page-section" id="sec-students">
+    <div class="section-head">Student Records</div>
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>All Students (1,428)</h3>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline" onclick="exportStudents()">⬇ Export CSV</button>
+          <button class="btn btn-primary" onclick="openAddStudentModal()">+ Add Student</button>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="studentSearch" placeholder="Search by name, matric, department…" oninput="filterStudents()">
+        <select id="studentFilter" onchange="filterStudents()" style="padding:10px 14px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:0.85rem;background:white;cursor:pointer;">
+          <option value="">All Levels</option>
+          <option>100 Level</option><option>200 Level</option><option>300 Level</option>
+          <option>400 Level</option><option>500 Level</option><option>600 Level</option>
+        </select>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="studentsTable">
+          <thead><tr>
+            <th>Name</th><th>Matric No.</th><th>Faculty</th><th>Level</th>
+            <th>Status</th><th>Hostel</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="studentsTbody"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:0.78rem;color:var(--muted);">
+        <span id="studentCount">Showing 10 of 1,428</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline btn-sm">← Prev</button>
+          <button class="btn btn-outline btn-sm">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WELFARE CASES ── -->
+  <div class="page-section" id="sec-welfare">
+    <div class="section-head">Welfare Cases</div>
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="openNewCaseModal()">+ Log New Case</button>
+      <button class="sem-tab active" onclick="filterCases('all',this)">All Cases</button>
+      <button class="sem-tab" onclick="filterCases('urgent',this)" style="padding:7px 18px;border-radius:20px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--rule);color:var(--mid);background:white;">Urgent</button>
+      <button class="sem-tab" onclick="filterCases('pending',this)" style="padding:7px 18px;border-radius:20px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--rule);color:var(--mid);background:white;">Pending</button>
+      <button class="sem-tab" onclick="filterCases('resolved',this)" style="padding:7px 18px;border-radius:20px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--rule);color:var(--mid);background:white;">Resolved</button>
+    </div>
+    <div class="case-list" id="casesList"></div>
+  </div>
+
+  <!-- ── HOSTEL MANAGEMENT ── -->
+  <div class="page-section" id="sec-hostel">
+    <div class="section-head">Hostel Management</div>
+    <div class="hostel-grid">
+      <div class="hostel-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+          <div><div class="hostel-name">Amina Hall</div><div class="hostel-type">Female · 320 Beds</div></div>
+          <span class="tag tag-green">88% Full</span>
+        </div>
+        <div class="hostel-meter"><div class="hostel-meter-fill fill-green" style="width:88%"></div></div>
+        <div class="hostel-meta"><span>282 occupied · 38 vacant</span><strong>320 total</strong></div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button class="btn btn-outline btn-sm" onclick="viewHostelRooms('amina')">View Rooms</button>
+          <button class="btn btn-primary btn-sm" onclick="manageHostel('amina')">Manage</button>
+        </div>
+      </div>
+      <div class="hostel-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+          <div><div class="hostel-name">Kwame Block</div><div class="hostel-type">Male · 280 Beds</div></div>
+          <span class="tag tag-gold">64% Full</span>
+        </div>
+        <div class="hostel-meter"><div class="hostel-meter-fill fill-gold" style="width:64%"></div></div>
+        <div class="hostel-meta"><span>179 occupied · 101 vacant</span><strong>280 total</strong></div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button class="btn btn-outline btn-sm" onclick="viewHostelRooms('kwame')">View Rooms</button>
+          <button class="btn btn-primary btn-sm" onclick="manageHostel('kwame')">Manage</button>
+        </div>
+      </div>
+      <div class="hostel-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+          <div><div class="hostel-name">Pioneer Hall</div><div class="hostel-type">Mixed PG · 80 Beds</div></div>
+          <span class="tag tag-red">41% Full</span>
+        </div>
+        <div class="hostel-meter"><div class="hostel-meter-fill fill-red" style="width:41%"></div></div>
+        <div class="hostel-meta"><span>33 occupied · 47 vacant</span><strong>80 total</strong></div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button class="btn btn-outline btn-sm" onclick="viewHostelRooms('pioneer')">View Rooms</button>
+          <button class="btn btn-primary btn-sm" onclick="manageHostel('pioneer')">Manage</button>
+        </div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Room Allocations</h3><button class="btn btn-primary" onclick="showAddAllocation()">+ Assign Room</button></div>
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Matric</th><th>Hostel</th><th>Block</th><th>Room</th><th>From</th><th>Status</th><th></th></tr></thead>
+        <tbody id="allocTbody">
+          <tr><td>Ngozi Adaeze</td><td>2022/MED/0021</td><td>Amina Hall</td><td>Block A</td><td>Room 14</td><td>Oct 2024</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-sm btn-outline">Edit</button></td></tr>
+          <tr><td>Musa Ibrahim</td><td>2023/PHM/0067</td><td>Kwame Block</td><td>Block C</td><td>Room 03</td><td>Oct 2024</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-sm btn-outline">Edit</button></td></tr>
+          <tr><td>Chisom Eze</td><td>2024/ANA/0012</td><td>Amina Hall</td><td>Block B</td><td>Room 22</td><td>Jan 2025</td><td><span class="tag tag-gold">Temp</span></td><td><button class="btn btn-sm btn-outline">Edit</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── ACCOMMODATION BALLOTING ── -->
+  <div class="page-section" id="sec-balloting">
+    <div class="section-head">Accommodation Balloting System</div>
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="portal-card" style="margin-bottom:0">
+        <div class="card-hd"><h3>Current Ballot Session</h3></div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="form-group"><label>Session</label><input type="text" value="2024/2025 – 2nd Semester"></div>
+          <div class="form-group"><label>Application Opens</label><input type="date" value="2025-01-15"></div>
+          <div class="form-group"><label>Application Closes</label><input type="date" value="2025-01-31"></div>
+          <div class="form-group"><label>Ballot Draw Date</label><input type="date" value="2025-02-05"></div>
+          <div class="form-group">
+            <label>Eligible Year Groups</label>
+            <div class="audience-chips">
+              <span class="chip selected" onclick="this.classList.toggle('selected')">100L</span>
+              <span class="chip selected" onclick="this.classList.toggle('selected')">200L</span>
+              <span class="chip selected" onclick="this.classList.toggle('selected')">300L</span>
+              <span class="chip" onclick="this.classList.toggle('selected')">400L</span>
+              <span class="chip" onclick="this.classList.toggle('selected')">500L+</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="saveBallotSession()">Save Session Settings</button>
+        </div>
+      </div>
+      <div class="portal-card" style="margin-bottom:0">
+        <div class="card-hd"><h3>Ballot Statistics</h3></div>
+        <div class="stat-row" style="grid-template-columns:1fr 1fr;">
+          <div class="stat-card"><div class="stat-value">347</div><div class="stat-label">Applications</div></div>
+          <div class="stat-card"><div class="stat-value">139</div><div class="stat-label">Available Beds</div></div>
+          <div class="stat-card"><div class="stat-value">2.5x</div><div class="stat-label">Oversubscription</div></div>
+          <div class="stat-card"><div class="stat-value">0</div><div class="stat-label">Drawn So Far</div></div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:12px;" onclick="runBallot()">🎯 Run Ballot Draw</button>
+        <button class="btn btn-outline" style="width:100%;margin-top:8px;" onclick="exportBallotResults()">⬇ Export Results</button>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Ballot Applications</h3></div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Student</th><th>Matric</th><th>Level</th><th>Gender</th><th>Preferred Hostel</th><th>Status</th></tr></thead>
+        <tbody id="ballotTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── HOSTEL REQUESTS ── -->
+  <div class="page-section" id="sec-hostel-requests">
+    <div class="section-head">Room Requests</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Pending Room Requests (12)</h3></div>
+      <div class="case-list" id="roomRequestsList">
+        <div class="case-item pending">
+          <span class="case-icon">🔀</span>
+          <div class="case-body">
+            <h4>Room Transfer – Aisha Lawal (2022/MED/0088)</h4>
+            <p>Requesting transfer from Amina Hall Block A Rm 7 to Block B. Reason: proximity to library.</p>
+            <div class="case-meta">
+              <span class="tag tag-gold">Pending Review</span>
+              <span style="font-size:0.72rem;color:var(--muted)">Submitted: 14 Jan 2025</span>
+              <button class="btn btn-sm btn-success" onclick="approveRequest('rr001')">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="declineRequest('rr001')">Decline</button>
+            </div>
+          </div>
+        </div>
+        <div class="case-item pending">
+          <span class="case-icon">🆕</span>
+          <div class="case-body">
+            <h4>New Room Application – Emeka Obi (2024/ANA/0055)</h4>
+            <p>First-time hostel application. Level 100 student. Preferred: Kwame Block.</p>
+            <div class="case-meta">
+              <span class="tag tag-gold">Pending Review</span>
+              <span style="font-size:0.72rem;color:var(--muted)">Submitted: 15 Jan 2025</span>
+              <button class="btn btn-sm btn-success" onclick="approveRequest('rr002')">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="declineRequest('rr002')">Decline</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PORTAL ACCESS CONTROL ── -->
+  <div class="page-section" id="sec-portal-access">
+    <div class="section-head">Portal Access Control</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Restrict / Restore Student Portal Access</h3></div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:18px;line-height:1.7;">Suspend or restore access for individual students or groups (e.g., students with outstanding fees). Suspended students cannot log in until access is restored.</p>
+      <div class="search-bar">
+        <input type="text" id="accessSearch" placeholder="Search student by name or matric…">
+        <button class="btn btn-primary" onclick="searchAccessStudent()">Search</button>
+      </div>
+      <div id="accessStudentResult" style="margin-bottom:18px;"></div>
+      <div class="portal-card" style="background:var(--cream);margin-bottom:0;">
+        <div class="card-hd"><h3>Bulk Actions</h3></div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">Apply access changes to a group of students at once.</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Select Group</label>
+            <select id="bulkGroup">
+              <option>Students with Outstanding Fees</option>
+              <option>Students on Probation</option>
+              <option>All 100 Level Students</option>
+              <option>Specific Faculty</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Action</label>
+            <select id="bulkAction">
+              <option value="suspend">Suspend Portal Access</option>
+              <option value="restore">Restore Portal Access</option>
+              <option value="limited">Limit to Read-Only</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-danger" onclick="applyBulkAccess()">Apply Bulk Action</button>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Recently Modified Access</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Matric</th><th>Action</th><th>Reason</th><th>By</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Dele Afolabi</td><td>2022/MED/0190</td><td><span class="tag tag-red">Suspended</span></td><td>Outstanding fees</td><td>DSA Office</td><td>10 Jan 2025</td><td><button class="btn btn-sm btn-success" onclick="restoreAccess('stu190')">Restore</button></td></tr>
+          <tr><td>Funmi Adegoke</td><td>2023/PHM/0034</td><td><span class="tag tag-green">Restored</span></td><td>Fees cleared</td><td>DSA Office</td><td>12 Jan 2025</td><td><span style="font-size:0.75rem;color:var(--muted)">Active</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── FEE COMPLIANCE ── -->
+  <div class="page-section" id="sec-fees">
+    <div class="section-head">Fee Compliance Tracking</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-value">1,342</div><div class="stat-label">Fees Paid</div><div class="stat-sub">94% of students</div></div>
+      <div class="stat-card"><div class="stat-value">86</div><div class="stat-label">Outstanding</div><div class="stat-sub alert">6% of students</div></div>
+      <div class="stat-card"><div class="stat-value">₦42.6M</div><div class="stat-label">Total Collected</div><div class="stat-sub">This session</div></div>
+      <div class="stat-card"><div class="stat-value">₦3.2M</div><div class="stat-label">Still Owed</div><div class="stat-sub alert">86 students</div></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Students with Outstanding Fees</h3>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline" onclick="sendFeeReminders()">📧 Send Reminders</button>
+          <button class="btn btn-danger" onclick="bulkSuspendFeeDefaulters()">🔒 Suspend Access</button>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Matric</th><th>Faculty</th><th>Level</th><th>Amount Due</th><th>Due Date</th><th>Portal</th></tr></thead>
+        <tbody id="feeDefaultersTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── DISCIPLINARY ── -->
+  <div class="page-section" id="sec-disciplinary">
+    <div class="section-head">Disciplinary Records</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Disciplinary Cases</h3>
+        <button class="btn btn-primary" onclick="openNewDisciplinaryModal()">+ Log Case</button>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Matric</th><th>Offence</th><th>Date</th><th>Penalty</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Tunde Olaiya</td><td>2021/MED/0077</td>
+            <td>Misconduct in exam hall</td><td>5 Dec 2024</td>
+            <td>Suspension – 1 semester</td><td><span class="tag tag-red">Active</span></td>
+            <td><button class="btn btn-sm btn-outline">View</button></td>
+          </tr>
+          <tr>
+            <td>Kemi Adewale</td><td>2022/PHM/0112</td>
+            <td>Hostel rule violation</td><td>10 Nov 2024</td>
+            <td>Warning + community service</td><td><span class="tag tag-gold">Monitoring</span></td>
+            <td><button class="btn btn-sm btn-outline">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── MEDICAL ── -->
+  <div class="page-section" id="sec-medical">
+    <div class="section-head">Medical / Clinic Reports</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-value">48</div><div class="stat-label">Clinic Visits (Jan)</div><div class="stat-sub">This month</div></div>
+      <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Referrals Out</div><div class="stat-sub">To teaching hospital</div></div>
+      <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Admissions</div><div class="stat-sub alert">Currently admitted</div></div>
+      <div class="stat-card"><div class="stat-value">94%</div><div class="stat-label">HMO Coverage</div><div class="stat-sub">1,343 students</div></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Recent Clinic Entries</h3><button class="btn btn-primary" onclick="openMedicalEntryModal()">+ Add Entry</button></div>
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Date</th><th>Complaint</th><th>Outcome</th><th>Follow-up</th></tr></thead>
+        <tbody>
+          <tr><td>Aisha M. (2022/MED/0134)</td><td>16 Jan 2025</td><td>Acute abdominal pain</td><td>Referred to OAUTHC</td><td><span class="tag tag-red">Pending</span></td></tr>
+          <tr><td>Emeka Obi (2024/ANA/0055)</td><td>14 Jan 2025</td><td>Malaria symptoms</td><td>Treated – Coartem prescribed</td><td><span class="tag tag-green">Cleared</span></td></tr>
+          <tr><td>Bisi Olowe (2023/MED/0211)</td><td>12 Jan 2025</td><td>Headache / stress</td><td>Counselled, paracetamol given</td><td><span class="tag tag-green">Cleared</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── ANNOUNCEMENTS ── -->
+  <div class="page-section" id="sec-notices">
+    <div class="section-head">Announcements</div>
+    <div class="compose-area">
+      <div class="card-hd" style="margin-bottom:16px;"><h3 style="font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--maroon-dark);">Compose Announcement</h3></div>
+      <div class="form-group"><label>Title</label><input type="text" id="noticeTitle" placeholder="Announcement title"></div>
+      <div class="form-group"><label>Message</label><textarea id="noticeBody" rows="4" placeholder="Type your announcement here…"></textarea></div>
+      <div class="form-group">
+        <label>Target Audience</label>
+        <div class="audience-chips">
+          <span class="chip selected" onclick="this.classList.toggle('selected')" data-audience="all-students">All Students</span>
+          <span class="chip" onclick="this.classList.toggle('selected')" data-audience="hostel">Hostel Residents</span>
+          <span class="chip" onclick="this.classList.toggle('selected')" data-audience="100l">100 Level</span>
+          <span class="chip" onclick="this.classList.toggle('selected')" data-audience="200l">200 Level</span>
+          <span class="chip" onclick="this.classList.toggle('selected')" data-audience="lecturers">Lecturers</span>
+          <span class="chip" onclick="this.classList.toggle('selected')" data-audience="all">Entire University</span>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Priority</label>
+          <select id="noticePriority"><option>Normal</option><option>Important</option><option>Urgent</option></select>
+        </div>
+        <div class="form-group"><label>Expires</label><input type="date" id="noticeExpiry"></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="publishNotice()">📢 Publish Announcement</button>
+        <button class="btn btn-outline" onclick="saveDraftNotice()">Save as Draft</button>
+      </div>
+      <div class="msg" id="noticeMsg"></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Published Announcements</h3></div>
+      <div id="publishedNotices" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- ── STUDENT REQUESTS ── -->
+  <div class="page-section" id="sec-requests">
+    <div class="section-head">Student Requests</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Incoming Requests (5 pending)</h3></div>
+      <div class="case-list" id="stuRequestsList">
+        <div class="case-item pending">
+          <span class="case-icon">📝</span>
+          <div class="case-body">
+            <h4>Letter of Good Standing – Fatima Bello</h4>
+            <p>Student requesting official letter for scholarship application. All clearances passed.</p>
+            <div class="case-meta">
+              <span class="tag tag-gold">Awaiting DSA</span>
+              <span style="font-size:0.72rem;color:var(--muted)">13 Jan 2025</span>
+              <button class="btn btn-sm btn-success" onclick="approveStudentRequest('sr001')">Approve & Issue</button>
+              <button class="btn btn-sm btn-outline" onclick="viewStudentRequest('sr001')">View</button>
+            </div>
+          </div>
+        </div>
+        <div class="case-item pending">
+          <span class="case-icon">🏥</span>
+          <div class="case-body">
+            <h4>Medical Leave Request – Chukwuemeka Okafor</h4>
+            <p>Requesting 2-week medical leave. Doctor's note attached.</p>
+            <div class="case-meta">
+              <span class="tag tag-gold">Awaiting DSA</span>
+              <span style="font-size:0.72rem;color:var(--muted)">11 Jan 2025</span>
+              <button class="btn btn-sm btn-success" onclick="approveStudentRequest('sr002')">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="declineRequest('sr002')">Decline</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REPORTS ── -->
+  <div class="page-section" id="sec-reports">
+    <div class="section-head">Reports & Analytics</div>
+    <div class="grid-2">
+      <div class="portal-card">
+        <div class="card-hd"><h3>Student Population by Faculty</h3></div>
+        <table class="data-table">
+          <thead><tr><th>Faculty</th><th>Students</th><th>%</th></tr></thead>
+          <tbody>
+            <tr><td>Basic Medical Sciences</td><td>524</td><td>36.7%</td></tr>
+            <tr><td>Clinical Sciences</td><td>412</td><td>28.9%</td></tr>
+            <tr><td>Pharmacy</td><td>289</td><td>20.2%</td></tr>
+            <tr><td>Allied Health Sciences</td><td>203</td><td>14.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="portal-card">
+        <div class="card-hd"><h3>Quick Report Downloads</h3></div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <button class="btn btn-outline" onclick="downloadReport('student-list')">⬇ Full Student List</button>
+          <button class="btn btn-outline" onclick="downloadReport('hostel-occupancy')">⬇ Hostel Occupancy Report</button>
+          <button class="btn btn-outline" onclick="downloadReport('fee-compliance')">⬇ Fee Compliance Report</button>
+          <button class="btn btn-outline" onclick="downloadReport('welfare-cases')">⬇ Welfare Cases Summary</button>
+          <button class="btn btn-outline" onclick="downloadReport('disciplinary')">⬇ Disciplinary Records</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROFILE ── -->
+  <div class="page-section" id="sec-profile">
+    <div class="section-head">My Profile</div>
+    <div class="portal-card" style="max-width:600px;">
+      <div class="form-grid">
+        <div class="form-group"><label>First Name</label><input type="text" id="pfirst" value="Amaka"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="plast" value="Okonkwo"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="pemail" value="dsa@fummsa.edu.ng"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="pphone" value="+234 801 234 5678"></div>
+      <div class="form-group"><label>Current Password</label><input type="password" id="pcurrent" placeholder="Enter current password"></div>
+      <div class="form-grid">
+        <div class="form-group"><label>New Password</label><input type="password" id="pnew" placeholder="New password"></div>
+        <div class="form-group"><label>Confirm Password</label><input type="password" id="pconfirm" placeholder="Confirm password"></div>
+      </div>
+      <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+      <div class="msg" id="profileMsg"></div>
+    </div>
+  </div>
+
+  <!-- ── SETTINGS ── -->
+  <div class="page-section" id="sec-settings">
+    <div class="section-head">Settings</div>
+    <div class="portal-card" style="max-width:600px;">
+      <h3 style="font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;">Notification Preferences</h3>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <label style="display:flex;align-items:center;gap:12px;font-size:0.85rem;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--maroon)"> Email alerts for new welfare cases</label>
+        <label style="display:flex;align-items:center;gap:12px;font-size:0.85rem;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--maroon)"> Notify when student requests are submitted</label>
+        <label style="display:flex;align-items:center;gap:12px;font-size:0.85rem;cursor:pointer;"><input type="checkbox" style="accent-color:var(--maroon)"> Daily fee compliance digest</label>
+        <label style="display:flex;align-items:center;gap:12px;font-size:0.85rem;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--maroon)"> Hostel room request notifications</label>
+      </div>
+      <button class="btn btn-primary" style="margin-top:20px;" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<!-- MODAL: Case Details / New Case -->
+<div class="modal-overlay hidden" id="caseModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('caseModal')">✕</button>
+    <div class="modal-title" id="caseModalTitle">Case Details</div>
+    <div id="caseModalBody"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:24px;right:24px;background:var(--maroon-dark);color:white;padding:14px 22px;border-radius:3px;font-size:0.83rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:999;transform:translateY(80px);opacity:0;transition:all 0.3s var(--ease);max-width:320px;"></div>
+
+<script>
+// Supabase credentials loaded from supabase-config.js
+let db,user;
+
+(function init(){
+  const currentUser = requireAuth(['dsa']);
+  if (!currentUser) return;
+  try{ db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY); }catch(e){}
+  const raw=sessionStorage.getItem('fummsa_user');
+  if(raw){ user=JSON.parse(raw); applyUserData(); }
+  else { user={name:'Dr. Amaka Okonkwo',role:'dsa'}; }
+  renderStudents(); renderCases(); renderBallotApps(); renderFeeDefaulters(); renderPublishedNotices();
+})();
+
+function applyUserData(){
+  if(!user) return;
+  const n=user.name||'DSA Officer';
+  document.getElementById('topUserName').textContent=n;
+  document.getElementById('profileName').textContent=n;
+  const initials=n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('topUserAvatar').textContent=initials;
+  document.getElementById('avatarInitials').textContent=initials;
+}
+
+function showSection(id){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  const sec=document.getElementById('sec-'+id);
+  if(sec) sec.classList.add('active');
+  event.currentTarget && event.currentTarget.classList && event.currentTarget.classList.add('active');
+  document.querySelectorAll('.sb-link').forEach(l=>{ if(l.textContent.toLowerCase().includes(id.replace('-',' '))) l.classList.add('active'); });
+  if(window.innerWidth<900) closeSidebar();
+}
+
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); }
+
+function toast(msg,type='success'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.style.background=type==='error'?'var(--danger)':'var(--maroon-dark)';
+  el.style.transform='translateY(0)'; el.style.opacity='1';
+  setTimeout(()=>{ el.style.transform='translateY(80px)'; el.style.opacity='0'; },3000);
+}
+
+function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+
+/* ── STUDENTS ── */
+const DEMO_STUDENTS=[
+  {name:'Aisha Bello Muhammad',matric:'2023/MED/0042',faculty:'Basic Medical Sciences',level:'200',status:'active',hostel:'Amina Hall'},
+  {name:'Emeka Obi',matric:'2024/ANA/0055',faculty:'Basic Medical Sciences',level:'100',status:'active',hostel:'—'},
+  {name:'Ngozi Adaeze',matric:'2022/MED/0021',faculty:'Clinical Sciences',level:'300',status:'active',hostel:'Amina Hall'},
+  {name:'Musa Ibrahim',matric:'2023/PHM/0067',faculty:'Pharmacy',level:'200',status:'active',hostel:'Kwame Block'},
+  {name:'Dele Afolabi',matric:'2022/MED/0190',faculty:'Basic Medical Sciences',level:'300',status:'suspended',hostel:'—'},
+  {name:'Kemi Adewale',matric:'2022/PHM/0112',faculty:'Pharmacy',level:'300',status:'active',hostel:'Amina Hall'},
+  {name:'Bisi Olowe',matric:'2023/MED/0211',faculty:'Clinical Sciences',level:'200',status:'active',hostel:'Amina Hall'},
+  {name:'Tunde Olaiya',matric:'2021/MED/0077',faculty:'Clinical Sciences',level:'400',status:'suspended',hostel:'—'},
+  {name:'Fatima Bello',matric:'2022/MED/0088',faculty:'Basic Medical Sciences',level:'300',status:'active',hostel:'Amina Hall'},
+  {name:'Chisom Eze',matric:'2024/ANA/0012',faculty:'Basic Medical Sciences',level:'100',status:'active',hostel:'Amina Hall'},
+];
+
+function renderStudents(filter=''){
+  const tbody=document.getElementById('studentsTbody');
+  const filtered=DEMO_STUDENTS.filter(s=>!filter||(s.name+s.matric+s.faculty).toLowerCase().includes(filter.toLowerCase()));
+  tbody.innerHTML=filtered.map(s=>`
+    <tr>
+      <td><strong>${s.name}</strong></td>
+      <td>${s.matric}</td>
+      <td>${s.faculty}</td>
+      <td>${s.level}L</td>
+      <td><span class="tag ${s.status==='active'?'tag-green':'tag-red'}">${s.status}</span></td>
+      <td>${s.hostel}</td>
+      <td><button class="btn btn-sm btn-outline" onclick="viewStudent('${s.matric}')">View</button></td>
+    </tr>`).join('');
+  document.getElementById('studentCount').textContent=`Showing ${filtered.length} of 1,428`;
+}
+
+function filterStudents(){ renderStudents(document.getElementById('studentSearch').value); }
+
+function viewStudent(matric){
+  const s=DEMO_STUDENTS.find(x=>x.matric===matric);
+  if(!s) return;
+  document.getElementById('caseModalTitle').textContent=s.name;
+  document.getElementById('caseModalBody').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px;font-size:0.85rem;">
+      <div><strong>Matric:</strong> ${s.matric}</div>
+      <div><strong>Faculty:</strong> ${s.faculty}</div>
+      <div><strong>Level:</strong> ${s.level}L</div>
+      <div><strong>Hostel:</strong> ${s.hostel}</div>
+      <div><strong>Status:</strong> <span class="tag ${s.status==='active'?'tag-green':'tag-red'}">${s.status}</span></div>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button class="btn btn-danger btn-sm" onclick="suspendStudent('${s.matric}')">🔒 Suspend Access</button>
+        <button class="btn btn-outline btn-sm" onclick="closeModal('caseModal')">Close</button>
+      </div>
+    </div>`;
+  openModal('caseModal');
+}
+
+function suspendStudent(matric){
+  closeModal('caseModal');
+  toast(`Portal access suspended for ${matric}`,'success');
+}
+
+function exportStudents(){ toast('Exporting student list as CSV…'); }
+function openAddStudentModal(){ toast('Student creation is managed by Super Admin'); }
+
+/* ── WELFARE CASES ── */
+const DEMO_CASES=[
+  {id:'med001',icon:'🚨',type:'urgent',title:'Medical Emergency – Hostel B',desc:'Student (2022/MED/0134) reported acute abdominal pain. Referred to university clinic.',date:'Today, 08:14 AM'},
+  {id:'fin002',icon:'💸',type:'pending',title:'Financial Hardship Request',desc:'Student Bello Taiwo seeking fee deferral for 2nd semester.',date:'Yesterday'},
+  {id:'men003',icon:'🧠',type:'pending',title:'Mental Health Support Request',desc:'Anonymous student reported depression symptoms. Referred to counselling unit.',date:'2 days ago'},
+  {id:'res004',icon:'✅',type:'resolved',title:'Room Transfer – Adaeze Nwosu',desc:'Moved from Block A Rm 14 to Block C Rm 7.',date:'3 days ago'},
+  {id:'fin005',icon:'💸',type:'resolved',title:'Emergency Bursary – Resolved',desc:'₦15,000 bursary disbursed to Chukwuemeka Okafor.',date:'1 week ago'},
+];
+
+function renderCases(filter='all'){
+  const list=document.getElementById('casesList');
+  const data=filter==='all'?DEMO_CASES:DEMO_CASES.filter(c=>c.type===filter);
+  list.innerHTML=data.map(c=>`
+    <div class="case-item ${c.type}">
+      <span class="case-icon">${c.icon}</span>
+      <div class="case-body">
+        <h4>${c.title}</h4>
+        <p>${c.desc}</p>
+        <div class="case-meta">
+          <span class="tag tag-${c.type==='urgent'?'red':c.type==='pending'?'gold':'green'}">${c.type}</span>
+          <span style="font-size:0.72rem;color:var(--muted)">${c.date}</span>
+          ${c.type!=='resolved'?`<button class="btn btn-sm btn-success" onclick="resolveCase('${c.id}')">Mark Resolved</button>`:''} 
+          <button class="btn btn-sm btn-outline" onclick="openCaseModal('${c.id}')">Details</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterCases(type, btn){
+  document.querySelectorAll('.sem-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderCases(type);
+}
+
+function openCaseModal(id){
+  const c=DEMO_CASES.find(x=>x.id===id)||{title:'Case Details',desc:'No details available.',icon:'📋',type:'pending',date:'—'};
+  document.getElementById('caseModalTitle').textContent=c.title;
+  document.getElementById('caseModalBody').innerHTML=`
+    <div style="font-size:0.85rem;display:flex;flex-direction:column;gap:12px;">
+      <p>${c.desc}</p>
+      <div><strong>Priority:</strong> <span class="tag tag-${c.type==='urgent'?'red':c.type==='pending'?'gold':'green'}">${c.type}</span></div>
+      <div><strong>Date:</strong> ${c.date}</div>
+      <div class="form-group" style="margin-top:8px;"><label>Add Note / Action</label><textarea rows="3" placeholder="Enter your notes…"></textarea></div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-success btn-sm" onclick="resolveCase('${id}');closeModal('caseModal')">Mark Resolved</button>
+        <button class="btn btn-outline btn-sm" onclick="closeModal('caseModal')">Close</button>
+      </div>
+    </div>`;
+  openModal('caseModal');
+}
+
+function resolveCase(id){ toast('Case marked as resolved'); renderCases('all'); }
+function openNewCaseModal(){
+  document.getElementById('caseModalTitle').textContent='Log New Welfare Case';
+  document.getElementById('caseModalBody').innerHTML=`
+    <div class="form-group"><label>Student Matric / Name</label><input type="text" placeholder="Search student…"></div>
+    <div class="form-group"><label>Case Type</label><select><option>Medical</option><option>Financial</option><option>Mental Health</option><option>Disciplinary</option><option>Other</option></select></div>
+    <div class="form-group"><label>Priority</label><select><option>Normal</option><option>Urgent</option></select></div>
+    <div class="form-group"><label>Description</label><textarea rows="4" placeholder="Describe the case…"></textarea></div>
+    <button class="btn btn-primary" onclick="submitNewCase()">Submit Case</button>`;
+  openModal('caseModal');
+}
+function submitNewCase(){ closeModal('caseModal'); toast('Welfare case logged successfully'); }
+
+/* ── BALLOTING ── */
+const BALLOT_APPS=[
+  {no:1,name:'Sade Ojo',matric:'2024/MED/0001',level:'100L',gender:'Female',hostel:'Amina Hall',status:'Applied'},
+  {no:2,name:'Tolu Adebayo',matric:'2024/MED/0002',level:'100L',gender:'Male',hostel:'Kwame Block',status:'Applied'},
+  {no:3,name:'Uche Nwobi',matric:'2024/ANA/0003',level:'100L',gender:'Male',hostel:'Kwame Block',status:'Applied'},
+  {no:4,name:'Halima Yusuf',matric:'2024/PHM/0004',level:'100L',gender:'Female',hostel:'Amina Hall',status:'Applied'},
+  {no:5,name:'Bola Akin',matric:'2024/MED/0005',level:'100L',gender:'Male',hostel:'Kwame Block',status:'Applied'},
+];
+
+function renderBallotApps(){
+  const tbody=document.getElementById('ballotTbody');
+  tbody.innerHTML=BALLOT_APPS.map(a=>`
+    <tr>
+      <td><strong>${a.no}</strong></td>
+      <td>${a.name}</td>
+      <td>${a.matric}</td>
+      <td>${a.level}</td>
+      <td>${a.gender}</td>
+      <td>${a.hostel}</td>
+      <td><span class="tag tag-blue">${a.status}</span></td>
+    </tr>`).join('');
+}
+
+function saveBallotSession(){ toast('Ballot session settings saved'); }
+function runBallot(){
+  toast('Running randomised ballot draw… Results will be sent to students within 10 minutes.');
+  setTimeout(()=>{ toast('Ballot complete! 139 students assigned rooms.'); },3000);
+}
+function exportBallotResults(){ toast('Ballot results exported as CSV'); }
+function viewHostelRooms(hostel){ toast(`Loading room plan for ${hostel}…`); }
+function manageHostel(hostel){ toast(`Opening management panel for ${hostel}…`); }
+function showAddAllocation(){ toast('Use room allocation form to assign a new bed'); }
+function approveRequest(id){ toast('Request approved'); }
+function declineRequest(id){ toast('Request declined and student notified'); }
+
+/* ── FEE DEFAULTERS ── */
+const FEE_DEFAULTERS=[
+  {name:'Dele Afolabi',matric:'2022/MED/0190',faculty:'Basic Medical Sciences',level:'300L',amount:'₦45,000',due:'01 Dec 2024',portal:'suspended'},
+  {name:'Emeka Okafor',matric:'2023/PHM/0099',faculty:'Pharmacy',level:'200L',amount:'₦45,000',due:'01 Dec 2024',portal:'active'},
+  {name:'Blessing Eze',matric:'2024/ANA/0031',faculty:'Basic Medical Sciences',level:'100L',amount:'₦45,000',due:'01 Dec 2024',portal:'active'},
+];
+
+function renderFeeDefaulters(){
+  const tbody=document.getElementById('feeDefaultersTbody');
+  tbody.innerHTML=FEE_DEFAULTERS.map(f=>`
+    <tr>
+      <td><strong>${f.name}</strong></td>
+      <td>${f.matric}</td>
+      <td>${f.faculty}</td>
+      <td>${f.level}</td>
+      <td style="color:var(--danger);font-weight:700">${f.amount}</td>
+      <td>${f.due}</td>
+      <td><span class="tag tag-${f.portal==='suspended'?'red':'gold'}">${f.portal}</span></td>
+    </tr>`).join('');
+}
+
+function sendFeeReminders(){ toast('Fee reminder emails sent to 86 students'); }
+function bulkSuspendFeeDefaulters(){ toast('Portal access suspended for 86 fee defaulters'); }
+function applyBulkAccess(){
+  const group=document.getElementById('bulkGroup').value;
+  const action=document.getElementById('bulkAction').value;
+  toast(`${action} applied to group: ${group}`);
+}
+function searchAccessStudent(){
+  const q=document.getElementById('accessSearch').value;
+  const div=document.getElementById('accessStudentResult');
+  if(!q){ div.innerHTML=''; return; }
+  div.innerHTML=`
+    <div class="portal-card" style="margin-bottom:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;">
+        <div><strong>Aisha Bello Muhammad</strong> – 2023/MED/0042<br><span style="color:var(--muted)">Status: Active</span></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm btn-danger" onclick="toast('Portal suspended for 2023/MED/0042')">Suspend</button>
+          <button class="btn btn-sm btn-success" onclick="toast('Portal restored for 2023/MED/0042')">Restore</button>
+        </div>
+      </div>
+    </div>`;
+}
+function restoreAccess(id){ toast('Portal access restored for student'); }
+
+/* ── NOTICES ── */
+const notices=[];
+function renderPublishedNotices(){
+  const container=document.getElementById('publishedNotices');
+  const all=[
+    {title:'Accommodation Balloting Open',body:'Applications for 2024/2025 2nd semester hostel accommodation are now open. Visit the portal to apply.',date:'10 Jan 2025',priority:'Important'},
+    {title:'Fee Payment Deadline Reminder',body:'All students are reminded that the deadline for school fee payment is 31 January 2025.',date:'8 Jan 2025',priority:'Urgent'},
+  ].concat(notices);
+  container.innerHTML=all.map(n=>`
+    <div style="background:white;border-radius:3px;padding:16px 20px;border-left:4px solid ${n.priority==='Urgent'?'var(--danger)':n.priority==='Important'?'var(--gold)':'var(--maroon)'};box-shadow:0 1px 6px rgba(107,15,43,0.04);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <h4 style="font-size:0.88rem;font-weight:700;color:var(--charcoal)">${n.title}</h4>
+        <span class="tag tag-${n.priority==='Urgent'?'red':n.priority==='Important'?'gold':'grey'}">${n.priority}</span>
+      </div>
+      <p style="font-size:0.8rem;color:var(--muted);margin:6px 0;line-height:1.6">${n.body}</p>
+      <span style="font-size:0.7rem;color:var(--muted)">${n.date}</span>
+    </div>`).join('');
+}
+
+function publishNotice(){
+  const title=document.getElementById('noticeTitle').value.trim();
+  const body=document.getElementById('noticeBody').value.trim();
+  const priority=document.getElementById('noticePriority').value;
+  if(!title||!body){ showMsg('noticeMsg','Please fill in title and message.'); return; }
+  notices.unshift({title,body,priority,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})});
+  renderPublishedNotices();
+  document.getElementById('noticeTitle').value='';
+  document.getElementById('noticeBody').value='';
+  showMsg('noticeMsg','Announcement published successfully!','success');
+}
+
+function saveDraftNotice(){ toast('Draft saved'); }
+function showMsg(id,msg,type='error'){
+  const el=document.getElementById(id);
+  el.textContent=msg; el.className='msg '+(type)+' show';
+}
+
+/* ── PROFILE ── */
+function saveProfile(){ showMsg('profileMsg','Profile updated successfully.','success'); }
+function saveSettings(){ toast('Settings saved'); }
+
+/* ── OTHER ── */
+function openMedicalEntryModal(){
+  document.getElementById('caseModalTitle').textContent='Add Medical Entry';
+  document.getElementById('caseModalBody').innerHTML=`
+    <div class="form-group"><label>Student Matric</label><input type="text" placeholder="e.g. 2023/MED/0042"></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Date</label><input type="date"></div>
+      <div class="form-group"><label>Clinic Officer</label><input type="text" placeholder="Name"></div>
+    </div>
+    <div class="form-group"><label>Complaint</label><input type="text" placeholder="Chief complaint"></div>
+    <div class="form-group"><label>Outcome / Treatment</label><textarea rows="3"></textarea></div>
+    <div class="form-group"><label>Follow-up Required?</label><select><option>No</option><option>Yes</option></select></div>
+    <button class="btn btn-primary" onclick="closeModal('caseModal');toast('Medical entry saved')">Save Entry</button>`;
+  openModal('caseModal');
+}
+
+function openNewDisciplinaryModal(){
+  document.getElementById('caseModalTitle').textContent='Log Disciplinary Case';
+  document.getElementById('caseModalBody').innerHTML=`
+    <div class="form-group"><label>Student Matric / Name</label><input type="text" placeholder="Search…"></div>
+    <div class="form-group"><label>Offence</label><input type="text" placeholder="Brief description of offence"></div>
+    <div class="form-group"><label>Date of Incident</label><input type="date"></div>
+    <div class="form-group"><label>Penalty</label><select><option>Written Warning</option><option>Suspension – 1 Semester</option><option>Suspension – 1 Year</option><option>Rustication</option><option>Community Service</option></select></div>
+    <div class="form-group"><label>Details</label><textarea rows="3"></textarea></div>
+    <button class="btn btn-primary" onclick="closeModal('caseModal');toast('Disciplinary case logged')">Submit</button>`;
+  openModal('caseModal');
+}
+
+function approveStudentRequest(id){ toast('Request approved and letter issued'); }
+function viewStudentRequest(id){ toast('Loading request details…'); }
+function downloadReport(type){ toast(`Generating ${type} report…`); }
+
+function doLogout(){
+  if(db) db.auth.signOut().catch(()=>{});
+  clearFummsaSession();
+}
+</script>
+</body>
+</html>

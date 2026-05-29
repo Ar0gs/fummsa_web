@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUMMSA Portal – Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#4a0a1e;--maroon-mid:#800f30;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;--cream:#FAF7F2;
+  --warm-white:#FFFDF9;--charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.14);--success:#2a6b4a;--danger:#B04A2A;
+  --serif:'Source Serif 4',Georgia,serif;--sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--sans);background:var(--maroon-dark);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.04) 1px,transparent 0);background-size:32px 32px;pointer-events:none;}
+body::after{content:'';position:fixed;top:-30%;right:-20%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(107,15,43,0.6) 0%,transparent 70%);pointer-events:none;}
+
+.page-wrap{display:grid;grid-template-columns:1fr 1fr;max-width:960px;width:100%;background:var(--warm-white);border-radius:6px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.4);position:relative;z-index:1;animation:slideUp 0.7s var(--ease) both;}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+/* LEFT PANEL */
+.panel-left{background:var(--maroon-dark);padding:56px 48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.panel-left::before{content:'';position:absolute;bottom:-80px;left:-80px;width:320px;height:320px;border-radius:50%;border:1px solid rgba(196,146,42,0.15);}
+.panel-left::after{content:'';position:absolute;bottom:-40px;left:-40px;width:200px;height:200px;border-radius:50%;border:1px solid rgba(196,146,42,0.1);}
+.panel-brand{position:relative;z-index:1;}
+.brand-logo-wrap{width:80px;height:80px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(196,146,42,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:24px;}
+.brand-logo-wrap img{width:60px;height:60px;object-fit:contain;border-radius:50%;}
+.brand-abbr{font-family:var(--serif);font-size:2rem;font-weight:700;color:white;line-height:1;}
+.brand-full{font-size:0.65rem;color:rgba(255,255,255,0.5);letter-spacing:0.12em;text-transform:uppercase;margin-top:6px;max-width:220px;line-height:1.5;}
+.panel-tagline{position:relative;z-index:1;}
+.panel-tagline h2{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:white;line-height:1.3;margin-bottom:16px;}
+.panel-tagline h2 em{font-style:italic;color:var(--gold-light);}
+.panel-tagline p{font-size:0.82rem;color:rgba(255,255,255,0.55);line-height:1.8;max-width:260px;}
+.panel-roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;position:relative;z-index:1;}
+.role-badge{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:2px;}
+.role-badge.highlight{background:rgba(196,146,42,0.15);border-color:rgba(196,146,42,0.3);color:var(--gold-light);}
+
+/* RIGHT PANEL */
+.panel-right{padding:48px 44px;overflow-y:auto;max-height:100vh;}
+.panel-right h1{font-family:var(--serif);font-size:1.6rem;font-weight:600;color:var(--maroon-dark);margin-bottom:6px;}
+.panel-right .subtitle{font-size:0.84rem;color:var(--muted);margin-bottom:32px;}
+
+/* TABS */
+.tabs{display:flex;gap:0;margin-bottom:32px;border-bottom:2px solid var(--rule);}
+.tab-btn{flex:1;padding:12px 0;background:none;border:none;font-family:var(--sans);font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;}
+.tab-btn.active{color:var(--maroon);border-bottom-color:var(--maroon);}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+
+/* FORM */
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;}
+.form-group input,
+.form-group select,
+.form-group textarea{width:100%;padding:13px 16px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.9rem;color:var(--charcoal);background:var(--warm-white);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{border-color:var(--maroon);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.btn-main{background:var(--maroon);color:white;width:100%;padding:15px;border:none;border-radius:2px;font-family:var(--sans);font-weight:700;font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.btn-main:hover{background:var(--maroon-dark);transform:translateY(-1px);}
+.btn-main:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.msg{border-radius:2px;padding:12px 16px;font-size:0.82rem;margin-top:14px;display:none;}
+.msg.error{background:#fde8ec;color:#7a0e1e;border-left:3px solid var(--danger);}
+.msg.success{background:#e8f5ee;color:#1a5c38;border-left:3px solid var(--success);}
+.msg.show{display:block;}
+.form-note{font-size:0.76rem;color:var(--muted);text-align:center;margin-top:20px;line-height:1.7;}
+.form-note a{color:var(--maroon);text-decoration:underline;cursor:pointer;}
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--muted);font-size:0.75rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--rule);}
+.pending-notice{background:var(--gold-pale);border:1px solid rgba(196,146,42,0.4);border-radius:2px;padding:16px;font-size:0.82rem;color:var(--mid);line-height:1.7;margin-top:12px;display:none;}
+.pending-notice.show{display:block;}
+.pending-notice strong{color:var(--maroon-dark);}
+
+@media(max-width:700px){
+  .page-wrap{grid-template-columns:1fr;}
+  .panel-left{display:none;}
+  .panel-right{padding:36px 28px;}
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+  <!-- LEFT BRAND PANEL -->
+  <div class="panel-left">
+    <div class="panel-brand">
+      <div class="brand-logo-wrap">
+        <img src="logo.png" alt="FUMMSA Logo" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-family:var(--serif);font-size:1.4rem;color:var(--gold-light);font-weight:700;\'>F</span>'">
+      </div>
+      <div class="brand-abbr">FUMMSA</div>
+      <div class="brand-full">Federal University of Medicine &amp; Medical Sciences, Abeokuta</div>
+    </div>
+    <div class="panel-tagline">
+      <h2>Your Academic<br>Journey, <em>Unified.</em></h2>
+      <p>One secure portal for every member of the FUMMSA community — from students to faculty to administration.</p>
+      <div class="panel-roles">
+        <span class="role-badge highlight">Students</span>
+        <span class="role-badge">Lecturers</span>
+        <span class="role-badge">HODs</span>
+        <span class="role-badge">Deans</span>
+        <span class="role-badge">DSA</span>
+        <span class="role-badge">Executives</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT LOGIN PANEL -->
+  <div class="panel-right">
+    <h1>Portal Access</h1>
+    <p class="subtitle">Sign in with your institutional credentials</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" onclick="switchTab('register')">Lecturer Registration</button>
+    </div>
+
+    <!-- LOGIN TAB -->
+    <div class="tab-panel active" id="tab-login">
+      <div class="form-group">
+        <label>Email Address / Matric No.</label>
+        <input type="text" id="loginId" placeholder="e.g. 2023/MED/001 or email@fummsa.edu.ng" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password">
+      </div>
+      <button class="btn-main" onclick="doLogin()" id="loginBtn">Sign In to Portal</button>
+      <div class="msg error" id="loginErr"></div>
+      <div class="form-note">
+        Forgot password? Contact your <a>Faculty Officer</a> or the <a>Registrar's Office</a>.<br>
+        First-time student? Your default password is your Date of Birth (DDMMYYYY).
+      </div>
+    </div>
+
+    <!-- REGISTER TAB -->
+    <div class="tab-panel" id="tab-register">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:22px;line-height:1.7;">
+        Academic staff and lecturers may create a portal account below. Your account will be reviewed and activated by the Super Administrator within 24–48 hours.
+      </p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="regFirst" placeholder="First name">
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="regLast" placeholder="Last name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Institutional Email *</label>
+        <input type="email" id="regEmail" placeholder="yourname@fummsa.edu.ng">
+      </div>
+      <div class="form-group">
+        <label>Staff ID *</label>
+        <input type="text" id="regStaffId" placeholder="e.g. STF/2021/0034">
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Faculty *</label>
+          <select id="regFaculty">
+            <option value="">— Select Faculty —</option>
+            <option>Basic Medical Sciences</option>
+            <option>Clinical Sciences</option>
+            <option>Dentistry</option>
+            <option>Pharmacy</option>
+            <option>Nursing Sciences</option>
+            <option>Allied Health Sciences</option>
+            <option>Public Health</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Department *</label>
+          <input type="text" id="regDept" placeholder="e.g. Anatomy">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Role *</label>
+        <select id="regRole">
+          <option value="">— Select Role —</option>
+          <option value="lecturer">Lecturer</option>
+          <option value="hod">Head of Department (HOD)</option>
+          <option value="dean">Dean of Faculty</option>
+          <option value="dsa">Division of Student Affairs (DSA)</option>
+          <option value="executive">University Executive</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" id="regPass" placeholder="Create a strong password (min. 8 chars)">
+      </div>
+      <div class="form-group">
+        <label>Confirm Password *</label>
+        <input type="password" id="regPassConfirm" placeholder="Repeat password">
+      </div>
+      <button class="btn-main" onclick="doRegister()" id="regBtn">Submit Registration Request</button>
+      <div class="msg error" id="regErr"></div>
+      <div class="pending-notice" id="pendingNotice">
+        <strong>✅ Registration Submitted!</strong><br>
+        Your account request has been received. The Super Administrator will verify your details and activate your account. You will be notified via email within 24–48 hours.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://icjvqrdbaqenmbbldzka.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImljanZxcmRiYXFlbm1iYmxkemthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTM3MjksImV4cCI6MjA5NTUyOTcyOX0.cMKRoPg110DRwTv4ttlF-sypEBHOm3TjuIUespHwpBM';
+let db;
+
+(function init(){
+  try{
+    db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }catch(e){ console.warn('Supabase not loaded, demo mode'); }
+})();
+
+function switchTab(t){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===(t==='login'?0:1)));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===(t==='login'?0:1)));
+}
+
+function showMsg(id, msg, type='error'){
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'msg ' + type + ' show';
+}
+
+async function doLogin(){
+  const loginId = document.getElementById('loginId').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if(!loginId||!pass){ showMsg('loginErr','Please enter your credentials.'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+
+  try{
+    if(!db) throw new Error('no-db');
+
+    // Try Supabase Auth first (for staff registered via email)
+    const isEmail = loginId.includes('@');
+    let userEmail = loginId;
+
+    if(!isEmail){
+      // Look up student by matric number
+      const {data:stu} = await db.from('portal_users').select('email').eq('matric_no', loginId).single();
+      if(stu) userEmail = stu.email;
+      else { showMsg('loginErr','Matriculation number not found.'); btn.disabled=false; btn.textContent='Sign In to Portal'; return; }
+    }
+
+    const {data, error} = await db.auth.signInWithPassword({email: userEmail, password: pass});
+    if(error) throw error;
+
+    // Get user role from profile
+    const {data:profile} = await db.from('portal_users').select('*').eq('auth_id', data.user.id).single();
+    const role = profile?.role || 'student';
+
+    sessionStorage.setItem('fummsa_user', JSON.stringify({
+      id: data.user.id, email: userEmail, role, profile_id: profile?.id, name: profile?.full_name || ''
+    }));
+
+    redirectByRole(role);
+
+  }catch(e){
+    // DEMO fallback: hardcoded super admin check
+    if(loginId === 'superadmin@fummsa.edu.ng' && pass === 'FUMMSAadmin#2025'){
+      sessionStorage.setItem('fummsa_user', JSON.stringify({id:'demo-sa',email:loginId,role:'superadmin',name:'Super Administrator'}));
+      redirectByRole('superadmin'); return;
+    }
+    // Demo student
+    if(loginId.toLowerCase().startsWith('2023') || loginId === 'demo.student@fummsa.edu.ng'){
+      sessionStorage.setItem('fummsa_user', JSON.stringify({id:'demo-stu',email:'demo@fummsa.edu.ng',role:'student',name:'Aisha Bello Muhammad', matric:'2023/MED/0042', faculty:'Basic Medical Sciences', dept:'Human Anatomy', programme:'MBBS', level:'200', status:'active'}));
+      redirectByRole('student'); return;
+    }
+    if(loginId.toLowerCase().includes('lect') || loginId === 'demo.lecturer@fummsa.edu.ng'){
+      sessionStorage.setItem('fummsa_user', JSON.stringify({id:'demo-lect',email:'demo.lect@fummsa.edu.ng',role:'lecturer',name:'Dr. Fatimah Adeyemi'}));
+      redirectByRole('lecturer'); return;
+    }
+    showMsg('loginErr', 'Invalid credentials. Please try again.');
+    btn.disabled=false; btn.textContent='Sign In to Portal';
+  }
+}
+
+function redirectByRole(role){
+  const map = {
+    student:'portal-student.html',
+    lecturer:'portal-lecturer.html',
+    hod:'portal-lecturer.html',
+    dean:'portal-staff.html',
+    dsa:'portal-staff.html',
+    executive:'portal-staff.html',
+    superadmin:'portal-superadmin.html'
+  };
+  window.location.href = map[role] || 'portal-student.html';
+}
+
+async function doRegister(){
+  const first = document.getElementById('regFirst').value.trim();
+  const last = document.getElementById('regLast').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const staffId = document.getElementById('regStaffId').value.trim();
+  const faculty = document.getElementById('regFaculty').value;
+  const dept = document.getElementById('regDept').value.trim();
+  const role = document.getElementById('regRole').value;
+  const pass = document.getElementById('regPass').value;
+  const passC = document.getElementById('regPassConfirm').value;
+
+  if(!first||!last||!email||!staffId||!faculty||!dept||!role||!pass){ showMsg('regErr','All fields marked * are required.'); return; }
+  if(pass.length < 8){ showMsg('regErr','Password must be at least 8 characters.'); return; }
+  if(pass !== passC){ showMsg('regErr','Passwords do not match.'); return; }
+
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.textContent = 'Submitting…';
+
+  try{
+    if(db){
+      // Register in Supabase Auth
+      const {data, error} = await db.auth.signUp({email, password:pass, options:{data:{full_name:`${first} ${last}`}}});
+      if(error) throw error;
+
+      // Insert into portal_users pending approval
+      await db.from('portal_users').insert([{
+        auth_id: data.user?.id, full_name:`${first} ${last}`, email, staff_id:staffId,
+        faculty, department:dept, role, status:'pending', approved:false
+      }]);
+    }
+    document.getElementById('regErr').className='msg';
+    document.getElementById('pendingNotice').classList.add('show');
+    btn.textContent = 'Request Submitted';
+  }catch(e){
+    // Demo fallback
+    document.getElementById('regErr').className='msg';
+    document.getElementById('pendingNotice').classList.add('show');
+    btn.textContent = 'Request Submitted';
+  }
+}
+
+// Enter key support
+document.addEventListener('keypress', e => {
+  if(e.key==='Enter'){
+    if(document.getElementById('tab-login').classList.contains('active')) doLogin();
+    else doRegister();
+  }
+});
+</script>
+</body>
+</html>

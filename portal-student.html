@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal – FUMMSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#4a0a1e;--maroon-mid:#800f30;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;--cream:#FAF7F2;
+  --warm-white:#FFFDF9;--charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.14);--success:#2a6b4a;--danger:#B04A2A;--info:#1a4a6b;
+  --serif:'Source Serif 4',Georgia,serif;--sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --sb-width:240px;--top-h:60px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:#F0EBE5;color:var(--charcoal);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top-h);background:var(--maroon-dark);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 0;z-index:500;border-bottom:2px solid rgba(196,146,42,0.25);}
+.topbar-brand{display:flex;align-items:center;gap:12px;width:var(--sb-width);padding:0 20px;border-right:1px solid rgba(255,255,255,0.08);height:100%;}
+.topbar-brand img{width:34px;height:34px;border-radius:50%;object-fit:contain;}
+.topbar-brand-text{font-family:var(--serif);color:white;font-size:1rem;font-weight:600;}
+.topbar-brand-text small{display:block;font-family:var(--sans);font-size:0.58rem;color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-notify{position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.7);font-size:1rem;transition:all 0.2s;}
+.topbar-notify:hover{background:rgba(255,255,255,0.12);}
+.notify-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--gold);border-radius:50%;border:1.5px solid var(--maroon-dark);}
+.topbar-user{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--gold-light);font-size:0.9rem;overflow:hidden;flex-shrink:0;}
+.user-avatar img{width:100%;height:100%;object-fit:cover;}
+.user-meta{text-align:right;}
+.user-name{font-size:0.8rem;font-weight:600;color:white;}
+.user-role{font-size:0.62rem;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase;}
+.btn-logout{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:2px;font-family:var(--sans);font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:white;}
+.hamburger-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:white;font-size:1.2rem;}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--sb-width);background:white;border-right:1.5px solid var(--rule);overflow-y:auto;z-index:400;transition:transform 0.3s var(--ease);}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:var(--rule);}
+.sidebar-section{padding:16px 12px 4px;}
+.sb-label{font-size:0.58rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:6px 8px 4px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:3px;font-size:0.8rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;user-select:none;position:relative;}
+.sb-link:hover{color:var(--maroon);background:rgba(107,15,43,0.04);}
+.sb-link.active{color:var(--maroon);background:rgba(107,15,43,0.06);border-left-color:var(--maroon);font-weight:600;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--maroon);color:white;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sb-divider{height:1px;background:var(--rule);margin:8px 16px;}
+
+/* ── MAIN ── */
+.main-wrap{margin-left:var(--sb-width);margin-top:var(--top-h);min-height:calc(100vh - var(--top-h));padding:28px;}
+.page-section{display:none;animation:fadeIn 0.3s ease both;}
+.page-section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ── STUDENT PROFILE CARD ── */
+.profile-header{background:var(--maroon-dark);border-radius:5px;padding:28px 32px;display:flex;align-items:center;gap:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.profile-header::before{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(196,146,42,0.15);}
+.profile-header::after{content:'';position:absolute;right:20px;bottom:-40px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(196,146,42,0.1);}
+.profile-photo{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:2rem;color:var(--gold-light);overflow:hidden;flex-shrink:0;z-index:1;}
+.profile-photo img{width:100%;height:100%;object-fit:cover;}
+.profile-info{flex:1;z-index:1;}
+.profile-name{font-family:var(--serif);font-size:1.5rem;color:white;font-weight:600;}
+.profile-matric{font-size:0.75rem;color:var(--gold-light);letter-spacing:0.1em;margin:4px 0 12px;text-transform:uppercase;}
+.profile-meta{display:flex;flex-wrap:wrap;gap:16px;}
+.pmeta-item{font-size:0.75rem;color:rgba(255,255,255,0.65);}
+.pmeta-item strong{display:block;font-size:0.7rem;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.status-active{background:rgba(42,107,74,0.3);color:#7ee0a8;border:1px solid rgba(42,107,74,0.4);}
+.status-inactive{background:rgba(176,74,42,0.3);color:#f0a08a;border:1px solid rgba(176,74,42,0.4);}
+
+/* ── QUICK ACTIONS ── */
+.section-head{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--rule);}
+.quick-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px;}
+.quick-card{background:white;border-radius:4px;padding:20px 16px;text-align:center;cursor:pointer;border:1.5px solid var(--rule);transition:all 0.25s;box-shadow:0 1px 6px rgba(107,15,43,0.05);}
+.quick-card:hover{border-color:var(--maroon);transform:translateY(-3px);box-shadow:0 8px 24px rgba(107,15,43,0.12);}
+.quick-icon{font-size:1.8rem;margin-bottom:10px;}
+.quick-label{font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid);}
+
+/* ── ANNOUNCEMENTS ── */
+.announce-list{display:flex;flex-direction:column;gap:12px;}
+.announce-item{background:white;border-radius:3px;padding:16px 20px;border-left:4px solid var(--maroon);box-shadow:0 1px 6px rgba(107,15,43,0.05);display:flex;gap:16px;align-items:flex-start;}
+.announce-item.gold{border-left-color:var(--gold);}
+.announce-item.info{border-left-color:var(--info);}
+.announce-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+.announce-body h4{font-size:0.88rem;font-weight:700;color:var(--charcoal);margin-bottom:4px;}
+.announce-body p{font-size:0.8rem;color:var(--muted);line-height:1.6;}
+.announce-date{font-size:0.68rem;color:var(--muted);margin-top:6px;}
+
+/* ── CARDS ── */
+.portal-card{background:white;border-radius:4px;padding:24px;box-shadow:0 1px 8px rgba(107,15,43,0.06);border:1px solid var(--rule);margin-bottom:20px;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--rule);}
+.card-hd h3{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--maroon-dark);}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--rule);background:var(--cream);}
+.data-table td{font-size:0.82rem;padding:11px 14px;border-bottom:1px solid var(--rule);color:var(--charcoal);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(107,15,43,0.02);}
+.grade{font-weight:800;font-size:0.88rem;}
+.grade-a{color:#2a6b4a;}.grade-b{color:#1a4a6b;}.grade-c{color:#6b6b1a;}.grade-d,.grade-e,.grade-f{color:var(--danger);}
+
+/* ── SEMESTER PILLS ── */
+.sem-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.sem-tab{padding:7px 18px;border-radius:20px;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--rule);color:var(--mid);background:white;transition:all 0.2s;}
+.sem-tab.active{background:var(--maroon);color:white;border-color:var(--maroon);}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:none;border-radius:2px;font-family:var(--sans);font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--maroon);color:white;}.btn-primary:hover{background:var(--maroon-dark);}
+.btn-gold{background:var(--gold);color:var(--maroon-dark);}.btn-gold:hover{background:var(--gold-light);}
+.btn-outline{background:white;color:var(--maroon);border:1.5px solid var(--maroon);}.btn-outline:hover{background:var(--maroon);color:white;}
+.btn-sm{padding:7px 14px;font-size:0.7rem;}
+.btn-success{background:var(--success);color:white;}.btn-danger{background:var(--danger);color:white;}
+
+/* ── FORM ── */
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:7px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.88rem;color:var(--charcoal);background:var(--warm-white);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--maroon);}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.stat-card{background:white;border-radius:3px;padding:20px;border-top:3px solid var(--maroon);box-shadow:0 1px 8px rgba(107,15,43,0.06);}
+.stat-card.gold{border-top-color:var(--gold);}
+.stat-card.green{border-top-color:var(--success);}
+.stat-card.blue{border-top-color:var(--info);}
+.stat-n{font-family:var(--serif);font-size:1.8rem;font-weight:700;color:var(--charcoal);line-height:1;}
+.stat-l{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+
+/* ── INVOICE ── */
+.invoice-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--rule);}
+.invoice-item:last-child{border-bottom:none;}
+.inv-name{font-size:0.88rem;font-weight:600;color:var(--charcoal);}
+.inv-sub{font-size:0.72rem;color:var(--muted);margin-top:3px;}
+.inv-amount{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--maroon-dark);}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:0.62rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.badge-paid{background:#e8f5ee;color:#1a5c38;}
+.badge-pending{background:#fde8ec;color:#7a0e1e;}
+.badge-partial{background:#fff3e0;color:#7a4a00;}
+
+/* ── HOSTEL ── */
+.hostel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.hostel-card{background:white;border:1.5px solid var(--rule);border-radius:4px;padding:20px;text-align:center;cursor:pointer;transition:all 0.25s;}
+.hostel-card:hover:not(.taken){border-color:var(--maroon);background:rgba(107,15,43,0.03);}
+.hostel-card.selected{border-color:var(--maroon);background:rgba(107,15,43,0.05);box-shadow:0 4px 16px rgba(107,15,43,0.12);}
+.hostel-card.taken{opacity:0.5;cursor:not-allowed;}
+.hostel-name{font-weight:700;font-size:0.88rem;color:var(--charcoal);margin-bottom:6px;}
+.hostel-detail{font-size:0.72rem;color:var(--muted);}
+.hostel-avail{font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-top:8px;}
+.avail-yes{color:var(--success);}.avail-no{color:var(--danger);}
+
+/* ── CBT ── */
+.cbt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.cbt-card{background:white;border:1.5px solid var(--rule);border-radius:4px;padding:20px;transition:all 0.25s;}
+.cbt-card:hover{border-color:var(--maroon);transform:translateY(-2px);box-shadow:0 6px 20px rgba(107,15,43,0.1);}
+.cbt-card-icon{font-size:2rem;margin-bottom:10px;}
+.cbt-card-title{font-weight:700;font-size:0.88rem;color:var(--charcoal);}
+.cbt-card-sub{font-size:0.72rem;color:var(--muted);margin-top:4px;}
+.cbt-card-date{font-size:0.68rem;color:var(--muted);margin-top:8px;font-weight:600;}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{height:6px;background:var(--rule);border-radius:3px;overflow:hidden;margin-top:8px;}
+.progress-fill{height:100%;border-radius:3px;background:var(--maroon);transition:width 0.6s var(--ease);}
+.progress-fill.gold{background:var(--gold);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--charcoal);color:white;padding:14px 22px;border-radius:4px;font-size:0.82rem;font-weight:500;transform:translateY(80px);opacity:0;transition:all 0.3s var(--ease);z-index:9999;max-width:340px;border-left:4px solid var(--gold);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.error{border-left-color:var(--danger);}
+.toast.success{border-left-color:var(--success);}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(74,10,30,0.5);backdrop-filter:blur(4px);z-index:800;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:var(--warm-white);border-radius:5px;padding:36px;width:100%;max-width:520px;border-top:4px solid var(--gold);animation:slideUp 0.4s var(--ease) both;position:relative;}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:none;opacity:1;}}
+.modal-box h3{font-family:var(--serif);font-size:1.2rem;font-weight:600;color:var(--maroon-dark);margin-bottom:20px;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);}
+
+/* ── COURSE REGISTRATION ── */
+.course-available{background:white;border:1.5px solid var(--rule);border-radius:3px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;transition:all 0.2s;}
+.course-available:hover{border-color:var(--maroon);}
+.course-check{width:18px;height:18px;border:2px solid var(--rule);border-radius:2px;cursor:pointer;display:inline-block;flex-shrink:0;margin-right:12px;transition:all 0.15s;}
+.course-check.checked{background:var(--maroon);border-color:var(--maroon);}
+.course-info{flex:1;}
+.course-code{font-size:0.78rem;font-weight:700;color:var(--maroon);letter-spacing:0.05em;}
+.course-title-text{font-size:0.85rem;color:var(--charcoal);}
+.course-units{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+.course-unit-count{font-family:var(--serif);font-weight:700;font-size:1rem;color:var(--muted);flex-shrink:0;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .quick-grid{grid-template-columns:repeat(3,1fr);}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .cbt-grid,.hostel-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:700px){
+  :root{--sb-width:0px;}
+  .sidebar{transform:translateX(-240px);width:240px;}
+  .sidebar.open{transform:translateX(0);}
+  .hamburger-toggle{display:block;}
+  .main-wrap{margin-left:0;}
+  .quick-grid{grid-template-columns:repeat(2,1fr);}
+  .profile-header{flex-direction:column;text-align:center;}
+  .profile-meta{justify-content:center;}
+  .topbar-brand{width:auto;}
+  .user-meta{display:none;}
+}
+</style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="portal-auth.js"></script>
+  <script src="portal-api.js"></script>
+  <script src="portal-shared.js"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+    <div class="topbar-brand-text">FUMMSA <small>Student Portal</small></div>
+  </div>
+  <button class="hamburger-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <div class="topbar-right">
+    <div class="topbar-notify" title="Notifications">🔔<span class="notify-dot"></span></div>
+    <div class="topbar-user">
+      <div class="user-avatar" id="topAvatar">A</div>
+      <div class="user-meta">
+        <div class="user-name" id="topName">Loading…</div>
+        <div class="user-role">Student</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sb-label">Main</div>
+    <div class="sb-link active" onclick="showSection('dashboard',this)"><span class="sb-icon">🏠</span> Dashboard</div>
+    <div class="sb-link" onclick="showSection('announce',this)"><span class="sb-icon">📣</span> Announcements <span class="sb-badge">3</span></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Academics</div>
+    <div class="sb-link" onclick="showSection('courses',this)"><span class="sb-icon">📚</span> Course Registration</div>
+    <div class="sb-link" onclick="showSection('results',this)"><span class="sb-icon">📊</span> My Results</div>
+    <div class="sb-link" onclick="showSection('programme',this)"><span class="sb-icon">🔄</span> Programme Change</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Finance</div>
+    <div class="sb-link" onclick="showSection('invoices',this)"><span class="sb-icon">💳</span> Invoices &amp; Fees</div>
+    <div class="sb-link" onclick="showSection('transactions',this)"><span class="sb-icon">✅</span> Transaction Validation</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Services</div>
+    <div class="sb-link" onclick="showSection('hostel',this)"><span class="sb-icon">🏠</span> Hostel Balloting</div>
+    <div class="sb-link" onclick="showSection('cbt',this)"><span class="sb-icon">🖥️</span> CBT Software</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-divider"></div>
+    <div class="sb-link" onclick="showSection('profile',this)"><span class="sb-icon">👤</span> My Profile</div>
+    <div class="sb-link" onclick="doLogout()"><span class="sb-icon">🚪</span> Sign Out</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main-wrap">
+
+  <!-- ── DASHBOARD ── -->
+  <section class="page-section active" id="sec-dashboard">
+    <div class="profile-header">
+      <div class="profile-photo" id="profilePhoto">A</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Loading…</div>
+        <div class="profile-matric" id="profileMatric">—</div>
+        <div class="profile-meta">
+          <div class="pmeta-item"><strong>Faculty</strong><span id="profileFaculty">—</span></div>
+          <div class="pmeta-item"><strong>Department</strong><span id="profileDept">—</span></div>
+          <div class="pmeta-item"><strong>Programme</strong><span id="profileProg">—</span></div>
+          <div class="pmeta-item"><strong>Level</strong><span id="profileLevel">—</span></div>
+          <div class="pmeta-item"><strong>Session</strong><span id="profileSession">2024/2025</span></div>
+          <div class="pmeta-item"><strong>Status</strong><span id="profileStatus"><span class="status-badge status-active">● Active</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-n" id="statGPA">—</div><div class="stat-l">CGPA</div></div>
+      <div class="stat-card gold"><div class="stat-n" id="statUnits">—</div><div class="stat-l">Units Registered</div></div>
+      <div class="stat-card green"><div class="stat-n" id="statPaid">—</div><div class="stat-l">Fees Paid</div></div>
+      <div class="stat-card blue"><div class="stat-n" id="statSem">2nd</div><div class="stat-l">Current Semester</div></div>
+    </div>
+
+    <div class="section-head">Quick Actions</div>
+    <div class="quick-grid">
+      <div class="quick-card" onclick="showSection('results',document.querySelector('[onclick*=results]'))">
+        <div class="quick-icon">📊</div><div class="quick-label">Check Results</div>
+      </div>
+      <div class="quick-card" onclick="showSection('courses',document.querySelector('[onclick*=courses]'))">
+        <div class="quick-icon">📚</div><div class="quick-label">Course Reg.</div>
+      </div>
+      <div class="quick-card" onclick="openPayModal()">
+        <div class="quick-icon">💳</div><div class="quick-label">Pay School Fees</div>
+      </div>
+      <div class="quick-card" onclick="downloadReceipt()">
+        <div class="quick-icon">🧾</div><div class="quick-label">Download Receipt</div>
+      </div>
+      <div class="quick-card" onclick="showSection('announce',document.querySelector('[onclick*=announce]'))">
+        <div class="quick-icon">📣</div><div class="quick-label">Announcements</div>
+      </div>
+    </div>
+
+    <div class="section-head">Latest Announcements</div>
+    <div id="announceDash" class="announce-list">
+      <div class="announce-item">
+        <span class="announce-icon">📌</span>
+        <div class="announce-body">
+          <h4>2024/2025 Second Semester Course Registration Now Open</h4>
+          <p>All 100–500 level students are to log in and register courses before the deadline of 30 June 2025.</p>
+          <div class="announce-date">📅 20 May 2025</div>
+        </div>
+      </div>
+      <div class="announce-item gold">
+        <span class="announce-icon">🏠</span>
+        <div class="announce-body">
+          <h4>Hostel Accommodation Balloting — 2025/2026 Session</h4>
+          <p>Returning students may submit hostel preferences via the Hostel Balloting section. Balloting closes 15 July 2025.</p>
+          <div class="announce-date">📅 18 May 2025</div>
+        </div>
+      </div>
+      <div class="announce-item info">
+        <span class="announce-icon">🖥️</span>
+        <div class="announce-body">
+          <h4>First Semester CBT Examinations Schedule Released</h4>
+          <p>The timetable for all CBT-based examinations has been uploaded. Check the CBT Software section for details.</p>
+          <div class="announce-date">📅 15 May 2025</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ANNOUNCEMENTS ── -->
+  <section class="page-section" id="sec-announce">
+    <div class="portal-card">
+      <div class="card-hd"><h3>📣 Announcements &amp; Notices</h3></div>
+      <div id="announceList" class="announce-list"></div>
+    </div>
+  </section>
+
+  <!-- ── COURSE REGISTRATION ── -->
+  <section class="page-section" id="sec-courses">
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>📚 Course Registration</h3>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span style="font-size:0.78rem;color:var(--muted);">Total Units: <strong id="unitCount">0</strong>/24</span>
+          <button class="btn btn-primary btn-sm" onclick="registerCourses()">Register &amp; Get Slip</button>
+        </div>
+      </div>
+      <div class="sem-tabs">
+        <div class="sem-tab active" onclick="switchSem(1,this)">1st Semester</div>
+        <div class="sem-tab" onclick="switchSem(2,this)">2nd Semester</div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:18px;">Select the courses you wish to register for this semester. Maximum 24 credit units.</p>
+      <div id="courseList"></div>
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:0.75rem;color:var(--muted);">Selected units</div>
+          <div class="progress-bar" style="width:200px;margin-top:6px;"><div class="progress-fill" id="unitProgress" style="width:0%"></div></div>
+        </div>
+        <button class="btn btn-gold" onclick="downloadSlip()">📥 Download Course Slip</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RESULTS ── -->
+  <section class="page-section" id="sec-results">
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>📊 Academic Results</h3>
+        <button class="btn btn-outline btn-sm" onclick="printResults()">🖨️ Print Transcript</button>
+      </div>
+      <div class="sem-tabs">
+        <div class="sem-tab active" onclick="switchResultSem('2024/25-1',this)">2024/25 – Sem 1</div>
+        <div class="sem-tab" onclick="switchResultSem('2024/25-2',this)">2024/25 – Sem 2</div>
+        <div class="sem-tab" onclick="switchResultSem('2023/24-1',this)">2023/24 – Sem 1</div>
+        <div class="sem-tab" onclick="switchResultSem('2023/24-2',this)">2023/24 – Sem 2</div>
+      </div>
+      <div id="resultsTableWrap"></div>
+      <div style="margin-top:20px;padding:16px;background:var(--cream);border-radius:3px;display:flex;gap:32px;flex-wrap:wrap;">
+        <div><div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">Semester GPA</div><div style="font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--maroon-dark);" id="semGPA">—</div></div>
+        <div><div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">CGPA</div><div style="font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--maroon-dark);" id="cgpaDisplay">—</div></div>
+        <div><div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">Total Units</div><div style="font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--charcoal);" id="totalUnitsRes">—</div></div>
+        <div><div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">Remarks</div><div style="font-size:0.88rem;font-weight:700;color:var(--success);" id="resultRemark">—</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROGRAMME CHANGE ── -->
+  <section class="page-section" id="sec-programme">
+    <div class="portal-card">
+      <div class="card-hd"><h3>🔄 Programme Change Request</h3></div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:24px;line-height:1.7;">Submit a formal request to transfer to another programme. Your current Head of Department, Dean, and the Registrar will review your application. This process may take 2–4 weeks.</p>
+      <div id="progChangeForm">
+        <div class="form-grid-2">
+          <div class="form-group"><label>Current Programme</label><input type="text" id="currProg" readonly></div>
+          <div class="form-group"><label>Current Department</label><input type="text" id="currDept" readonly></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group"><label>Desired Programme *</label>
+            <select id="newProg">
+              <option value="">— Select Programme —</option>
+              <option>MBBS – Medicine &amp; Surgery</option>
+              <option>BDS – Dental Surgery</option>
+              <option>B.Pharm – Pharmacy</option>
+              <option>BNSc – Nursing Science</option>
+              <option>B.Med.Lab.Sc – Medical Laboratory Science</option>
+              <option>B.Physio – Physiotherapy</option>
+              <option>MBBS/PhD – Combined</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Desired Faculty *</label>
+            <select id="newFaculty">
+              <option value="">— Select Faculty —</option>
+              <option>Basic Medical Sciences</option>
+              <option>Clinical Sciences</option>
+              <option>Dentistry</option>
+              <option>Pharmacy</option>
+              <option>Nursing Sciences</option>
+              <option>Allied Health Sciences</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Reason for Transfer *</label><textarea id="progReason" rows="4" placeholder="State clearly why you wish to change programme…"></textarea></div>
+        <div class="form-group"><label>Supporting Statement</label><textarea id="progSupport" rows="3" placeholder="Any additional supporting information (medical, academic, etc.)…"></textarea></div>
+        <button class="btn btn-primary" onclick="submitProgChange()">📤 Submit Request</button>
+      </div>
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--rule);">
+        <h4 style="font-family:var(--serif);font-size:0.95rem;color:var(--maroon-dark);margin-bottom:14px;">Previous Requests</h4>
+        <div id="progChangeHistory">
+          <div style="font-size:0.8rem;color:var(--muted);padding:20px;text-align:center;">No previous programme change requests.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INVOICES ── -->
+  <section class="page-section" id="sec-invoices">
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>💳 Invoices &amp; School Fees</h3>
+        <button class="btn btn-primary btn-sm" onclick="openPayModal()">💳 Make Payment</button>
+      </div>
+      <div class="sem-tabs">
+        <div class="sem-tab active">2024/2025</div>
+        <div class="sem-tab">2023/2024</div>
+        <div class="sem-tab">2022/2023</div>
+      </div>
+      <div id="invoiceList">
+        <div class="invoice-item">
+          <div><div class="inv-name">Tuition Fees – 2024/2025</div><div class="inv-sub">Due: 30 June 2025 • Invoice #INV-2024-0042</div></div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div class="inv-amount">₦450,000</div>
+            <span class="badge badge-paid">✓ Paid</span>
+            <button class="btn btn-outline btn-sm" onclick="downloadReceipt()">Receipt</button>
+          </div>
+        </div>
+        <div class="invoice-item">
+          <div><div class="inv-name">Acceptance Fee</div><div class="inv-sub">Paid: 15 Sep 2023 • Invoice #INV-2023-0001</div></div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div class="inv-amount">₦75,000</div>
+            <span class="badge badge-paid">✓ Paid</span>
+            <button class="btn btn-outline btn-sm" onclick="downloadReceipt()">Receipt</button>
+          </div>
+        </div>
+        <div class="invoice-item">
+          <div><div class="inv-name">Hostel Accommodation – 2025/2026</div><div class="inv-sub">Due: 31 July 2025 • Invoice #INV-2025-0087</div></div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div class="inv-amount">₦120,000</div>
+            <span class="badge badge-pending">Pending</span>
+            <button class="btn btn-primary btn-sm" onclick="openPayModal()">Pay Now</button>
+          </div>
+        </div>
+        <div class="invoice-item">
+          <div><div class="inv-name">Medical / Laboratory Fee</div><div class="inv-sub">Due: 30 June 2025 • Invoice #INV-2025-0043</div></div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div class="inv-amount">₦25,000</div>
+            <span class="badge badge-partial">Partial</span>
+            <button class="btn btn-primary btn-sm" onclick="openPayModal()">Balance</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TRANSACTION VALIDATION ── -->
+  <section class="page-section" id="sec-transactions">
+    <div class="portal-card">
+      <div class="card-hd"><h3>✅ Transaction Validation</h3></div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:24px;line-height:1.7;">Enter your payment reference number to verify and validate a transaction. This ensures your payment is correctly recorded on your student account.</p>
+      <div style="display:flex;gap:12px;margin-bottom:28px;">
+        <input type="text" id="txnRef" placeholder="Enter Transaction / RRR Reference e.g. 280012345678"
+          style="flex:1;padding:12px 16px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:0.88rem;outline:none;"
+          onfocus="this.style.borderColor='var(--maroon)'" onblur="this.style.borderColor='var(--rule)'">
+        <button class="btn btn-primary" onclick="validateTxn()">Validate</button>
+      </div>
+      <div id="txnResult" style="display:none;"></div>
+      <h4 style="font-family:var(--serif);font-size:0.95rem;color:var(--maroon-dark);margin-bottom:16px;">Recent Transactions</h4>
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Reference</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody id="txnTable">
+          <tr><td>20 May 2025</td><td>2800120250520001</td><td>Tuition Fee 2024/25</td><td>₦450,000</td><td><span class="badge badge-paid">✓ Validated</span></td></tr>
+          <tr><td>15 Sep 2023</td><td>2800120230915002</td><td>Acceptance Fee</td><td>₦75,000</td><td><span class="badge badge-paid">✓ Validated</span></td></tr>
+          <tr><td>02 Jun 2025</td><td>2800120250602003</td><td>Hostel Fee (Partial)</td><td>₦60,000</td><td><span class="badge badge-partial">Partial</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── HOSTEL BALLOTING ── -->
+  <section class="page-section" id="sec-hostel">
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>🏠 Hostel Accommodation Balloting</h3>
+        <span style="font-size:0.75rem;color:var(--muted);">Session: 2025/2026 &nbsp;|&nbsp; Closes: 15 July 2025</span>
+      </div>
+      <div style="background:var(--gold-pale);border:1px solid rgba(196,146,42,0.3);border-radius:3px;padding:14px 18px;margin-bottom:22px;font-size:0.8rem;color:var(--mid);line-height:1.7;">
+        ⚠️ Hostel allocation is done by <strong>random balloting</strong>. Select your top 3 hostel preferences below and submit before the deadline. Payment of hostel fees is required before your allocation can be confirmed.
+      </div>
+      <div class="hostel-grid" id="hostelGrid"></div>
+      <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--rule);display:flex;gap:12px;align-items:center;justify-content:space-between;">
+        <div style="font-size:0.8rem;color:var(--muted);">Selected: <strong id="hostelSelection">None</strong></div>
+        <button class="btn btn-primary" onclick="submitHostel()">📤 Submit Preference</button>
+      </div>
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--rule);">
+        <h4 style="font-family:var(--serif);font-size:0.95rem;color:var(--maroon-dark);margin-bottom:14px;">Allocation Status</h4>
+        <div id="hostelStatus" style="font-size:0.82rem;color:var(--muted);padding:16px 0;">Balloting result will be published on <strong>1 August 2025</strong>.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CBT SOFTWARE ── -->
+  <section class="page-section" id="sec-cbt">
+    <div class="portal-card">
+      <div class="card-hd"><h3>🖥️ CBT Examination Portal</h3></div>
+      <div style="background:#e8f5ee;border:1px solid rgba(42,107,74,0.3);border-radius:3px;padding:14px 18px;margin-bottom:22px;font-size:0.8rem;color:#1a5c38;line-height:1.7;">
+        ✅ Your CBT account is active. Examinations are conducted in the ICT Centre. Ensure you arrive 30 minutes before your scheduled time with your Student ID and Examination Clearance.
+      </div>
+      <div class="section-head" style="margin-bottom:16px;">Upcoming Examinations</div>
+      <div class="cbt-grid" id="cbtGrid"></div>
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--rule);">
+        <div class="section-head" style="margin-bottom:16px;">Past CBT Results</div>
+        <table class="data-table">
+          <thead><tr><th>Course</th><th>Date</th><th>Score</th><th>Grade</th><th>Remarks</th></tr></thead>
+          <tbody id="cbtPastTable">
+            <tr><td>ANA 201 – General Anatomy</td><td>Jan 2025</td><td>68/100</td><td class="grade grade-b">B</td><td>Pass</td></tr>
+            <tr><td>BCH 201 – Medical Biochemistry</td><td>Jan 2025</td><td>74/100</td><td class="grade grade-b">B</td><td>Pass</td></tr>
+            <tr><td>PHS 201 – Medical Physiology</td><td>Jan 2025</td><td>61/100</td><td class="grade grade-c">C</td><td>Pass</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROFILE ── -->
+  <section class="page-section" id="sec-profile">
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>👤 My Profile</h3>
+        <button class="btn btn-primary btn-sm" id="saveProfileBtn">💾 Save Changes</button>
+      </div>
+      <div style="display:flex;gap:28px;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div class="profile-photo" id="bigAvatar" style="width:110px;height:110px;font-size:2.5rem;margin:0 auto 12px;">A</div>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('photoUpload').click()">📷 Change Photo</button>
+          <input type="file" id="photoUpload" accept="image/*" style="display:none;" onchange="previewPhoto(this)">
+        </div>
+        <div style="flex:1;min-width:280px;">
+          <div class="form-grid-2">
+            <div class="form-group"><label>First Name</label><input type="text" id="pFirst" placeholder="First name"></div>
+            <div class="form-group"><label>Last Name</label><input type="text" id="pLast" placeholder="Last name"></div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group"><label>Matriculation No.</label><input type="text" id="pMatric" readonly style="background:#f5f5f5;cursor:not-allowed;"></div>
+            <div class="form-group"><label>Level</label><input type="text" id="pLevel" readonly style="background:#f5f5f5;cursor:not-allowed;"></div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group"><label>Phone Number</label><input type="tel" id="pPhone" placeholder="+234…"></div>
+            <div class="form-group"><label>Personal Email</label><input type="email" id="pEmail" placeholder="personal@gmail.com"></div>
+          </div>
+          <div class="form-group"><label>Home Address</label><input type="text" id="pAddress" placeholder="Full home address"></div>
+          <div class="form-group"><label>Next of Kin</label><input type="text" id="pNok" placeholder="Full name of next of kin"></div>
+          <div class="form-grid-2">
+            <div class="form-group"><label>NOK Phone</label><input type="tel" id="pNokPhone" placeholder="+234…"></div>
+            <div class="form-group"><label>Relationship</label>
+              <select id="pNokRel">
+                <option>Parent</option><option>Sibling</option><option>Guardian</option><option>Spouse</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding-top:20px;border-top:1px solid var(--rule);">
+        <h4 style="font-family:var(--serif);font-size:0.95rem;color:var(--maroon-dark);margin-bottom:16px;">Change Password</h4>
+        <div class="form-grid-3">
+          <div class="form-group"><label>Current Password</label><input type="password" id="cpOld" placeholder="Current password"></div>
+          <div class="form-group"><label>New Password</label><input type="password" id="cpNew" placeholder="New password (min. 8 chars)"></div>
+          <div class="form-group"><label>Confirm New</label><input type="password" id="cpConfirm" placeholder="Repeat new password"></div>
+        </div>
+        <button class="btn btn-outline" onclick="changePassword()">🔒 Update Password</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- PAY MODAL -->
+<div class="modal-overlay" id="payModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('payModal').classList.remove('open')">✕</button>
+    <h3>💳 School Fees Payment</h3>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:24px;line-height:1.6;">Select the fee type and complete payment via Remita. You will receive a confirmation and your payment will be automatically validated.</p>
+    <div class="form-group"><label>Fee Type</label>
+      <select id="payFeeType">
+        <option value="450000">Tuition Fee – ₦450,000</option>
+        <option value="120000">Hostel Accommodation – ₦120,000</option>
+        <option value="25000">Medical / Laboratory Fee – ₦25,000</option>
+        <option value="10000">Examination Clearance – ₦10,000</option>
+        <option value="5000">ID Card / Miscellaneous – ₦5,000</option>
+      </select>
+    </div>
+    <div id="payAmountDisplay" style="background:var(--cream);padding:14px 18px;border-radius:3px;margin-bottom:20px;font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--maroon-dark);text-align:center;">₦450,000</div>
+    <button class="btn btn-primary" style="width:100%;" onclick="initiatePayment()">Proceed to Remita Payment Portal</button>
+    <div style="font-size:0.72rem;color:var(--muted);text-align:center;margin-top:12px;">Payments are processed securely via Remita (CBN-approved). You will be redirected to complete payment.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── GLOBALS ──────────────────────────────────────────────────
+let db = null;
+let currentUser = null;
+let selectedCourses = new Set();
+let selectedHostel = null;
+
+// ── INIT ─────────────────────────────────────────────────────
+(function init() {
+  // Read session
+  const raw = sessionStorage.getItem('fummsa_user');
+  if (!raw) { window.location.href = 'portal-login.html'; return; }
+
+  currentUser = JSON.parse(raw);
+
+  if (currentUser.role !== 'student') {
+    window.location.href = 'portal-login.html';
+    return;
+  }
+
+  // Boot Supabase client if config is available
+  try {
+    if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined') {
+      db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+  } catch (e) {
+    console.warn('Supabase not initialised:', e);
+  }
+
+  loadProfile();
+  loadCourses(1);
+  loadResults('2024/25-1');
+  loadHostels();
+  loadCBT();
+  loadAnnouncements();
+
+  // Attach save profile button safely via addEventListener
+  document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+})();
+
+// ── PROFILE ──────────────────────────────────────────────────
+function loadProfile() {
+  const u = currentUser || {};
+  const name    = u.name       || u.full_name || 'Aisha Bello Muhammad';
+  const matric  = u.matric     || u.matric_no || '2023/MED/0042';
+  const faculty = u.faculty    || 'Basic Medical Sciences';
+  const dept    = u.dept       || u.department || 'Human Anatomy';
+  const prog    = u.programme  || 'MBBS – Medicine & Surgery';
+  const level   = u.level      || '200';
+  const active  = u.status !== 'inactive';
+
+  const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+  document.getElementById('topName').textContent      = name.split(' ')[0];
+  document.getElementById('topAvatar').textContent    = initials;
+  document.getElementById('profileName').textContent  = name;
+  document.getElementById('profileMatric').textContent = matric;
+  document.getElementById('profileFaculty').textContent = faculty;
+  document.getElementById('profileDept').textContent  = dept;
+  document.getElementById('profileProg').textContent  = prog;
+  document.getElementById('profileLevel').textContent = level + ' Level';
+  document.getElementById('profilePhoto').textContent = initials;
+  document.getElementById('bigAvatar').textContent    = initials;
+  document.getElementById('profileStatus').innerHTML  = active
+    ? '<span class="status-badge status-active">● Active</span>'
+    : '<span class="status-badge status-inactive">● Inactive</span>';
+
+  document.getElementById('statGPA').textContent   = u.cgpa  || '3.42';
+  document.getElementById('statUnits').textContent = '18/24';
+  document.getElementById('statPaid').textContent  = '₦450K';
+
+  // Pre-fill profile form fields
+  const names = name.split(' ');
+  document.getElementById('pFirst').value  = names[0] || '';
+  document.getElementById('pLast').value   = names.slice(1).join(' ') || '';
+  document.getElementById('pMatric').value = matric;
+  document.getElementById('pLevel').value  = level + ' Level';
+  document.getElementById('pPhone').value  = u.phone || '';
+  document.getElementById('pEmail').value  = u.email || '';
+
+  // Pre-fill programme change read-only fields
+  document.getElementById('currProg').value = prog;
+  document.getElementById('currDept').value = dept;
+}
+
+function saveProfile() {
+  const first   = document.getElementById('pFirst').value.trim();
+  const last    = document.getElementById('pLast').value.trim();
+  const phone   = document.getElementById('pPhone').value.trim();
+  const email   = document.getElementById('pEmail').value.trim();
+  const address = document.getElementById('pAddress').value.trim();
+  const nok     = document.getElementById('pNok').value.trim();
+  const nokPhone = document.getElementById('pNokPhone').value.trim();
+  const nokRel  = document.getElementById('pNokRel').value;
+
+  if (!first || !last) {
+    showToast('Please enter your first and last name.', 'error');
+    return;
+  }
+
+  // Persist any updatable fields back to session so refresh keeps them
+  if (currentUser) {
+    currentUser.name  = first + ' ' + last;
+    currentUser.phone = phone;
+    sessionStorage.setItem('fummsa_user', JSON.stringify(currentUser));
+  }
+
+  // If Supabase is connected, persist to DB
+  if (db && currentUser && currentUser.id) {
+    db.from('portal_users')
+      .update({ full_name: first + ' ' + last, phone: phone })
+      .eq('id', currentUser.id)
+      .then(({ error }) => {
+        if (error) {
+          showToast('DB error: ' + error.message, 'error');
+        } else {
+          showToast('✅ Profile updated successfully.', 'success');
+        }
+      });
+  } else {
+    showToast('✅ Profile updated successfully.', 'success');
+  }
+}
+
+function changePassword() {
+  const old     = document.getElementById('cpOld').value;
+  const newPwd  = document.getElementById('cpNew').value;
+  const confirm = document.getElementById('cpConfirm').value;
+
+  if (!old || !newPwd || !confirm) { showToast('Please fill all password fields.', 'error'); return; }
+  if (newPwd !== confirm)          { showToast('New passwords do not match.', 'error'); return; }
+  if (newPwd.length < 8)           { showToast('Password must be at least 8 characters.', 'error'); return; }
+
+  if (db) {
+    db.auth.updateUser({ password: newPwd })
+      .then(({ error }) => {
+        if (error) showToast('Error: ' + error.message, 'error');
+        else {
+          showToast('🔒 Password changed successfully.', 'success');
+          document.getElementById('cpOld').value = '';
+          document.getElementById('cpNew').value = '';
+          document.getElementById('cpConfirm').value = '';
+        }
+      });
+  } else {
+    showToast('🔒 Password changed successfully.', 'success');
+  }
+}
+
+function previewPhoto(input) {
+  if (input.files && input.files[0]) {
+    const r = new FileReader();
+    r.onload = e => {
+      const imgHtml = `<img src="${e.target.result}" alt="Photo">`;
+      document.getElementById('profilePhoto').innerHTML = imgHtml;
+      document.getElementById('bigAvatar').innerHTML    = imgHtml;
+      document.getElementById('topAvatar').innerHTML    = imgHtml;
+    };
+    r.readAsDataURL(input.files[0]);
+    showToast('Photo preview updated. Save to apply.', 'success');
+  }
+}
+
+// ── COURSES ──────────────────────────────────────────────────
+const COURSES_DATA = {
+  1: [
+    {code:'ANA 201',title:'General Anatomy I',units:4,compulsory:true},
+    {code:'BCH 201',title:'Medical Biochemistry I',units:4,compulsory:true},
+    {code:'PHS 201',title:'Medical Physiology I',units:4,compulsory:true},
+    {code:'CSB 201',title:'Cell & Structural Biology',units:3,compulsory:true},
+    {code:'GST 211',title:'Communication in English',units:2,compulsory:false},
+    {code:'GST 213',title:'Introduction to Logic',units:2,compulsory:false},
+    {code:'MBS 201',title:'Medical Microbiology I',units:3,compulsory:false},
+  ],
+  2: [
+    {code:'ANA 202',title:'General Anatomy II',units:4,compulsory:true},
+    {code:'BCH 202',title:'Medical Biochemistry II',units:4,compulsory:true},
+    {code:'PHS 202',title:'Medical Physiology II',units:4,compulsory:true},
+    {code:'HIS 202',title:'Medical Histology',units:3,compulsory:true},
+    {code:'GST 222',title:'Peace & Conflict Resolution',units:2,compulsory:false},
+    {code:'MBS 202',title:'Medical Microbiology II',units:3,compulsory:false},
+  ]
+};
+
+function loadCourses(sem) {
+  const list = COURSES_DATA[sem] || [];
+  selectedCourses = new Set(list.filter(c => c.compulsory).map(c => c.code));
+  renderCourses(list);
+}
+
+function renderCourses(list) {
+  const div = document.getElementById('courseList');
+  div.innerHTML = list.map(c => `
+    <div class="course-available">
+      <span class="course-check ${selectedCourses.has(c.code) ? 'checked' : ''}"
+            onclick="toggleCourse('${c.code}', this, ${c.units})"
+            id="chk-${c.code}"></span>
+      <div class="course-info">
+        <span class="course-code">${c.code}</span>
+        <span class="course-title-text"> — ${c.title}</span>
+        <div class="course-units">${c.units} Credit Units ${c.compulsory ? '<span style="color:var(--maroon);font-weight:700;">• Compulsory</span>' : ''}</div>
+      </div>
+      <div class="course-unit-count">${c.units}u</div>
+    </div>`).join('');
+  updateUnitCount();
+}
+
+function toggleCourse(code, el, units) {
+  if (selectedCourses.has(code)) selectedCourses.delete(code);
+  else selectedCourses.add(code);
+  el.classList.toggle('checked', selectedCourses.has(code));
+  updateUnitCount();
+}
+
+function updateUnitCount() {
+  let total = 0;
+  const all = [...(COURSES_DATA[1] || []), ...(COURSES_DATA[2] || [])];
+  all.forEach(c => { if (selectedCourses.has(c.code)) total += c.units; });
+  document.getElementById('unitCount').textContent = total;
+  const pct = Math.min(100, Math.round(total / 24 * 100));
+  const bar = document.getElementById('unitProgress');
+  bar.style.width    = pct + '%';
+  bar.style.background = pct > 100 ? 'var(--danger)' : 'var(--maroon)';
+}
+
+function switchSem(s, el) {
+  document.querySelectorAll('#sec-courses .sem-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  loadCourses(s);
+}
+
+function registerCourses() {
+  if (selectedCourses.size === 0) { showToast('Please select at least one course.', 'error'); return; }
+  showToast(`✅ ${selectedCourses.size} courses registered successfully!`, 'success');
+  setTimeout(() => showToast('📥 Your course slip is ready to download.', 'success'), 1500);
+}
+
+function downloadSlip() {
+  showToast('📥 Course slip downloaded.', 'success');
+}
+
+// ── RESULTS ──────────────────────────────────────────────────
+const RESULTS_DATA = {
+  '2024/25-1': [
+    {code:'ANA 201',title:'General Anatomy I',units:4,ca:28,exam:55,total:83,grade:'A'},
+    {code:'BCH 201',title:'Medical Biochemistry I',units:4,ca:25,exam:49,total:74,grade:'B'},
+    {code:'PHS 201',title:'Medical Physiology I',units:4,ca:22,exam:43,total:65,grade:'C'},
+    {code:'CSB 201',title:'Cell & Structural Biology',units:3,ca:27,exam:52,total:79,grade:'B'},
+    {code:'GST 211',title:'Communication in English',units:2,ca:18,exam:47,total:65,grade:'C'},
+  ],
+  '2024/25-2': [],
+  '2023/24-1': [
+    {code:'ANA 101',title:'Introductory Anatomy',units:3,ca:26,exam:56,total:82,grade:'A'},
+    {code:'BCH 101',title:'General Biochemistry',units:3,ca:23,exam:50,total:73,grade:'B'},
+    {code:'GST 111',title:'Use of English',units:2,ca:20,exam:45,total:65,grade:'C'},
+  ],
+  '2023/24-2': []
+};
+
+function loadResults(sem) { renderResultsTable(RESULTS_DATA[sem] || []); }
+
+function switchResultSem(sem, el) {
+  document.querySelectorAll('#sec-results .sem-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  loadResults(sem);
+}
+
+function renderResultsTable(rows) {
+  const wrap = document.getElementById('resultsTableWrap');
+  if (!rows.length) {
+    wrap.innerHTML = '<div style="padding:32px;text-align:center;color:var(--muted);font-size:0.85rem;">No results available for this semester yet.</div>';
+    document.getElementById('semGPA').textContent      = '—';
+    document.getElementById('cgpaDisplay').textContent = '3.42';
+    document.getElementById('totalUnitsRes').textContent = '—';
+    document.getElementById('resultRemark').textContent = '—';
+    return;
+  }
+  const gradePoints = {A:5, B:4, C:3, D:2, E:1, F:0};
+  let totalUnits = 0, totalGradePoints = 0;
+  rows.forEach(r => { totalUnits += r.units; totalGradePoints += r.units * (gradePoints[r.grade] || 0); });
+  const gpa = totalUnits ? (totalGradePoints / totalUnits).toFixed(2) : '0.00';
+
+  wrap.innerHTML = `<table class="data-table">
+    <thead><tr><th>Code</th><th>Course Title</th><th>Units</th><th>CA (30)</th><th>Exam (70)</th><th>Total</th><th>Grade</th></tr></thead>
+    <tbody>${rows.map(r => `<tr>
+      <td><strong>${r.code}</strong></td>
+      <td>${r.title}</td>
+      <td>${r.units}</td>
+      <td>${r.ca}</td>
+      <td>${r.exam}</td>
+      <td><strong>${r.total}</strong></td>
+      <td class="grade grade-${r.grade.toLowerCase()}">${r.grade}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+
+  document.getElementById('semGPA').textContent        = gpa;
+  document.getElementById('cgpaDisplay').textContent   = '3.42';
+  document.getElementById('totalUnitsRes').textContent = totalUnits + 'u';
+  document.getElementById('resultRemark').textContent  =
+    gpa >= 4.5 ? 'First Class' :
+    gpa >= 3.5 ? 'Second Class Upper' :
+    gpa >= 2.4 ? 'Second Class Lower' :
+    gpa >= 1.5 ? 'Third Class' : 'Pass/Fail';
+}
+
+function printResults() { showToast('🖨️ Printing transcript…'); window.print(); }
+
+// ── HOSTEL ───────────────────────────────────────────────────
+function loadHostels() {
+  const hostels = [
+    {name:'Al-Amin Hall',   type:'Female', capacity:200, available:45},
+    {name:'Bilal Hall',     type:'Male',   capacity:180, available:23},
+    {name:'Khadijah Hall',  type:'Female', capacity:160, available:0},
+    {name:'Usman Hall',     type:'Male',   capacity:200, available:67},
+    {name:'Aisha Hall',     type:'Female', capacity:120, available:12},
+    {name:'Fatimah Annexe', type:'Female', capacity:80,  available:0},
+  ];
+  document.getElementById('hostelGrid').innerHTML = hostels.map((h, i) => `
+    <div class="hostel-card ${h.available === 0 ? 'taken' : ''}"
+         onclick="selectHostel(${i}, '${h.name}', ${h.available})"
+         id="hc-${i}">
+      <div style="font-size:1.8rem;margin-bottom:8px;">${h.type === 'Female' ? '🏠' : '🏛️'}</div>
+      <div class="hostel-name">${h.name}</div>
+      <div class="hostel-detail">${h.type} Hostel • Capacity: ${h.capacity}</div>
+      <div class="hostel-avail ${h.available > 0 ? 'avail-yes' : 'avail-no'}">
+        ${h.available > 0 ? h.available + ' spaces available' : 'Full'}
+      </div>
+    </div>`).join('');
+}
+
+function selectHostel(i, name, avail) {
+  if (avail === 0) { showToast('This hostel is fully booked.', 'error'); return; }
+  document.querySelectorAll('.hostel-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('hc-' + i).classList.add('selected');
+  selectedHostel = name;
+  document.getElementById('hostelSelection').textContent = name;
+}
+
+function submitHostel() {
+  if (!selectedHostel) { showToast('Please select a hostel preference.', 'error'); return; }
+  showToast(`✅ Hostel preference "${selectedHostel}" submitted. Balloting result: 1 Aug 2025.`, 'success');
+}
+
+// ── CBT ──────────────────────────────────────────────────────
+function loadCBT() {
+  const exams = [
+    {code:'ANA 202', title:'General Anatomy II',      date:'10 Jun 2025', time:'9:00 AM',  venue:'ICT Lab A'},
+    {code:'BCH 202', title:'Medical Biochemistry II', date:'12 Jun 2025', time:'11:00 AM', venue:'ICT Lab B'},
+    {code:'PHS 202', title:'Medical Physiology II',   date:'14 Jun 2025', time:'2:00 PM',  venue:'ICT Lab A'},
+  ];
+  document.getElementById('cbtGrid').innerHTML = exams.map(e => `
+    <div class="cbt-card">
+      <div class="cbt-card-icon">🖥️</div>
+      <div class="cbt-card-title">${e.code}</div>
+      <div class="cbt-card-sub">${e.title}</div>
+      <div class="cbt-card-date">📅 ${e.date} at ${e.time}</div>
+      <div style="font-size:0.68rem;color:var(--muted);margin-top:4px;">📍 ${e.venue}</div>
+      <div style="margin-top:12px;">
+        <span class="badge" style="background:#fff3e0;color:#7a4a00;">Upcoming</span>
+      </div>
+    </div>`).join('');
+}
+
+// ── ANNOUNCEMENTS ────────────────────────────────────────────
+function loadAnnouncements() {
+  const items = [
+    {icon:'📌', type:'',     title:'2024/2025 Second Semester Course Registration Now Open',    body:'All 100–500 level students are to log in and register courses before the deadline of 30 June 2025.',           date:'20 May 2025'},
+    {icon:'🏠', type:'gold', title:'Hostel Accommodation Balloting — 2025/2026 Session',        body:'Returning students may submit hostel preferences via the Hostel Balloting section. Balloting closes 15 July 2025.', date:'18 May 2025'},
+    {icon:'🖥️', type:'info', title:'First Semester CBT Examinations Schedule Released',         body:'The timetable for all CBT-based examinations has been uploaded. Check the CBT Software section.',               date:'15 May 2025'},
+    {icon:'📢', type:'',     title:'Medical Laboratory Fee Payment Deadline Extended',           body:'The deadline for payment of the medical laboratory fee has been extended to 15 June 2025.',                      date:'12 May 2025'},
+    {icon:'🎓', type:'gold', title:'FUMMSA 1st Convocation Ceremony — 30 July 2025',            body:'All graduating students are required to collect their gown and submit clearance forms before 20 July 2025.',     date:'10 May 2025'},
+  ];
+  document.getElementById('announceList').innerHTML = items.map(a => `
+    <div class="announce-item ${a.type}">
+      <span class="announce-icon">${a.icon}</span>
+      <div class="announce-body">
+        <h4>${a.title}</h4>
+        <p>${a.body}</p>
+        <div class="announce-date">📅 ${a.date}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── SECTION NAVIGATION ────────────────────────────────────────
+function showSection(name, clickedEl) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  const sec = document.getElementById('sec-' + name);
+  if (sec) sec.classList.add('active');
+  if (clickedEl) clickedEl.classList.add('active');
+  document.querySelector('.sidebar').classList.remove('open');
+}
+
+// ── PAYMENT ───────────────────────────────────────────────────
+function openPayModal() {
+  document.getElementById('payModal').classList.add('open');
+}
+
+document.getElementById('payFeeType').addEventListener('change', function () {
+  document.getElementById('payAmountDisplay').textContent = '₦' + parseInt(this.value).toLocaleString();
+});
+
+function initiatePayment() {
+  const amt = document.getElementById('payFeeType').value;
+  showToast('Redirecting to Remita payment portal…');
+  document.getElementById('payModal').classList.remove('open');
+  setTimeout(() => showToast('💳 Payment of ₦' + parseInt(amt).toLocaleString() + ' initiated. Please complete on Remita.', 'success'), 1500);
+}
+
+function downloadReceipt() {
+  showToast('📥 Receipt downloaded.', 'success');
+}
+
+// ── TRANSACTION VALIDATION ───────────────────────────────────
+function validateTxn() {
+  const ref = document.getElementById('txnRef').value.trim();
+  if (!ref) { showToast('Please enter a reference number.', 'error'); return; }
+  const div = document.getElementById('txnResult');
+  div.style.display = 'block';
+  div.innerHTML = `
+    <div style="background:#e8f5ee;border:1px solid rgba(42,107,74,0.3);border-radius:3px;padding:16px 20px;margin-bottom:20px;">
+      <div style="font-weight:700;color:#1a5c38;margin-bottom:8px;">✅ Transaction Validated</div>
+      <div style="font-size:0.8rem;color:var(--mid);display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><strong>Reference:</strong> ${ref}</div>
+        <div><strong>Amount:</strong> ₦60,000</div>
+        <div><strong>Date:</strong> 02 Jun 2025</div>
+        <div><strong>Status:</strong> Successful</div>
+        <div><strong>Description:</strong> Hostel Fee (Partial)</div>
+        <div><strong>Bank:</strong> UBA</div>
+      </div>
+    </div>`;
+  showToast('Transaction validated successfully!', 'success');
+}
+
+// ── PROGRAMME CHANGE ─────────────────────────────────────────
+function submitProgChange() {
+  const prog   = document.getElementById('newProg').value;
+  const reason = document.getElementById('progReason').value.trim();
+  if (!prog || !reason) { showToast('Please complete all required fields.', 'error'); return; }
+  showToast('📤 Programme change request submitted. Awaiting HOD review.', 'success');
+  document.getElementById('progChangeHistory').innerHTML = `
+    <div style="background:white;border:1px solid var(--rule);border-radius:3px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-weight:700;font-size:0.85rem;">${prog}</div>
+        <div style="font-size:0.72rem;color:var(--muted);">Submitted ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>
+      <span class="badge badge-pending">Pending Review</span>
+    </div>`;
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── LOGOUT ────────────────────────────────────────────────────
+function doLogout() {
+  sessionStorage.removeItem('fummsa_user');
+  if (typeof clearFummsaSession === 'function') clearFummsaSession();
+  window.location.href = 'portal-login.html';
+}
+</script>
+</body>
+</html>

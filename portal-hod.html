@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOD Portal – FUMMSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#4a0a1e;--maroon-mid:#800f30;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;--cream:#FAF7F2;
+  --warm-white:#FFFDF9;--charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.14);--success:#2a6b4a;--danger:#B04A2A;--info:#1a4a6b;
+  --serif:'Source Serif 4',Georgia,serif;--sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);--sb-width:248px;--top-h:60px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:#F0EBE5;color:var(--charcoal);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top-h);background:var(--maroon-dark);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 0;z-index:500;border-bottom:2px solid rgba(196,146,42,0.25);}
+.topbar-brand{display:flex;align-items:center;gap:12px;width:var(--sb-width);padding:0 20px;border-right:1px solid rgba(255,255,255,0.08);height:100%;}
+.topbar-brand img{width:34px;height:34px;border-radius:50%;object-fit:contain;}
+.topbar-brand-text{font-family:var(--serif);color:white;font-size:1rem;font-weight:600;}
+.topbar-brand-text small{display:block;font-family:var(--sans);font-size:0.58rem;color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-notify{position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.7);font-size:1rem;transition:all 0.2s;}
+.topbar-notify:hover{background:rgba(255,255,255,0.12);}
+.notify-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--gold);border-radius:50%;border:1.5px solid var(--maroon-dark);}
+.topbar-user{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--gold-light);font-size:0.85rem;overflow:hidden;flex-shrink:0;}
+.user-avatar img{width:100%;height:100%;object-fit:cover;}
+.user-meta{text-align:right;}
+.user-name{font-size:0.8rem;font-weight:600;color:white;}
+.user-role{font-size:0.62rem;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase;}
+.btn-logout{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:2px;font-family:var(--sans);font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:white;}
+.hamburger-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:white;font-size:1.2rem;}
+
+.sidebar{position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--sb-width);background:white;border-right:1.5px solid var(--rule);overflow-y:auto;z-index:400;transition:transform 0.3s var(--ease);}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:var(--rule);}
+.sidebar-section{padding:16px 12px 4px;}
+.sb-label{font-size:0.58rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:6px 8px 4px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:3px;font-size:0.8rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;user-select:none;}
+.sb-link:hover{color:var(--maroon);background:rgba(107,15,43,0.04);}
+.sb-link.active{color:var(--maroon);background:rgba(107,15,43,0.06);border-left-color:var(--maroon);font-weight:600;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--maroon);color:white;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sb-divider{height:1px;background:var(--rule);margin:8px 16px;}
+
+.main-wrap{margin-left:var(--sb-width);margin-top:var(--top-h);min-height:calc(100vh - var(--top-h));padding:28px;}
+.page-section{display:none;animation:fadeIn 0.3s ease both;}
+.page-section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.profile-header{background:var(--maroon-dark);border-radius:5px;padding:28px 32px;display:flex;align-items:center;gap:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.profile-header::before{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(196,146,42,0.15);}
+.profile-header::after{content:'';position:absolute;right:20px;bottom:-40px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(196,146,42,0.1);}
+.profile-photo{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:2rem;color:var(--gold-light);overflow:hidden;flex-shrink:0;z-index:1;}
+.profile-photo img{width:100%;height:100%;object-fit:cover;}
+.profile-info{flex:1;z-index:1;}
+.profile-name{font-family:var(--serif);font-size:1.5rem;color:white;font-weight:600;}
+.profile-sub{font-size:0.75rem;color:var(--gold-light);letter-spacing:0.1em;margin:4px 0 12px;text-transform:uppercase;}
+.profile-meta{display:flex;flex-wrap:wrap;gap:20px;}
+.pmeta-item{font-size:0.75rem;color:rgba(255,255,255,0.65);}
+.pmeta-item strong{display:block;font-size:0.65rem;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.status-active{background:rgba(42,107,74,0.3);color:#7ee0a8;border:1px solid rgba(42,107,74,0.4);}
+
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:white;border-radius:4px;padding:20px 22px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.05);}
+.stat-value{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--maroon-dark);line-height:1;}
+.stat-label{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+.stat-sub{font-size:0.72rem;color:var(--success);margin-top:4px;}
+
+.section-head{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--rule);}
+
+.portal-card{background:white;border-radius:4px;padding:24px;box-shadow:0 1px 8px rgba(107,15,43,0.06);border:1px solid var(--rule);margin-bottom:20px;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--rule);}
+.card-hd h3{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--maroon-dark);}
+
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--rule);background:var(--cream);}
+.data-table td{font-size:0.82rem;padding:11px 14px;border-bottom:1px solid var(--rule);color:var(--charcoal);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(107,15,43,0.02);}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:0.68rem;font-weight:700;}
+.badge-active{background:#e8f5ee;color:#1a5c38;}
+.badge-pending{background:var(--gold-pale);color:#7a5200;}
+.badge-closed{background:#fde8ec;color:#7a0e1e;}
+.badge-info{background:#e8f0fe;color:#1a3a7a;}
+
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:7px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.88rem;color:var(--charcoal);background:var(--warm-white);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--maroon);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+.btn{padding:10px 20px;border:none;border-radius:2px;font-family:var(--sans);font-weight:700;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--maroon);color:white;}
+.btn-primary:hover{background:var(--maroon-dark);}
+.btn-secondary{background:transparent;border:1.5px solid var(--maroon);color:var(--maroon);}
+.btn-secondary:hover{background:var(--maroon);color:white;}
+.btn-gold{background:var(--gold);color:white;}
+.btn-gold:hover{background:#a8791f;}
+.btn-sm{padding:6px 14px;font-size:0.72rem;}
+.btn-danger{background:var(--danger);color:white;}
+.btn-success{background:var(--success);color:white;}
+
+/* ACCESS TOGGLE */
+.access-toggle{display:flex;align-items:center;gap:12px;}
+.toggle-switch{position:relative;display:inline-block;width:44px;height:24px;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:24px;transition:.3s;}
+.toggle-slider:before{position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s;}
+input:checked+.toggle-slider{background:var(--success);}
+input:checked+.toggle-slider:before{transform:translateX(20px);}
+.toggle-label{font-size:0.8rem;font-weight:600;color:var(--mid);}
+
+.toast{position:fixed;bottom:28px;right:28px;background:var(--charcoal);color:white;padding:14px 22px;border-radius:3px;font-size:0.82rem;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.3s var(--ease);pointer-events:none;max-width:360px;}
+.toast.show{transform:none;opacity:1;}
+.toast.success{background:var(--success);}
+.toast.error{background:var(--danger);}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:800;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:4px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;}
+.modal-head{background:var(--maroon-dark);color:white;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;}
+.modal-head h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;}
+.modal-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:1.2rem;cursor:pointer;}
+.modal-body{padding:24px;}
+
+@media(max-width:900px){
+  .stat-row{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+  .hamburger-toggle{display:block;}
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:none;}
+  .main-wrap{margin-left:0;}
+}
+</style>
+
+  <!-- Shared portal libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="portal-auth.js"></script>
+  <script src="portal-api.js"></script>
+  <script src="portal-shared.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="logo.png" alt="FUMMSA" onerror="this.style.display='none'">
+    <div class="topbar-brand-text">FUMMSA<small>HOD Portal</small></div>
+  </div>
+  <div class="topbar-right">
+    <button class="hamburger-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+    <div class="topbar-notify">🔔<span class="notify-dot"></span></div>
+    <div class="topbar-user">
+      <div class="user-avatar" id="topAvatar">PR</div>
+      <div class="user-meta">
+        <div class="user-name" id="topName">Prof. Rasheed Musa</div>
+        <div class="user-role">Head of Department</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+  </div>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sb-label">Overview</div>
+    <div class="sb-link active" onclick="showSection('dashboard',this)"><span class="sb-icon">📊</span> Dashboard</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Department Management</div>
+    <div class="sb-link" onclick="showSection('students',this)"><span class="sb-icon">👨‍🎓</span> Student Roster</div>
+    <div class="sb-link" onclick="showSection('staff',this)"><span class="sb-icon">👩‍🏫</span> Staff Roster</div>
+    <div class="sb-link" onclick="showSection('courses',this)"><span class="sb-icon">📚</span> Course Allocation</div>
+    <div class="sb-link" onclick="showSection('progchange',this)"><span class="sb-icon">🔄</span> Programme Changes <span class="sb-badge">3</span></div>
+    <div class="sb-link" onclick="showSection('access',this)"><span class="sb-icon">🔒</span> Portal Access Control</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">My Teaching</div>
+    <div class="sb-link" onclick="showSection('mygrades',this)"><span class="sb-icon">📋</span> Grade Entry</div>
+    <div class="sb-link" onclick="showSection('requests',this)"><span class="sb-icon">📩</span> Staff Requests <span class="sb-badge">2</span></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Reports & Comms</div>
+    <div class="sb-link" onclick="showSection('reports',this)"><span class="sb-icon">📈</span> Departmental Reports</div>
+    <div class="sb-link" onclick="showSection('announcements',this)"><span class="sb-icon">📢</span> Announcements</div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sidebar-section">
+    <div class="sb-label">Account</div>
+    <div class="sb-link" onclick="showSection('profile',this)"><span class="sb-icon">👤</span> My Profile</div>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="sec-dashboard" class="page-section active">
+    <div class="profile-header">
+      <div class="profile-photo" id="bigAvatar">PR</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Prof. Rasheed Musa</div>
+        <div class="profile-sub">Head of Department &nbsp;|&nbsp; Staff ID: STAFF/ANAT/HOD/2017</div>
+        <div class="profile-meta">
+          <div class="pmeta-item"><strong>Faculty</strong>Basic Medical Sciences</div>
+          <div class="pmeta-item"><strong>Department</strong>Human Anatomy</div>
+          <div class="pmeta-item"><strong>Rank</strong>Professor</div>
+          <div class="pmeta-item"><strong>Status</strong><span class="status-badge status-active">● Active HOD</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-value">342</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-sub">100L – 500L</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">18</div>
+        <div class="stat-label">Academic Staff</div>
+        <div class="stat-sub">Lecturers & Assistants</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--gold)">3</div>
+        <div class="stat-label">Pending Changes</div>
+        <div class="stat-sub">Programme change requests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12</div>
+        <div class="stat-label">Active Courses</div>
+        <div class="stat-sub">This semester</div>
+      </div>
+    </div>
+
+    <!-- Quick alerts -->
+    <div class="section-head">Department Alerts</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+      <div style="background:var(--gold-pale);border:1px solid rgba(196,146,42,0.3);border-left:4px solid var(--gold);border-radius:3px;padding:14px 18px;font-size:0.83rem;">
+        <strong>⚠️ 3 Programme Change Requests</strong> await your approval — please review before 5 June 2025.
+      </div>
+      <div style="background:#fde8ec;border:1px solid rgba(176,74,42,0.3);border-left:4px solid var(--danger);border-radius:3px;padding:14px 18px;font-size:0.83rem;">
+        <strong>🔴 11 students</strong> in ANAT 401 have attendance below 75%. Consider issuing attendance warnings.
+      </div>
+      <div style="background:#e8f5ee;border:1px solid rgba(42,107,74,0.3);border-left:4px solid var(--success);border-radius:3px;padding:14px 18px;font-size:0.83rem;">
+        <strong>✅ Grade submissions</strong>: 14 of 18 lecturers have submitted scores for Second CA.
+      </div>
+    </div>
+
+    <!-- Recent student activity -->
+    <div class="section-head">Recent Student Activity</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Matric</th><th>Level</th><th>Activity</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td>Aisha Bello Muhammad</td><td>2023/MED/0042</td><td>300L</td><td>Course Registration</td><td>27 May 2025</td></tr>
+          <tr><td>Babatunde Olasubomi</td><td>2023/MED/0051</td><td>300L</td><td>Programme Change Request</td><td>26 May 2025</td></tr>
+          <tr><td>Chisom Nwachukwu</td><td>2022/MED/0018</td><td>400L</td><td>Result Check</td><td>26 May 2025</td></tr>
+          <tr><td>Damilola Adeyinka</td><td>2021/MED/0031</td><td>500L</td><td>School Fees Payment</td><td>25 May 2025</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ STUDENT ROSTER ═══ -->
+  <div id="sec-students" class="page-section">
+    <div class="section-head">Student Roster — Human Anatomy Department</div>
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>All Students</h3>
+        <div style="display:flex;gap:8px;">
+          <select style="padding:8px 12px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:0.82rem;" id="filterLevel">
+            <option value="">All Levels</option>
+            <option>100L</option><option>200L</option><option>300L</option><option>400L</option><option>500L</option>
+          </select>
+          <input type="text" placeholder="Search by name or matric…" style="padding:8px 12px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:0.82rem;width:220px;" oninput="filterStudents(this.value)">
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="studentTable">
+          <thead><tr><th>Matric No.</th><th>Full Name</th><th>Level</th><th>Status</th><th>Last Login</th><th>Portal Access</th><th>Action</th></tr></thead>
+          <tbody id="studentBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);">Showing <span id="studentCount">8</span> of 342 students</div>
+    </div>
+  </div>
+
+  <!-- ═══ STAFF ROSTER ═══ -->
+  <div id="sec-staff" class="page-section">
+    <div class="section-head">Staff Roster — Human Anatomy Department</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Staff ID</th><th>Name</th><th>Rank</th><th>Specialization</th><th>Courses</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>STAFF/ANAT/2019/004</td><td>Dr. Fatimah Adeyemi</td><td>Senior Lecturer</td><td>Neuroanatomy</td><td>ANAT 301, 302</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>STAFF/ANAT/2016/002</td><td>Dr. Biodun Salami</td><td>Lecturer I</td><td>Histology</td><td>ANAT 201</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>STAFF/ANAT/2020/007</td><td>Dr. Ngozi Eze</td><td>Lecturer II</td><td>Embryology</td><td>ANAT 401</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>STAFF/ANAT/2021/009</td><td>Dr. Seun Adebayo</td><td>Assistant Lecturer</td><td>Gross Anatomy</td><td>ANAT 101</td><td><span class="badge badge-pending">On Leave</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ COURSE ALLOCATION ═══ -->
+  <div id="sec-courses" class="page-section">
+    <div class="section-head">Course Allocation</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Assign Course to Lecturer</h3></div>
+      <div class="form-row">
+        <div class="form-group"><label>Course</label>
+          <select><option>ANAT 101 – Introductory Anatomy</option><option>ANAT 201 – Histology</option><option>ANAT 301 – Gross Anatomy I</option><option>ANAT 302 – Neuroanatomy</option><option>ANAT 401 – Clinical Anatomy</option></select>
+        </div>
+        <div class="form-group"><label>Assign To</label>
+          <select><option>Dr. Fatimah Adeyemi</option><option>Dr. Biodun Salami</option><option>Dr. Ngozi Eze</option><option>Dr. Seun Adebayo</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Semester</label><select><option>2024/2025 Second Semester</option><option>2025/2026 First Semester</option></select></div>
+        <div class="form-group"><label>Teaching Days</label><input type="text" placeholder="e.g. Monday, Wednesday 8–10 AM"></div>
+      </div>
+      <button class="btn btn-primary" onclick="showToast('Course allocated successfully.','success')">Allocate Course</button>
+    </div>
+
+    <div class="portal-card">
+      <div class="card-hd"><h3>Current Allocations — 2024/2025 Second Semester</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Course</th><th>Units</th><th>Lecturer</th><th>Students</th><th>Days</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ANAT 101</strong></td><td>3</td><td>Dr. Seun Adebayo</td><td>94</td><td>Mon, Wed</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('Allocation updated.','success')">Edit</button></td></tr>
+          <tr><td><strong>ANAT 201</strong></td><td>3</td><td>Dr. Biodun Salami</td><td>91</td><td>Wed, Fri</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('Allocation updated.','success')">Edit</button></td></tr>
+          <tr><td><strong>ANAT 301</strong></td><td>3</td><td>Dr. Fatimah Adeyemi</td><td>86</td><td>Mon, Wed</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('Allocation updated.','success')">Edit</button></td></tr>
+          <tr><td><strong>ANAT 302</strong></td><td>4</td><td>Dr. Fatimah Adeyemi</td><td>72</td><td>Tue, Thu</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('Allocation updated.','success')">Edit</button></td></tr>
+          <tr><td><strong>ANAT 401</strong></td><td>3</td><td>Dr. Ngozi Eze</td><td>63</td><td>Thu</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('Allocation updated.','success')">Edit</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ PROGRAMME CHANGE REQUESTS ═══ -->
+  <div id="sec-progchange" class="page-section">
+    <div class="section-head">Programme Change Requests</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Matric</th><th>Current Dept</th><th>Requested Dept</th><th>Reason</th><th>Submitted</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Babatunde Olasubomi</td><td>2023/MED/0051</td>
+            <td>Human Anatomy</td><td>Physiology</td>
+            <td style="max-width:180px;font-size:0.78rem;color:var(--muted);">Personal interest in functional biology</td>
+            <td>26 May 2025</td>
+            <td style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-success" onclick="approveChange(this)">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="declineChange(this)">Decline</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Emeka Obi</td><td>2023/MED/0088</td>
+            <td>Human Anatomy</td><td>Biochemistry</td>
+            <td style="max-width:180px;font-size:0.78rem;color:var(--muted);">Better alignment with career goals</td>
+            <td>24 May 2025</td>
+            <td style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-success" onclick="approveChange(this)">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="declineChange(this)">Decline</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Halima Yahaya</td><td>2023/MED/0114</td>
+            <td>Human Anatomy</td><td>Pharmacology</td>
+            <td style="max-width:180px;font-size:0.78rem;color:var(--muted);">Academic performance challenges</td>
+            <td>22 May 2025</td>
+            <td style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-success" onclick="approveChange(this)">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="declineChange(this)">Decline</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ PORTAL ACCESS CONTROL ═══ -->
+  <div id="sec-access" class="page-section">
+    <div class="section-head">Portal Access Control</div>
+    <div style="background:var(--gold-pale);border:1px solid rgba(196,146,42,0.3);border-radius:3px;padding:14px 18px;font-size:0.82rem;margin-bottom:20px;">
+      ⚠️ <strong>Note:</strong> Closing a student's portal restricts their access to all portal services including course registration and result checks. Use only when necessary.
+    </div>
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>Department-Wide Access</h3>
+        <div class="access-toggle">
+          <span class="toggle-label">All Student Portals:</span>
+          <label class="toggle-switch">
+            <input type="checkbox" checked onchange="toggleAllAccess(this)">
+            <span class="toggle-slider"></span>
+          </label>
+          <span id="allAccessLabel" style="font-size:0.78rem;color:var(--success);font-weight:700;">OPEN</span>
+        </div>
+      </div>
+      <table class="data-table" id="accessTable">
+        <thead><tr><th>Matric</th><th>Student</th><th>Level</th><th>Reason (if closed)</th><th>Portal Status</th><th>Toggle</th></tr></thead>
+        <tbody id="accessBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ GRADE ENTRY (HOD's own courses) ═══ -->
+  <div id="sec-mygrades" class="page-section">
+    <div class="section-head">Grade Entry — My Courses</div>
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>ANAT 501 – Advanced Anatomy</h3>
+        <span class="badge badge-pending">Submission Due: 30 Jun 2025</span>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>S/N</th><th>Matric No.</th><th>Full Name</th><th>CA Score</th><th>Exam Score</th><th>Total</th><th>Grade</th></tr></thead>
+        <tbody id="hodGradeBody"></tbody>
+      </table>
+      <button class="btn btn-primary" style="margin-top:14px;" onclick="showToast('Grades submitted.','success')">Submit Grades</button>
+    </div>
+  </div>
+
+  <!-- ═══ STAFF REQUESTS ═══ -->
+  <div id="sec-requests" class="page-section">
+    <div class="section-head">Staff Requests — Pending Review</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Staff</th><th>Request Type</th><th>Period</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Dr. Fatimah Adeyemi</td><td>Lab Equipment Request</td><td>–</td><td>20 May 2025</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+            <td style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-success" onclick="showToast('Request approved.','success')">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="showToast('Request declined.','error')">Decline</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Dr. Seun Adebayo</td><td>Sick Leave</td><td>25 – 30 May</td><td>24 May 2025</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+            <td style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-success" onclick="showToast('Leave approved.','success')">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="showToast('Request declined.','error')">Decline</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ DEPARTMENTAL REPORTS ═══ -->
+  <div id="sec-reports" class="page-section">
+    <div class="section-head">Departmental Reports</div>
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-value">74%</div>
+        <div class="stat-label">Pass Rate</div>
+        <div class="stat-sub">Dept avg — 1st Sem 24/25</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">3.52</div>
+        <div class="stat-label">Avg GPA</div>
+        <div class="stat-sub">Across all levels</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">88%</div>
+        <div class="stat-label">Attendance Rate</div>
+        <div class="stat-sub">This semester</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">14/18</div>
+        <div class="stat-label">Grades Submitted</div>
+        <div class="stat-sub">2nd CA submissions</div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Level-by-Level Performance</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Level</th><th>Students</th><th>Avg GPA</th><th>Pass Rate</th><th>Attendance</th></tr></thead>
+        <tbody>
+          <tr><td>100L</td><td>94</td><td>3.21</td><td>79%</td><td>85%</td></tr>
+          <tr><td>200L</td><td>88</td><td>3.40</td><td>82%</td><td>87%</td></tr>
+          <tr><td>300L</td><td>74</td><td>3.55</td><td>86%</td><td>90%</td></tr>
+          <tr><td>400L</td><td>52</td><td>3.68</td><td>88%</td><td>91%</td></tr>
+          <tr><td>500L</td><td>34</td><td>3.80</td><td>94%</td><td>96%</td></tr>
+        </tbody>
+      </table>
+      <button class="btn btn-secondary" style="margin-top:14px;" onclick="showToast('Report exported.','success')">Export Report</button>
+    </div>
+  </div>
+
+  <!-- ═══ ANNOUNCEMENTS ═══ -->
+  <div id="sec-announcements" class="page-section">
+    <div class="section-head">Announcements</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Post Department Announcement</h3></div>
+      <div class="form-group"><label>Subject</label><input type="text" placeholder="e.g. Reminder: Attendance Warning Letters"></div>
+      <div class="form-group"><label>Target Audience</label>
+        <select><option>All Students & Staff</option><option>Students Only</option><option>Staff Only</option><option>Specific Level</option></select>
+      </div>
+      <div class="form-group"><label>Message</label><textarea rows="5" placeholder="Type your announcement here…"></textarea></div>
+      <button class="btn btn-primary" onclick="showToast('📢 Announcement posted.','success')">Post Announcement</button>
+    </div>
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;">
+      <div style="background:white;border-left:4px solid var(--maroon);border-radius:3px;padding:16px 20px;border:1px solid var(--rule);">
+        <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:4px;">Grade Submission Reminder</h4>
+        <p style="font-size:0.8rem;color:var(--muted);line-height:1.6;">All lecturers in Human Anatomy are reminded to submit their Second CA scores by 30 June 2025.</p>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:6px;">📅 20 May 2025</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PROFILE ═══ -->
+  <div id="sec-profile" class="page-section">
+    <div class="section-head">My Profile</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Personal Information</h3></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" value="Rasheed"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" value="Musa"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email</label><input type="email" value="r.musa@fummsa.edu.ng"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" value="0803 456 7890"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Academic Rank</label><select><option selected>Professor</option></select></div>
+        <div class="form-group"><label>Office</label><input type="text" value="Block C, Room 14"></div>
+      </div>
+      <button class="btn btn-primary" onclick="showToast('Profile updated.','success')">Save Changes</button>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const u=JSON.parse(sessionStorage.getItem('fummsa_user')||'{}');
+  if(u.name){
+    const init=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('topName').textContent=u.name;
+    document.getElementById('profileName').textContent=u.name;
+    document.getElementById('topAvatar').textContent=init;
+    document.getElementById('bigAvatar').textContent=init;
+  }
+  buildStudentTable();
+  buildAccessTable();
+  buildHodGradeTable();
+})();
+
+const STUDENTS=[
+  {matric:'2023/MED/0042',name:'Aisha Bello Muhammad',level:'300L',open:true},
+  {matric:'2023/MED/0051',name:'Babatunde Olasubomi',level:'300L',open:true},
+  {matric:'2022/MED/0018',name:'Chisom Nwachukwu',level:'400L',open:true},
+  {matric:'2021/MED/0031',name:'Damilola Adeyinka',level:'500L',open:true},
+  {matric:'2023/MED/0088',name:'Emeka Obi',level:'300L',open:false},
+  {matric:'2023/MED/0095',name:'Fatima Sule',level:'300L',open:true},
+  {matric:'2024/MED/0012',name:'Gbenga Afolabi',level:'200L',open:true},
+  {matric:'2025/MED/0005',name:'Halima Yahaya',level:'100L',open:true},
+];
+
+function buildStudentTable(){
+  document.getElementById('studentBody').innerHTML=STUDENTS.map(s=>`<tr>
+    <td>${s.matric}</td><td>${s.name}</td><td>${s.level}</td>
+    <td><span class="badge badge-active">Active</span></td>
+    <td>${randomDate()}</td>
+    <td><span class="badge ${s.open?'badge-active':'badge-closed'}">${s.open?'Open':'Closed'}</span></td>
+    <td><button class="btn btn-sm btn-secondary" onclick="showStudentDetail('${s.name}')">View</button></td>
+  </tr>`).join('');
+  document.getElementById('studentCount').textContent=STUDENTS.length;
+}
+
+function buildAccessTable(){
+  document.getElementById('accessBody').innerHTML=STUDENTS.map((s,i)=>`<tr>
+    <td>${s.matric}</td><td>${s.name}</td><td>${s.level}</td>
+    <td style="font-size:0.78rem;color:var(--muted);">${s.open?'—':'Fee payment outstanding'}</td>
+    <td><span class="badge ${s.open?'badge-active':'badge-closed'}" id="acc-status-${i}">${s.open?'Open':'Closed'}</span></td>
+    <td><label class="toggle-switch"><input type="checkbox" ${s.open?'checked':''} onchange="toggleAccess(this,${i})"><span class="toggle-slider"></span></label></td>
+  </tr>`).join('');
+}
+
+function buildHodGradeTable(){
+  const names=['Aisha Bello','Babatunde Olasubomi','Chisom Nwachukwu','Damilola Adeyinka'];
+  document.getElementById('hodGradeBody').innerHTML=names.map((n,i)=>{
+    const ca=Math.floor(Math.random()*25+55);
+    const ex=Math.floor(Math.random()*35+45);
+    const tot=Math.round(ca*0.3+ex*0.4);
+    const g=tot>=70?'A':tot>=60?'B':tot>=50?'C':'D';
+    return `<tr><td>${i+1}</td><td>202${i+1}/MED/00${42+i}</td><td>${n}</td>
+      <td><input type="number" value="${ca}" min="0" max="30" style="width:70px;padding:5px 8px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);"></td>
+      <td><input type="number" value="${ex}" min="0" max="40" style="width:70px;padding:5px 8px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);"></td>
+      <td><strong>${tot}</strong></td><td><strong style="color:var(--maroon)">${g}</strong></td></tr>`;
+  }).join('');
+}
+
+function toggleAccess(cb,idx){
+  const sp=document.getElementById('acc-status-'+idx);
+  sp.textContent=cb.checked?'Open':'Closed';
+  sp.className='badge '+(cb.checked?'badge-active':'badge-closed');
+  showToast(cb.checked?'✅ Portal access restored.':'🔒 Portal access closed for student.', cb.checked?'success':'error');
+}
+
+function toggleAllAccess(cb){
+  const lbl=document.getElementById('allAccessLabel');
+  lbl.textContent=cb.checked?'OPEN':'CLOSED';
+  lbl.style.color=cb.checked?'var(--success)':'var(--danger)';
+  showToast(cb.checked?'✅ All student portals are now OPEN.':'🔒 All student portals have been CLOSED.',cb.checked?'success':'error');
+  document.querySelectorAll('#accessBody input[type=checkbox]').forEach(c=>{c.checked=cb.checked;});
+  document.querySelectorAll('[id^=acc-status-]').forEach(s=>{
+    s.textContent=cb.checked?'Open':'Closed';
+    s.className='badge '+(cb.checked?'badge-active':'badge-closed');
+  });
+}
+
+function filterStudents(q){
+  const rows=document.querySelectorAll('#studentBody tr');
+  rows.forEach(r=>{r.style.display=r.innerText.toLowerCase().includes(q.toLowerCase())?'':'none';});
+}
+
+function approveChange(btn){btn.closest('tr').querySelector('.badge').textContent='Approved';btn.closest('tr').querySelector('.badge').className='badge badge-active';btn.closest('td').innerHTML='<span class="badge badge-active">Approved</span>';showToast('✅ Programme change approved.','success');}
+function declineChange(btn){btn.closest('tr').querySelector('.badge').textContent='Declined';btn.closest('td').innerHTML='<span class="badge badge-closed">Declined</span>';showToast('Request declined.','error');}
+function showStudentDetail(n){showToast('Loading profile for '+n+'…','success');}
+function randomDate(){const d=new Date();d.setDate(d.getDate()-Math.floor(Math.random()*14));return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+
+function showSection(name,el){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  const sec=document.getElementById('sec-'+name);
+  if(sec) sec.classList.add('active');
+  if(el) el.classList.add('active');
+  document.querySelector('.sidebar').classList.remove('open');
+}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type+' show';
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+function doLogout(){sessionStorage.removeItem('fummsa_user');window.location.href='portal-login.html';}
+</script>
+</body>
+</html>

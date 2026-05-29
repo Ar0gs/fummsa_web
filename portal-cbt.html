@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBT Examination – FUMMSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700&family=Libre+Franklin:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ── TOKENS ── */
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#4a0a1e;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;
+  --cream:#FAF7F2;--warm-white:#FFFDF9;
+  --charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.14);
+  --success:#2a6b4a;--danger:#B04A2A;--info:#1a4a6b;--warn:#7a4a00;
+  --serif:'Source Serif 4',Georgia,serif;
+  --sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:#F0EBE5;color:var(--charcoal);-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* ══════════════════════════════════════
+   SCREEN 1 — EXAM DASHBOARD
+══════════════════════════════════════ */
+#screen-dashboard{background:#F0EBE5;}
+
+.dash-topbar{
+  background:var(--maroon-dark);
+  padding:0 32px;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:2px solid rgba(196,146,42,0.25);
+  flex-shrink:0;
+}
+.dash-brand{display:flex;align-items:center;gap:12px;}
+.dash-brand-logo{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--maroon-light));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:white;font-size:1rem;border:2px solid var(--gold-light);}
+.dash-brand-text{font-family:var(--serif);color:white;font-size:1.05rem;font-weight:600;}
+.dash-brand-text small{display:block;font-size:0.6rem;color:rgba(255,255,255,0.45);font-weight:400;letter-spacing:0.1em;text-transform:uppercase;}
+.dash-user{display:flex;align-items:center;gap:10px;}
+.dash-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--gold-light);font-size:0.85rem;}
+.dash-name{font-size:0.82rem;color:white;font-weight:600;}
+.dash-role{font-size:0.62rem;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase;}
+.btn-back{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);padding:7px 16px;border-radius:2px;font-family:var(--sans);font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.btn-back:hover{background:rgba(255,255,255,0.15);}
+
+.dash-body{flex:1;padding:32px;max-width:1100px;margin:0 auto;width:100%;}
+
+.dash-hero{
+  background:var(--maroon-dark);
+  border-radius:6px;
+  padding:32px 36px;
+  margin-bottom:28px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+.dash-hero::before{content:'';position:absolute;right:-80px;top:-80px;width:300px;height:300px;border-radius:50%;border:1px solid rgba(196,146,42,0.12);}
+.dash-hero::after{content:'';position:absolute;right:60px;bottom:-60px;width:200px;height:200px;border-radius:50%;border:1px solid rgba(196,146,42,0.08);}
+.hero-left{z-index:1;}
+.hero-label{font-size:0.65rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-light);margin-bottom:8px;}
+.hero-title{font-family:var(--serif);font-size:1.7rem;color:white;font-weight:600;line-height:1.2;margin-bottom:10px;}
+.hero-sub{font-size:0.8rem;color:rgba(255,255,255,0.55);line-height:1.7;}
+.hero-right{z-index:1;display:flex;gap:20px;flex-shrink:0;}
+.hero-stat{text-align:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:16px 22px;}
+.hero-stat-n{font-family:var(--serif);font-size:1.8rem;font-weight:700;color:var(--gold-light);line-height:1;}
+.hero-stat-l{font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:4px;}
+
+.section-head{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--rule);}
+
+/* Exam cards grid */
+.exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:32px;}
+
+.exam-card{
+  background:white;
+  border-radius:5px;
+  border:1.5px solid var(--rule);
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(107,15,43,0.06);
+  transition:all 0.25s var(--ease);
+  animation:cardIn 0.4s var(--ease) both;
+}
+.exam-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(107,15,43,0.14);border-color:rgba(107,15,43,0.25);}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+.exam-card-stripe{height:5px;background:var(--maroon);}
+.exam-card-stripe.gold{background:var(--gold);}
+.exam-card-stripe.green{background:var(--success);}
+.exam-card-stripe.info{background:var(--info);}
+
+.exam-card-body{padding:20px 22px;}
+.exam-card-code{font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--maroon);margin-bottom:4px;}
+.exam-card-title{font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--charcoal);margin-bottom:12px;line-height:1.3;}
+.exam-card-meta{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.exam-meta-row{display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--muted);}
+.exam-meta-row strong{color:var(--mid);}
+
+.exam-card-footer{padding:14px 22px;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;background:var(--cream);}
+.exam-status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:0.65rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;}
+.status-upcoming{background:#fff3e0;color:var(--warn);}
+.status-live{background:#fde8ec;color:var(--danger);animation:pulse-badge 1.4s ease infinite;}
+.status-done{background:#e8f5ee;color:var(--success);}
+.status-missed{background:#f5e8e8;color:var(--danger);}
+@keyframes pulse-badge{0%,100%{opacity:1;}50%{opacity:0.6;}}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border:none;border-radius:2px;font-family:var(--sans);font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--maroon);color:white;}.btn-primary:hover{background:var(--maroon-dark);}
+.btn-primary:disabled{background:#ccc;cursor:not-allowed;}
+.btn-outline{background:white;color:var(--maroon);border:1.5px solid var(--maroon);}.btn-outline:hover{background:var(--maroon);color:white;}
+.btn-gold{background:var(--gold);color:var(--maroon-dark);}.btn-gold:hover{background:var(--gold-light);}
+.btn-sm{padding:7px 14px;font-size:0.68rem;}
+.btn-success{background:var(--success);color:white;}
+
+/* Results history table */
+.portal-card{background:white;border-radius:4px;padding:24px;box-shadow:0 1px 8px rgba(107,15,43,0.06);border:1px solid var(--rule);}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:0.63rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--rule);background:var(--cream);}
+.data-table td{font-size:0.82rem;padding:12px 14px;border-bottom:1px solid var(--rule);color:var(--charcoal);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(107,15,43,0.02);}
+.grade-pill{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-weight:800;font-size:0.82rem;}
+.gp-a{background:#e8f5ee;color:#1a5c38;}
+.gp-b{background:#e8eef5;color:#1a3a6b;}
+.gp-c{background:#f5f5e8;color:#5c5c1a;}
+.gp-f{background:#f5e8e8;color:#6b1a1a;}
+
+/* ══════════════════════════════════════
+   SCREEN 2 — EXAM INSTRUCTIONS
+══════════════════════════════════════ */
+#screen-instructions{
+  background:var(--cream);
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+}
+
+.instr-box{
+  background:white;
+  border-radius:6px;
+  border-top:5px solid var(--gold);
+  padding:44px 48px;
+  max-width:620px;
+  width:100%;
+  box-shadow:0 8px 40px rgba(107,15,43,0.12);
+  animation:slideUp 0.5s var(--ease) both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+
+.instr-logo{font-size:2.4rem;margin-bottom:16px;}
+.instr-exam-code{font-size:0.68rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--maroon);margin-bottom:6px;}
+.instr-exam-title{font-family:var(--serif);font-size:1.5rem;font-weight:600;color:var(--charcoal);margin-bottom:4px;}
+.instr-sub{font-size:0.8rem;color:var(--muted);margin-bottom:28px;}
+
+.instr-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+.instr-stat{background:var(--cream);border-radius:3px;padding:14px;text-align:center;}
+.instr-stat-n{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--maroon-dark);}
+.instr-stat-l{font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+
+.instr-list{margin-bottom:28px;}
+.instr-list h4{font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;}
+.instr-list ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.instr-list li{display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;color:var(--mid);line-height:1.5;}
+.instr-list li::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:6px;}
+
+.instr-agree{display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;padding:14px 16px;background:var(--gold-pale);border-radius:3px;border:1px solid rgba(196,146,42,0.25);}
+.instr-agree input[type=checkbox]{width:16px;height:16px;flex-shrink:0;margin-top:2px;accent-color:var(--maroon);cursor:pointer;}
+.instr-agree label{font-size:0.8rem;color:var(--mid);line-height:1.6;cursor:pointer;}
+
+.instr-actions{display:flex;gap:12px;}
+.instr-actions .btn{flex:1;justify-content:center;}
+
+/* ══════════════════════════════════════
+   SCREEN 3 — EXAM TAKING
+══════════════════════════════════════ */
+#screen-exam{background:#1a0d14;flex-direction:row;}
+
+/* Sidebar panel */
+.exam-sidebar{
+  width:280px;
+  flex-shrink:0;
+  background:#12080f;
+  border-right:1px solid rgba(196,146,42,0.15);
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  position:sticky;
+  top:0;
+}
+.exam-sidebar-top{padding:20px;border-bottom:1px solid rgba(196,146,42,0.12);}
+.exam-course-code{font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.exam-course-title{font-family:var(--serif);font-size:0.95rem;color:white;font-weight:600;line-height:1.3;}
+
+/* Timer */
+.timer-wrap{padding:18px 20px;border-bottom:1px solid rgba(196,146,42,0.12);}
+.timer-label{font-size:0.6rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+.timer-display{font-family:var(--serif);font-size:2.2rem;font-weight:700;color:var(--gold-light);letter-spacing:0.04em;line-height:1;}
+.timer-display.warning{color:#ff9944;animation:timer-pulse 1s ease infinite;}
+.timer-display.danger{color:#ff4444;animation:timer-pulse 0.5s ease infinite;}
+@keyframes timer-pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+.timer-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:10px;overflow:hidden;}
+.timer-bar-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 1s linear,background 0.5s;}
+
+/* Question navigator */
+.q-nav-wrap{flex:1;overflow-y:auto;padding:16px 20px;}
+.q-nav-wrap::-webkit-scrollbar{width:3px;}
+.q-nav-wrap::-webkit-scrollbar-thumb{background:rgba(196,146,42,0.2);}
+.q-nav-label{font-size:0.6rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px;}
+.q-nav-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}
+.q-num{width:32px;height:32px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;cursor:pointer;transition:all 0.15s;border:1.5px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);}
+.q-num:hover{border-color:var(--gold);color:var(--gold-light);}
+.q-num.answered{background:rgba(42,107,74,0.3);border-color:rgba(42,107,74,0.6);color:#7ee0a8;}
+.q-num.current{background:var(--maroon);border-color:var(--gold);color:white;}
+.q-num.flagged{background:rgba(196,146,42,0.2);border-color:var(--gold);color:var(--gold-light);}
+.q-num.answered.flagged{background:rgba(196,146,42,0.3);}
+
+.q-nav-legend{margin-top:14px;display:flex;flex-direction:column;gap:6px;}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:0.68rem;color:rgba(255,255,255,0.35);}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+.exam-sidebar-bottom{padding:16px 20px;border-top:1px solid rgba(196,146,42,0.12);}
+.exam-progress-info{display:flex;justify-content:space-between;font-size:0.68rem;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+.exam-progress-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+.exam-progress-fill{height:100%;background:var(--success);border-radius:2px;transition:width 0.4s;}
+.btn-submit-exam{width:100%;margin-top:14px;background:var(--gold);color:var(--maroon-dark);border:none;padding:12px;border-radius:3px;font-family:var(--sans);font-size:0.78rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-submit-exam:hover{background:var(--gold-light);}
+
+/* Main question area */
+.exam-main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+.exam-topbar{
+  background:#12080f;
+  border-bottom:1px solid rgba(196,146,42,0.12);
+  padding:0 32px;
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-shrink:0;
+}
+.exam-topbar-left{font-size:0.75rem;color:rgba(255,255,255,0.4);}
+.exam-topbar-left strong{color:var(--gold-light);}
+.exam-topbar-actions{display:flex;gap:10px;}
+
+.btn-flag{background:rgba(196,146,42,0.1);border:1px solid rgba(196,146,42,0.25);color:var(--gold);padding:7px 14px;border-radius:2px;font-family:var(--sans);font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-flag:hover,.btn-flag.active{background:rgba(196,146,42,0.25);border-color:var(--gold);}
+.btn-flag.active{color:var(--gold-light);}
+
+/* Question content */
+.question-area{flex:1;overflow-y:auto;padding:36px 48px;}
+.question-area::-webkit-scrollbar{width:4px;}
+.question-area::-webkit-scrollbar-thumb{background:rgba(196,146,42,0.15);}
+
+.q-number-label{font-size:0.65rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px;}
+.q-body{font-family:var(--serif);font-size:1.15rem;color:rgba(255,255,255,0.9);line-height:1.7;margin-bottom:32px;font-weight:400;}
+
+.options-list{display:flex;flex-direction:column;gap:12px;}
+.option-item{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding:16px 20px;
+  border-radius:4px;
+  border:1.5px solid rgba(255,255,255,0.06);
+  cursor:pointer;
+  transition:all 0.2s var(--ease);
+  background:rgba(255,255,255,0.03);
+}
+.option-item:hover{border-color:rgba(196,146,42,0.35);background:rgba(196,146,42,0.05);}
+.option-item.selected{border-color:var(--gold);background:rgba(196,146,42,0.12);}
+.option-label{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;color:rgba(255,255,255,0.4);flex-shrink:0;transition:all 0.2s;}
+.option-item.selected .option-label{border-color:var(--gold);background:var(--gold);color:var(--maroon-dark);}
+.option-text{font-size:0.9rem;color:rgba(255,255,255,0.75);line-height:1.6;padding-top:3px;}
+.option-item.selected .option-text{color:rgba(255,255,255,0.95);}
+
+/* Nav footer */
+.exam-nav{
+  background:#12080f;
+  border-top:1px solid rgba(196,146,42,0.12);
+  padding:14px 48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-shrink:0;
+}
+.btn-nav{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);padding:10px 22px;border-radius:2px;font-family:var(--sans);font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-nav:hover:not(:disabled){background:rgba(255,255,255,0.12);color:white;}
+.btn-nav:disabled{opacity:0.3;cursor:not-allowed;}
+.btn-nav-next{background:var(--maroon);border-color:var(--maroon);color:white;}
+.btn-nav-next:hover:not(:disabled){background:var(--maroon-light);}
+.q-counter{font-size:0.78rem;color:rgba(255,255,255,0.35);}
+.q-counter strong{color:rgba(255,255,255,0.7);}
+
+/* ══════════════════════════════════════
+   SCREEN 4 — RESULTS
+══════════════════════════════════════ */
+#screen-results{
+  background:var(--cream);
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+}
+
+.result-box{
+  background:white;
+  border-radius:6px;
+  overflow:hidden;
+  max-width:680px;
+  width:100%;
+  box-shadow:0 8px 40px rgba(107,15,43,0.14);
+  animation:slideUp 0.5s var(--ease) both;
+}
+.result-header{
+  background:var(--maroon-dark);
+  padding:36px 40px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.result-header::before{content:'';position:absolute;right:-60px;top:-60px;width:250px;height:250px;border-radius:50%;border:1px solid rgba(196,146,42,0.12);}
+.result-icon{font-size:3rem;margin-bottom:12px;position:relative;z-index:1;}
+.result-title{font-family:var(--serif);font-size:1.5rem;color:white;font-weight:600;position:relative;z-index:1;}
+.result-course{font-size:0.75rem;color:var(--gold-light);letter-spacing:0.1em;margin-top:4px;position:relative;z-index:1;}
+
+.result-score-ring{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px;
+  gap:48px;
+  border-bottom:1.5px solid var(--rule);
+}
+.score-circle{
+  width:140px;height:140px;
+  border-radius:50%;
+  background:conic-gradient(var(--maroon) 0%, var(--rule) 0%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  flex-shrink:0;
+}
+.score-circle-inner{
+  width:110px;height:110px;
+  border-radius:50%;
+  background:white;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.score-pct{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--maroon-dark);line-height:1;}
+.score-pct-label{font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+
+.result-stats{display:flex;flex-direction:column;gap:14px;}
+.res-stat{display:flex;justify-content:space-between;align-items:center;gap:24px;}
+.res-stat-label{font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+.res-stat-val{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--charcoal);}
+.res-stat-val.pass{color:var(--success);}
+.res-stat-val.fail{color:var(--danger);}
+
+.result-breakdown{padding:28px 40px;border-bottom:1.5px solid var(--rule);}
+.result-breakdown h4{font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;}
+.breakdown-row{display:flex;align-items:center;gap:14px;margin-bottom:10px;font-size:0.82rem;}
+.breakdown-q{flex:1;color:var(--mid);line-height:1.5;}
+.breakdown-indicator{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;}
+.bi-correct{background:#e8f5ee;color:#1a5c38;}
+.bi-wrong{background:#fde8ec;color:#7a0e1e;}
+
+.result-actions{padding:24px 40px;display:flex;gap:12px;justify-content:center;}
+.result-actions .btn{padding:12px 28px;}
+
+/* ══════════════════════════════════════
+   MODAL — SUBMIT CONFIRMATION
+══════════════════════════════════════ */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(10,4,8,0.75);
+  backdrop-filter:blur(6px);
+  z-index:900;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{
+  background:#1e0e18;
+  border:1px solid rgba(196,146,42,0.25);
+  border-top:4px solid var(--gold);
+  border-radius:5px;
+  padding:36px;
+  max-width:440px;
+  width:100%;
+  animation:slideUp 0.4s var(--ease) both;
+}
+.modal-box h3{font-family:var(--serif);font-size:1.2rem;color:white;margin-bottom:10px;}
+.modal-box p{font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:22px;}
+.modal-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.modal-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:3px;padding:12px 16px;text-align:center;}
+.modal-stat-n{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--gold-light);}
+.modal-stat-l{font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:3px;}
+.modal-actions{display:flex;gap:10px;}
+.modal-actions .btn{flex:1;justify-content:center;}
+.btn-modal-cancel{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);padding:11px 20px;border-radius:2px;font-family:var(--sans);font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-modal-cancel:hover{background:rgba(255,255,255,0.1);color:white;}
+.btn-modal-submit{background:var(--gold);border:none;color:var(--maroon-dark);padding:11px 20px;border-radius:2px;font-family:var(--sans);font-size:0.72rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-modal-submit:hover{background:var(--gold-light);}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--charcoal);color:white;padding:13px 20px;border-radius:4px;font-size:0.8rem;font-weight:500;transform:translateY(80px);opacity:0;transition:all 0.3s var(--ease);z-index:9999;max-width:320px;border-left:4px solid var(--gold);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.error{border-left-color:var(--danger);}
+.toast.success{border-left-color:var(--success);}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:900px){
+  #screen-exam{flex-direction:column;}
+  .exam-sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap;}
+  .exam-sidebar-top,.timer-wrap{flex:1;min-width:200px;}
+  .q-nav-wrap{width:100%;border-top:1px solid rgba(196,146,42,0.12);}
+  .exam-sidebar-bottom{width:100%;}
+  .question-area{padding:24px;}
+  .exam-nav{padding:12px 24px;}
+  .dash-hero{flex-direction:column;}
+  .hero-right{width:100%;justify-content:center;}
+  .instr-box{padding:28px 24px;}
+  .result-score-ring{flex-direction:column;gap:28px;}
+}
+@media(max-width:600px){
+  .dash-body{padding:16px;}
+  .result-actions{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — DASHBOARD
+══════════════════════════════════════ -->
+<div class="screen active" id="screen-dashboard">
+
+  <div class="dash-topbar">
+    <div class="dash-brand">
+      <div class="dash-brand-logo">F</div>
+      <div class="dash-brand-text">FUMMSA <small>CBT Portal</small></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="dash-user">
+        <div class="dash-avatar" id="dashAvatar">AB</div>
+        <div>
+          <div class="dash-name" id="dashName">Aisha Bello</div>
+          <div class="dash-role">200 Level • MBBS</div>
+        </div>
+      </div>
+      <a href="portal-student.html" class="btn-back">← Back to Portal</a>
+    </div>
+  </div>
+
+  <div class="dash-body">
+
+    <div class="dash-hero">
+      <div class="hero-left">
+        <div class="hero-label">CBT Examination Centre</div>
+        <div class="hero-title">Computer Based Testing<br>Portal</div>
+        <div class="hero-sub">Sit your scheduled examinations online. Ensure you are in the ICT Lab before starting. Keep your Student ID handy at all times.</div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-stat"><div class="hero-stat-n" id="hStatUpcoming">3</div><div class="hero-stat-l">Upcoming</div></div>
+        <div class="hero-stat"><div class="hero-stat-n" id="hStatDone">3</div><div class="hero-stat-l">Completed</div></div>
+        <div class="hero-stat"><div class="hero-stat-n" id="hStatAvg">68%</div><div class="hero-stat-l">Avg. Score</div></div>
+      </div>
+    </div>
+
+    <!-- Upcoming / Live exams -->
+    <div class="section-head">Scheduled Examinations</div>
+    <div class="exam-grid" id="examGrid"></div>
+
+    <!-- Past results -->
+    <div class="section-head">Past CBT Results</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Date</th>
+            <th>Score</th>
+            <th>Percentage</th>
+            <th>Grade</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="pastResultsTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — INSTRUCTIONS
+══════════════════════════════════════ -->
+<div class="screen" id="screen-instructions">
+  <div class="instr-box">
+    <div class="instr-logo">🖥️</div>
+    <div class="instr-exam-code" id="instrCode">ANA 202</div>
+    <div class="instr-exam-title" id="instrTitle">General Anatomy II</div>
+    <div class="instr-sub" id="instrSub">2024/2025 Session • Second Semester</div>
+
+    <div class="instr-stats">
+      <div class="instr-stat">
+        <div class="instr-stat-n" id="instrQCount">40</div>
+        <div class="instr-stat-l">Questions</div>
+      </div>
+      <div class="instr-stat">
+        <div class="instr-stat-n" id="instrDuration">60</div>
+        <div class="instr-stat-l">Minutes</div>
+      </div>
+      <div class="instr-stat">
+        <div class="instr-stat-n" id="instrPass">50%</div>
+        <div class="instr-stat-l">Pass Mark</div>
+      </div>
+    </div>
+
+    <div class="instr-list">
+      <h4>Instructions</h4>
+      <ul>
+        <li>The exam will begin immediately after you click <strong>Start Exam</strong>. The countdown timer cannot be paused.</li>
+        <li>Each question carries equal marks. There is no negative marking for wrong answers.</li>
+        <li>Click any question number on the sidebar to navigate directly to that question.</li>
+        <li>You may flag questions for review using the <strong>Flag</strong> button and return to them later.</li>
+        <li>Click <strong>Submit Exam</strong> only when you are certain. Submission is irreversible.</li>
+        <li>The exam will auto-submit when the timer reaches zero.</li>
+        <li>Ensure a stable internet connection throughout the exam.</li>
+      </ul>
+    </div>
+
+    <div class="instr-agree">
+      <input type="checkbox" id="agreeCheck">
+      <label for="agreeCheck">I have read and understood the instructions above. I confirm that I am taking this examination in an authorised examination venue and will not engage in any form of malpractice.</label>
+    </div>
+
+    <div class="instr-actions">
+      <button class="btn btn-outline" onclick="showScreen('dashboard')">← Cancel</button>
+      <button class="btn btn-primary" id="startExamBtn" onclick="startExam()">Start Exam →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 — EXAM TAKING
+══════════════════════════════════════ -->
+<div class="screen" id="screen-exam">
+
+  <!-- Sidebar -->
+  <aside class="exam-sidebar">
+    <div class="exam-sidebar-top">
+      <div class="exam-course-code" id="examSideCode">ANA 202</div>
+      <div class="exam-course-title" id="examSideTitle">General Anatomy II</div>
+    </div>
+
+    <div class="timer-wrap">
+      <div class="timer-label">Time Remaining</div>
+      <div class="timer-display" id="timerDisplay">60:00</div>
+      <div class="timer-bar"><div class="timer-bar-fill" id="timerBarFill" style="width:100%"></div></div>
+    </div>
+
+    <div class="q-nav-wrap">
+      <div class="q-nav-label">Questions</div>
+      <div class="q-nav-grid" id="qNavGrid"></div>
+      <div class="q-nav-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#2a6b4a;"></div>Answered</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--maroon);"></div>Current</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(196,146,42,0.3);border:1px solid var(--gold);"></div>Flagged</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);"></div>Unanswered</div>
+      </div>
+    </div>
+
+    <div class="exam-sidebar-bottom">
+      <div class="exam-progress-info">
+        <span id="answeredCount">0</span> of <span id="totalQCount">40</span> answered
+      </div>
+      <div class="exam-progress-bar">
+        <div class="exam-progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <button class="btn-submit-exam" onclick="openSubmitModal()">Submit Exam</button>
+    </div>
+  </aside>
+
+  <!-- Main area -->
+  <div class="exam-main">
+    <div class="exam-topbar">
+      <div class="exam-topbar-left">
+        Question <strong id="currentQNum">1</strong> of <strong id="totalQNum">40</strong>
+      </div>
+      <div class="exam-topbar-actions">
+        <button class="btn-flag" id="flagBtn" onclick="toggleFlag()">⚑ Flag for Review</button>
+      </div>
+    </div>
+
+    <div class="question-area" id="questionArea">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="exam-nav">
+      <button class="btn-nav" id="prevBtn" onclick="goTo(currentQ - 1)" disabled>← Previous</button>
+      <div class="q-counter">Question <strong id="qCounterCurrent">1</strong> / <strong id="qCounterTotal">40</strong></div>
+      <button class="btn-nav btn-nav-next" id="nextBtn" onclick="goTo(currentQ + 1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 4 — RESULTS
+══════════════════════════════════════ -->
+<div class="screen" id="screen-results">
+  <div class="result-box">
+    <div class="result-header">
+      <div class="result-icon" id="resultIcon">🎉</div>
+      <div class="result-title" id="resultTitle">Exam Completed</div>
+      <div class="result-course" id="resultCourse">ANA 202 • General Anatomy II</div>
+    </div>
+
+    <div class="result-score-ring">
+      <div class="score-circle" id="scoreCircle">
+        <div class="score-circle-inner">
+          <div class="score-pct" id="scorePct">—</div>
+          <div class="score-pct-label">Score</div>
+        </div>
+      </div>
+      <div class="result-stats">
+        <div class="res-stat">
+          <div class="res-stat-label">Raw Score</div>
+          <div class="res-stat-val" id="resRaw">—</div>
+        </div>
+        <div class="res-stat">
+          <div class="res-stat-label">Correct</div>
+          <div class="res-stat-val" id="resCorrect">—</div>
+        </div>
+        <div class="res-stat">
+          <div class="res-stat-label">Wrong</div>
+          <div class="res-stat-val" id="resWrong">—</div>
+        </div>
+        <div class="res-stat">
+          <div class="res-stat-label">Time Taken</div>
+          <div class="res-stat-val" id="resTime">—</div>
+        </div>
+        <div class="res-stat">
+          <div class="res-stat-label">Result</div>
+          <div class="res-stat-val" id="resVerdict">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-breakdown" id="resultBreakdown">
+      <h4>Review — First 10 Questions</h4>
+      <div id="breakdownList"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-outline" onclick="showScreen('dashboard')">Back to Dashboard</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print Result</button>
+    </div>
+  </div>
+</div>
+
+<!-- Submit Modal -->
+<div class="modal-overlay" id="submitModal" onclick="if(event.target===this)closeSubmitModal()">
+  <div class="modal-box">
+    <h3>Submit Examination?</h3>
+    <p>You are about to submit your exam. This action cannot be undone. Please review your answers before submitting.</p>
+    <div class="modal-stats">
+      <div class="modal-stat"><div class="modal-stat-n" id="modalAnswered">0</div><div class="modal-stat-l">Answered</div></div>
+      <div class="modal-stat"><div class="modal-stat-n" id="modalUnanswered">0</div><div class="modal-stat-l">Unanswered</div></div>
+      <div class="modal-stat"><div class="modal-stat-n" id="modalFlagged">0</div><div class="modal-stat-l">Flagged</div></div>
+      <div class="modal-stat"><div class="modal-stat-n" id="modalTimeLeft">—</div><div class="modal-stat-l">Time Left</div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeSubmitModal()">Continue Exam</button>
+      <button class="btn-modal-submit" onclick="submitExam()">Confirm Submit</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+
+const EXAMS = [
+  {
+    id: 'ANA202',
+    code: 'ANA 202',
+    title: 'General Anatomy II',
+    session: '2024/2025 Session • Second Semester',
+    date: '10 Jun 2025',
+    time: '9:00 AM',
+    venue: 'ICT Lab A',
+    duration: 60,         // minutes
+    totalQ: 40,
+    passPercent: 50,
+    status: 'upcoming',   // upcoming | live | done | missed
+    stripe: ''
+  },
+  {
+    id: 'BCH202',
+    code: 'BCH 202',
+    title: 'Medical Biochemistry II',
+    session: '2024/2025 Session • Second Semester',
+    date: '12 Jun 2025',
+    time: '11:00 AM',
+    venue: 'ICT Lab B',
+    duration: 60,
+    totalQ: 40,
+    passPercent: 50,
+    status: 'upcoming',
+    stripe: 'gold'
+  },
+  {
+    id: 'PHS202',
+    code: 'PHS 202',
+    title: 'Medical Physiology II',
+    session: '2024/2025 Session • Second Semester',
+    date: '14 Jun 2025',
+    time: '2:00 PM',
+    venue: 'ICT Lab A',
+    duration: 60,
+    totalQ: 40,
+    passPercent: 50,
+    status: 'upcoming',
+    stripe: 'info'
+  },
+];
+
+const PAST_RESULTS = [
+  {code:'ANA 201',title:'General Anatomy I',       date:'Jan 2025',score:34,total:50,pct:68,grade:'B',passed:true},
+  {code:'BCH 201',title:'Medical Biochemistry I',  date:'Jan 2025',score:37,total:50,pct:74,grade:'B',passed:true},
+  {code:'PHS 201',title:'Medical Physiology I',    date:'Jan 2025',score:31,total:50,pct:62,grade:'C',passed:true},
+];
+
+// Demo question bank — 20 anatomy questions
+const QUESTION_BANK = {
+  ANA202: [
+    {q:"The femoral triangle is bounded superiorly by the:",opts:["Inguinal ligament","Sartorius muscle","Adductor longus","Iliopsoas muscle"],correct:0},
+    {q:"Which of the following is NOT a branch of the brachial plexus?",opts:["Axillary nerve","Radial nerve","Femoral nerve","Musculocutaneous nerve"],correct:2},
+    {q:"The rotator cuff of the shoulder is formed by all of the following EXCEPT:",opts:["Supraspinatus","Infraspinatus","Teres minor","Teres major"],correct:3},
+    {q:"The primary blood supply to the head of the femur in an adult is from the:",opts:["Obturator artery","Medial circumflex femoral artery","Lateral circumflex femoral artery","Superior gluteal artery"],correct:1},
+    {q:"Which carpal bone is most commonly fractured?",opts:["Lunate","Scaphoid","Triquetrum","Capitate"],correct:1},
+    {q:"The ductus arteriosus connects the:",opts:["Aorta to the superior vena cava","Pulmonary artery to the aorta","Left atrium to right atrium","Pulmonary veins to the left atrium"],correct:1},
+    {q:"Which structure passes through the foramen ovale of the sphenoid bone?",opts:["Ophthalmic nerve (V1)","Maxillary nerve (V2)","Mandibular nerve (V3)","Abducens nerve (VI)"],correct:2},
+    {q:"The nerve most likely damaged in a fracture of the surgical neck of the humerus is:",opts:["Radial nerve","Axillary nerve","Musculocutaneous nerve","Ulnar nerve"],correct:1},
+    {q:"Regarding the diaphragm, which of the following passes through the aortic hiatus?",opts:["Inferior vena cava","Oesophagus","Aorta and thoracic duct","Azygos vein only"],correct:2},
+    {q:"The posterior relations of the kidney include all EXCEPT:",opts:["Quadratus lumborum","Psoas major","Diaphragm","Transversus abdominis"],correct:3},
+    {q:"Which of the following ligaments prevents anterior displacement of the tibia on the femur?",opts:["Posterior cruciate ligament","Anterior cruciate ligament","Medial collateral ligament","Lateral collateral ligament"],correct:1},
+    {q:"The parotid duct (Stensen's duct) opens opposite the:",opts:["Upper 1st molar","Upper 2nd molar","Lower 2nd molar","Upper 2nd premolar"],correct:1},
+    {q:"In the cubital fossa, the order of structures from medial to lateral is:",opts:["Tendon, artery, nerve","Nerve, artery, tendon","Artery, tendon, nerve","Nerve, tendon, artery"],correct:1},
+    {q:"The appendix is supplied by the:",opts:["Ileocolic artery","Right colic artery","Middle colic artery","Superior mesenteric artery directly"],correct:0},
+    {q:"Which muscle is responsible for flexion and medial rotation of the thigh?",opts:["Gluteus maximus","Tensor fasciae latae","Sartorius","Iliopsoas"],correct:3},
+    {q:"The transpyloric plane (of Addison) is at the level of:",opts:["T10","T12","L1","L3"],correct:2},
+    {q:"The spleen is normally located in which abdominal quadrant?",opts:["Right upper","Left upper","Right lower","Left lower"],correct:1},
+    {q:"The brachioradialis muscle is supplied by the:",opts:["Median nerve","Ulnar nerve","Radial nerve","Musculocutaneous nerve"],correct:2},
+    {q:"McBurney's point, used to locate the appendix, lies:",opts:["At the umbilicus","One-third of the distance from the ASIS to the umbilicus","One-third of the distance from the umbilicus to the ASIS","At the mid-inguinal point"],correct:1},
+    {q:"Which structure is found in the porta hepatis?",opts:["Hepatic veins","Portal vein, hepatic artery, bile duct","Inferior vena cava","Lymphatics only"],correct:1},
+    {q:"The basilic vein drains into the:",opts:["Subclavian vein","Cephalic vein","Axillary vein","Brachial vein"],correct:2},
+    {q:"The dorsal column (medial lemniscus) pathway carries:",opts:["Pain and temperature","Crude touch only","Proprioception and fine touch","Motor signals"],correct:2},
+    {q:"The coronary sinus drains into the:",opts:["Right ventricle","Left atrium","Right atrium","Left ventricle"],correct:2},
+    {q:"Which of the following is a feature of the right bronchus compared to the left?",opts:["Longer","More horizontal","Wider and shorter","Gives off branches earlier"],correct:2},
+    {q:"The plantaris muscle is innervated by the:",opts:["Common peroneal nerve","Tibial nerve","Sural nerve","Superficial peroneal nerve"],correct:1},
+    {q:"Waldeyer's ring consists of lymphoid tissue in which region?",opts:["Axilla","Nasopharynx and oropharynx","Inguinal region","Mesentery"],correct:1},
+    {q:"The profunda femoris artery is a branch of the:",opts:["Femoral artery","External iliac artery","Obturator artery","Popliteal artery"],correct:0},
+    {q:"The muscle that produces the 'anatomical snuffbox' on its floor is the:",opts:["Extensor pollicis longus","Abductor pollicis longus","Scaphoid","Extensor pollicis brevis"],correct:0},
+    {q:"Which nerve is at risk during a posterior approach to the hip joint?",opts:["Femoral nerve","Sciatic nerve","Obturator nerve","Superior gluteal nerve"],correct:1},
+    {q:"The fossa ovalis is a remnant of the:",opts:["Foramen ovale","Ductus venosus","Ductus arteriosus","Umbilical vein"],correct:0},
+    {q:"Kiesselbach's area (Little's area) in the nose is supplied by all EXCEPT:",opts:["Anterior ethmoidal artery","Sphenopalatine artery","Greater palatine artery","Posterior ethmoidal artery"],correct:3},
+    {q:"The adrenal (suprarenal) glands are supplied by all of the following arteries EXCEPT:",opts:["Superior suprarenal (from inferior phrenic)","Middle suprarenal (from aorta)","Inferior suprarenal (from renal artery)","Lumbar arteries"],correct:3},
+    {q:"The ansa cervicalis supplies all of the following muscles EXCEPT:",opts:["Sternohyoid","Sternothyroid","Omohyoid","Thyrohyoid"],correct:3},
+    {q:"The obturator nerve arises from:",opts:["L2, L3, L4","L3, L4, L5","L1, L2, L3","L4, L5, S1"],correct:0},
+    {q:"The hepatorenal pouch (Morrison's pouch) is the:",opts:["Most superior recess of the peritoneal cavity","Most inferior recess in the supine position","Junction of lesser and greater sac","Space between the liver and right kidney"],correct:3},
+    {q:"Which of the following is true of the left coronary artery?",opts:["Supplies the SA node in most people","Arises from the posterior aortic sinus","Supplies the left ventricle via LAD and circumflex","Is dominant in most people"],correct:2},
+    {q:"The tensor tympani muscle is innervated by:",opts:["Facial nerve (VII)","Mandibular nerve (V3)","Glossopharyngeal nerve (IX)","Trigeminal nerve — ophthalmic (V1)"],correct:1},
+    {q:"Lateral rotation of the eyeball is performed by the:",opts:["Superior oblique","Inferior oblique","Superior rectus","Lateral rectus"],correct:1},
+    {q:"The thoracic duct begins at the:",opts:["Left subclavian vein","Cisterna chyli","Thoracic inlet","Right lymphatic duct"],correct:1},
+    {q:"All of the following are contents of the inguinal canal EXCEPT:",opts:["Ilioinguinal nerve","Genital branch of genitofemoral nerve","Iliac lymphatics","Round ligament (in female)"],correct:2},
+  ],
+  BCH202: [
+    {q:"The enzyme deficient in Phenylketonuria (PKU) is:",opts:["Phenylalanine hydroxylase","Tyrosinase","Homogentisate oxidase","Fumarylacetoacetase"],correct:0},
+    {q:"Which vitamin is required as a coenzyme for transamination reactions?",opts:["Vitamin B12","Vitamin B6 (Pyridoxal phosphate)","Vitamin B1","Niacin"],correct:1},
+    {q:"The rate-limiting step of the urea cycle is catalysed by:",opts:["Arginase","Carbamoyl phosphate synthetase I","Argininosuccinate synthetase","Ornithine transcarbamoylase"],correct:1},
+    {q:"Which lipoprotein has the highest triglyceride content?",opts:["LDL","HDL","VLDL","Chylomicrons"],correct:3},
+    {q:"The Km of an enzyme is defined as:",opts:["Maximum velocity","Substrate concentration at half Vmax","Inhibitor constant","Product concentration at equilibrium"],correct:1},
+    {q:"Which of the following is an irreversible step in glycolysis?",opts:["Phosphoglucose isomerase","Phosphofructokinase-1","Aldolase","Phosphoglycerate kinase"],correct:1},
+    {q:"The pentose phosphate pathway produces:",opts:["ATP and pyruvate","NADPH and ribose-5-phosphate","Acetyl-CoA and FADH2","Oxaloacetate and NADH"],correct:1},
+    {q:"HbA1c reflects average blood glucose over the past:",opts:["1 week","2–3 months","1 month","6 months"],correct:1},
+    {q:"Which of the following is NOT a ketone body?",opts:["Acetoacetate","Beta-hydroxybutyrate","Acetone","Pyruvate"],correct:3},
+    {q:"The enzyme that commits fatty acids to beta-oxidation is:",opts:["Acyl-CoA synthetase","Carnitine acyltransferase I","Enoyl-CoA hydratase","Thiolase"],correct:1},
+  ],
+  PHS202: [
+    {q:"The resting membrane potential of a typical neuron is approximately:",opts:["-90 mV","-70 mV","+40 mV","-55 mV"],correct:1},
+    {q:"The primary stimulus for erythropoietin secretion is:",opts:["Low iron","Tissue hypoxia","High altitude alone","Anaemia alone"],correct:1},
+    {q:"Which of the following is a function of the proximal convoluted tubule?",opts:["Concentration of urine","Reabsorption of ~65% of filtered sodium","Secretion of ADH","Production of renin"],correct:1},
+    {q:"The Frank-Starling law of the heart states:",opts:["Heart rate increases cardiac output","Stroke volume increases with preload","Afterload determines heart rate","Contractility is independent of fibre length"],correct:1},
+    {q:"Normal tidal volume at rest is approximately:",opts:["150 mL","500 mL","1200 mL","3500 mL"],correct:1},
+    {q:"The P50 value of haemoglobin refers to:",opts:["Oxygen saturation at sea level","PO2 at which Hb is 50% saturated","Carbon dioxide carrying capacity","Bohr effect constant"],correct:1},
+    {q:"Aldosterone acts primarily on which segment of the nephron?",opts:["Proximal tubule","Loop of Henle","Collecting duct and distal tubule","Glomerulus"],correct:2},
+    {q:"The QRS complex on an ECG represents:",opts:["Atrial depolarisation","Ventricular depolarisation","Atrial repolarisation","Ventricular repolarisation"],correct:1},
+    {q:"Which of the following shifts the oxygen-dissociation curve to the right?",opts:["Decreased CO2","Increased pH","Increased temperature","Decreased 2,3-DPG"],correct:2},
+    {q:"The primary buffer system in blood is:",opts:["Phosphate buffer","Protein buffer","Bicarbonate-carbonic acid system","Haemoglobin alone"],correct:2},
+  ]
+};
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let currentExam      = null;
+let questions        = [];
+let answers          = {};    // { qIndex: optionIndex }
+let flagged          = new Set();
+let currentQ         = 0;
+let timerInterval    = null;
+let timeRemaining    = 0;
+let totalTime        = 0;
+let examStartTime    = null;
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Load user info
+  try {
+    const raw = sessionStorage.getItem('fummsa_user');
+    if (raw) {
+      const u = JSON.parse(raw);
+      const name = u.name || u.full_name || 'Aisha Bello';
+      const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      document.getElementById('dashAvatar').textContent = initials;
+      document.getElementById('dashName').textContent   = name.split(' ')[0] + ' ' + (name.split(' ')[1] || '');
+    }
+  } catch(e) {}
+
+  renderDashboard();
+});
+
+// ══════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════
+function renderDashboard() {
+  renderExamCards();
+  renderPastResults();
+}
+
+function renderExamCards() {
+  const grid = document.getElementById('examGrid');
+  grid.innerHTML = EXAMS.map((exam, i) => {
+    const isLive    = exam.status === 'live';
+    const isDone    = exam.status === 'done';
+    const isMissed  = exam.status === 'missed';
+    const statusHtml = isLive
+      ? '<span class="exam-status-badge status-live">🔴 Live Now</span>'
+      : isDone
+        ? '<span class="exam-status-badge status-done">✓ Completed</span>'
+        : isMissed
+          ? '<span class="exam-status-badge status-missed">✗ Missed</span>'
+          : '<span class="exam-status-badge status-upcoming">⏳ Upcoming</span>';
+
+    const btnHtml = isDone || isMissed
+      ? `<button class="btn btn-outline btn-sm" disabled style="opacity:0.5;cursor:not-allowed;">
+           ${isDone ? '✓ Completed' : '✗ Missed'}
+         </button>`
+      : `<button class="btn btn-primary btn-sm" onclick="openInstructions('${exam.id}')"
+           style="animation-delay:${i*0.08}s">
+           ${isLive ? '🔴 Enter Exam' : 'Begin Exam'}
+         </button>`;
+
+    return `
+      <div class="exam-card" style="animation-delay:${i * 0.1}s">
+        <div class="exam-card-stripe ${exam.stripe}"></div>
+        <div class="exam-card-body">
+          <div class="exam-card-code">${exam.code}</div>
+          <div class="exam-card-title">${exam.title}</div>
+          <div class="exam-card-meta">
+            <div class="exam-meta-row">📅 <strong>${exam.date}</strong> at ${exam.time}</div>
+            <div class="exam-meta-row">📍 <span>${exam.venue}</span></div>
+            <div class="exam-meta-row">⏱ <span>${exam.duration} minutes &nbsp;•&nbsp; ${exam.totalQ} questions</span></div>
+          </div>
+        </div>
+        <div class="exam-card-footer">
+          ${statusHtml}
+          ${btnHtml}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderPastResults() {
+  const tbody = document.getElementById('pastResultsTable');
+  const gradeClass = {A:'gp-a', B:'gp-b', C:'gp-c', D:'gp-f', F:'gp-f'};
+  tbody.innerHTML = PAST_RESULTS.map(r => `
+    <tr>
+      <td>
+        <div style="font-weight:700;font-size:0.8rem;color:var(--maroon);">${r.code}</div>
+        <div style="font-size:0.75rem;color:var(--muted);">${r.title}</div>
+      </td>
+      <td>${r.date}</td>
+      <td><strong>${r.score}</strong>/${r.total}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;height:5px;background:var(--rule);border-radius:2px;overflow:hidden;max-width:80px;">
+            <div style="height:100%;width:${r.pct}%;background:${r.pct>=50?'var(--success)':'var(--danger)'};border-radius:2px;"></div>
+          </div>
+          <span style="font-size:0.78rem;font-weight:700;">${r.pct}%</span>
+        </div>
+      </td>
+      <td><div class="grade-pill ${gradeClass[r.grade]||'gp-c'}">${r.grade}</div></td>
+      <td><span class="exam-status-badge ${r.passed?'status-done':'status-missed'}">${r.passed?'✓ Pass':'✗ Fail'}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick="showToast('Detailed review coming soon.','success')">Review</button></td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════
+// INSTRUCTIONS SCREEN
+// ══════════════════════════════════════
+function openInstructions(examId) {
+  currentExam = EXAMS.find(e => e.id === examId);
+  if (!currentExam) return;
+
+  document.getElementById('instrCode').textContent    = currentExam.code;
+  document.getElementById('instrTitle').textContent   = currentExam.title;
+  document.getElementById('instrSub').textContent     = currentExam.session;
+  document.getElementById('instrQCount').textContent  = currentExam.totalQ;
+  document.getElementById('instrDuration').textContent = currentExam.duration;
+  document.getElementById('instrPass').textContent    = currentExam.passPercent + '%';
+
+  document.getElementById('agreeCheck').checked = false;
+  showScreen('instructions');
+}
+
+document.getElementById('agreeCheck').addEventListener('change', function () {
+  document.getElementById('startExamBtn').disabled = !this.checked;
+});
+document.getElementById('startExamBtn').disabled = true;
+
+// ══════════════════════════════════════
+// START EXAM
+// ══════════════════════════════════════
+function startExam() {
+  if (!document.getElementById('agreeCheck').checked) {
+    showToast('Please agree to the instructions first.', 'error');
+    return;
+  }
+
+  // Build question set — use real bank or generate fillers if fewer than totalQ
+  const bank = QUESTION_BANK[currentExam.id] || [];
+  questions = [];
+  for (let i = 0; i < currentExam.totalQ; i++) {
+    if (bank[i]) {
+      questions.push(bank[i]);
+    } else {
+      // Filler question
+      questions.push({
+        q: `Sample Question ${i + 1}: Which of the following best describes the structure indicated?`,
+        opts: ['Option A — First choice', 'Option B — Second choice', 'Option C — Third choice', 'Option D — Fourth choice'],
+        correct: Math.floor(Math.random() * 4)
+      });
+    }
+  }
+
+  answers      = {};
+  flagged      = new Set();
+  currentQ     = 0;
+  timeRemaining = currentExam.duration * 60;
+  totalTime     = timeRemaining;
+  examStartTime = Date.now();
+
+  // Set sidebar info
+  document.getElementById('examSideCode').textContent  = currentExam.code;
+  document.getElementById('examSideTitle').textContent = currentExam.title;
+  document.getElementById('totalQCount').textContent   = questions.length;
+  document.getElementById('totalQNum').textContent     = questions.length;
+  document.getElementById('qCounterTotal').textContent = questions.length;
+
+  buildQNav();
+  renderQuestion(0);
+  startTimer();
+  showScreen('exam');
+}
+
+// ══════════════════════════════════════
+// QUESTION NAVIGATION
+// ══════════════════════════════════════
+function buildQNav() {
+  const grid = document.getElementById('qNavGrid');
+  grid.innerHTML = questions.map((_, i) => `
+    <div class="q-num" id="qn-${i}" onclick="goTo(${i})">${i + 1}</div>
+  `).join('');
+}
+
+function updateQNav() {
+  questions.forEach((_, i) => {
+    const el = document.getElementById('qn-' + i);
+    if (!el) return;
+    el.className = 'q-num';
+    if (i === currentQ) el.classList.add('current');
+    if (answers[i] !== undefined) el.classList.add('answered');
+    if (flagged.has(i)) el.classList.add('flagged');
+  });
+
+  const answered = Object.keys(answers).length;
+  document.getElementById('answeredCount').textContent = answered;
+  document.getElementById('progressFill').style.width  = Math.round(answered / questions.length * 100) + '%';
+}
+
+function goTo(index) {
+  if (index < 0 || index >= questions.length) return;
+  currentQ = index;
+  renderQuestion(index);
+}
+
+function renderQuestion(index) {
+  const q = questions[index];
+  if (!q) return;
+
+  const area = document.getElementById('questionArea');
+  area.innerHTML = `
+    <div class="q-number-label">Question ${index + 1} of ${questions.length}</div>
+    <div class="q-body">${q.q}</div>
+    <div class="options-list">
+      ${q.opts.map((opt, oi) => `
+        <div class="option-item ${answers[index] === oi ? 'selected' : ''}"
+             onclick="selectAnswer(${index}, ${oi})"
+             id="opt-${index}-${oi}">
+          <div class="option-label">${['A','B','C','D'][oi]}</div>
+          <div class="option-text">${opt}</div>
+        </div>`).join('')}
+    </div>`;
+
+  // Nav buttons
+  document.getElementById('prevBtn').disabled = (index === 0);
+  document.getElementById('nextBtn').disabled = (index === questions.length - 1);
+  document.getElementById('currentQNum').textContent    = index + 1;
+  document.getElementById('qCounterCurrent').textContent = index + 1;
+
+  // Flag button state
+  const flagBtn = document.getElementById('flagBtn');
+  flagBtn.classList.toggle('active', flagged.has(index));
+  flagBtn.textContent = flagged.has(index) ? '⚑ Flagged' : '⚑ Flag for Review';
+
+  updateQNav();
+
+  // Smooth scroll question area to top
+  area.scrollTop = 0;
+}
+
+function selectAnswer(qIndex, optIndex) {
+  answers[qIndex] = optIndex;
+
+  // Update option UI
+  document.querySelectorAll(`[id^="opt-${qIndex}-"]`).forEach(el => el.classList.remove('selected'));
+  const selected = document.getElementById(`opt-${qIndex}-${optIndex}`);
+  if (selected) selected.classList.add('selected');
+
+  updateQNav();
+}
+
+function toggleFlag() {
+  if (flagged.has(currentQ)) {
+    flagged.delete(currentQ);
+    showToast('Question unflagged.', 'success');
+  } else {
+    flagged.add(currentQ);
+    showToast('Question flagged for review.', 'success');
+  }
+  renderQuestion(currentQ);
+}
+
+// ══════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeRemaining--;
+    updateTimerDisplay();
+    if (timeRemaining <= 0) {
+      clearInterval(timerInterval);
+      showToast('⏰ Time is up! Exam auto-submitted.', 'error');
+      submitExam(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(timeRemaining / 60);
+  const secs = timeRemaining % 60;
+  const display = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+  const el = document.getElementById('timerDisplay');
+  el.textContent = display;
+
+  const pct = timeRemaining / totalTime * 100;
+  const fill = document.getElementById('timerBarFill');
+  fill.style.width = pct + '%';
+  fill.style.background = pct > 25 ? 'var(--gold)' : pct > 10 ? '#ff9944' : '#ff4444';
+
+  el.className = 'timer-display';
+  if (timeRemaining <= totalTime * 0.1) el.classList.add('danger');
+  else if (timeRemaining <= totalTime * 0.25) el.classList.add('warning');
+}
+
+// ══════════════════════════════════════
+// SUBMIT MODAL
+// ══════════════════════════════════════
+function openSubmitModal() {
+  const answered   = Object.keys(answers).length;
+  const unanswered = questions.length - answered;
+
+  document.getElementById('modalAnswered').textContent   = answered;
+  document.getElementById('modalUnanswered').textContent = unanswered;
+  document.getElementById('modalFlagged').textContent    = flagged.size;
+
+  const mins = Math.floor(timeRemaining / 60);
+  const secs = timeRemaining % 60;
+  document.getElementById('modalTimeLeft').textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+  document.getElementById('submitModal').classList.add('open');
+}
+
+function closeSubmitModal() {
+  document.getElementById('submitModal').classList.remove('open');
+}
+
+// ══════════════════════════════════════
+// SUBMIT & SCORE
+// ══════════════════════════════════════
+function submitExam(autoSubmit = false) {
+  clearInterval(timerInterval);
+  closeSubmitModal();
+
+  // Score
+  let correct = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === q.correct) correct++;
+  });
+
+  const total      = questions.length;
+  const wrong      = total - correct;
+  const pct        = Math.round(correct / total * 100);
+  const passed     = pct >= currentExam.passPercent;
+  const timeTaken  = Math.floor((Date.now() - examStartTime) / 1000);
+  const tMins      = Math.floor(timeTaken / 60);
+  const tSecs      = timeTaken % 60;
+
+  // Update results screen
+  document.getElementById('resultCourse').textContent = currentExam.code + ' • ' + currentExam.title;
+  document.getElementById('resultTitle').textContent  = passed ? 'Examination Passed!' : 'Examination Result';
+  document.getElementById('resultIcon').textContent   = passed ? '🎉' : '📋';
+  document.getElementById('scorePct').textContent     = pct + '%';
+  document.getElementById('resRaw').textContent       = `${correct}/${total}`;
+  document.getElementById('resCorrect').textContent   = correct;
+  document.getElementById('resWrong').textContent     = wrong;
+  document.getElementById('resTime').textContent      = `${tMins}m ${tSecs}s`;
+  document.getElementById('resVerdict').textContent   = passed ? 'PASSED' : 'FAILED';
+  document.getElementById('resVerdict').className     = 'res-stat-val ' + (passed ? 'pass' : 'fail');
+
+  // Conic gradient for score circle
+  const deg = Math.round(pct / 100 * 360);
+  const color = passed ? 'var(--success)' : 'var(--danger)';
+  document.getElementById('scoreCircle').style.background =
+    `conic-gradient(${color} ${deg}deg, var(--rule) ${deg}deg)`;
+
+  // Breakdown — first 10 questions
+  const breakdown = document.getElementById('breakdownList');
+  breakdown.innerHTML = questions.slice(0, 10).map((q, i) => {
+    const userAns    = answers[i];
+    const isCorrect  = userAns === q.correct;
+    const userLabel  = userAns !== undefined ? ['A','B','C','D'][userAns] : '—';
+    const correctLabel = ['A','B','C','D'][q.correct];
+    return `
+      <div class="breakdown-row">
+        <div style="width:24px;height:24px;border-radius:3px;background:rgba(107,15,43,0.08);display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:var(--muted);flex-shrink:0;">
+          ${i+1}
+        </div>
+        <div class="breakdown-q">${q.q.substring(0, 80)}${q.q.length > 80 ? '…' : ''}</div>
+        <div style="font-size:0.72rem;color:var(--muted);flex-shrink:0;">
+          You: <strong style="color:${isCorrect?'var(--success)':'var(--danger)'}">${userLabel}</strong>
+          ${!isCorrect ? ` · Ans: <strong style="color:var(--success)">${correctLabel}</strong>` : ''}
+        </div>
+        <div class="breakdown-indicator ${isCorrect?'bi-correct':'bi-wrong'}">${isCorrect?'✓':'✗'}</div>
+      </div>`;
+  }).join('');
+
+  // Mark exam as done in local array
+  const examObj = EXAMS.find(e => e.id === currentExam.id);
+  if (examObj) examObj.status = 'done';
+
+  // Add to past results
+  PAST_RESULTS.unshift({
+    code: currentExam.code,
+    title: currentExam.title,
+    date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+    score: correct,
+    total: total,
+    pct: pct,
+    grade: pct>=70?'A':pct>=60?'B':pct>=50?'C':pct>=45?'D':'F',
+    passed: passed
+  });
+
+  showScreen('results');
+}
+
+// ══════════════════════════════════════
+// SCREEN SWITCHING
+// ══════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('screen-' + name);
+  if (target) target.classList.add('active');
+
+  // Re-render dashboard when returning to it
+  if (name === 'dashboard') {
+    renderDashboard();
+    clearInterval(timerInterval);
+  }
+}
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast ' + type + ' show';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// Prevent accidental tab close during exam
+window.addEventListener('beforeunload', e => {
+  const examScreen = document.getElementById('screen-exam');
+  if (examScreen && examScreen.classList.contains('active')) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+</script>
+</body>
+</html>

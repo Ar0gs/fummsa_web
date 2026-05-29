@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Admin Portal – FUMMSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#3a0819;--maroon-mid:#800f30;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;--cream:#FAF7F2;
+  --warm-white:#FFFDF9;--charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.13);--success:#2a6b4a;--danger:#B04A2A;--info:#1a4a6b;
+  --serif:'Source Serif 4',Georgia,serif;--sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);--sb-width:262px;--top-h:60px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:#ECEAE6;color:var(--charcoal);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top-h);background:#1e0409;display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 0;z-index:500;border-bottom:2px solid rgba(196,146,42,0.35);}
+.topbar-brand{display:flex;align-items:center;gap:12px;width:var(--sb-width);padding:0 20px;border-right:1px solid rgba(255,255,255,0.07);height:100%;flex-shrink:0;}
+.topbar-seal{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:#1e0409;font-size:0.9rem;flex-shrink:0;}
+.topbar-brand-text{font-family:var(--serif);color:white;font-size:0.97rem;font-weight:600;}
+.topbar-brand-text small{display:block;font-family:var(--sans);font-size:0.57rem;color:var(--gold-light);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.topbar-notify{position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.7);font-size:1rem;transition:all 0.2s;}
+.topbar-notify:hover{background:rgba(196,146,42,0.15);}
+.notify-dot{position:absolute;top:5px;right:5px;width:9px;height:9px;background:var(--gold);border-radius:50%;border:1.5px solid #1e0409;}
+.topbar-user{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--gold-light);font-size:0.85rem;flex-shrink:0;}
+.user-meta{text-align:right;}
+.user-name{font-size:0.8rem;font-weight:600;color:white;}
+.user-role{font-size:0.6rem;color:var(--gold-light);letter-spacing:0.1em;text-transform:uppercase;}
+.topbar-secure{display:flex;align-items:center;gap:6px;background:rgba(42,107,74,0.2);border:1px solid rgba(42,107,74,0.4);border-radius:12px;padding:4px 10px;font-size:0.62rem;font-weight:700;color:#7ee0a8;letter-spacing:0.08em;}
+.btn-logout{background:rgba(176,74,42,0.18);border:1px solid rgba(176,74,42,0.4);color:rgba(255,255,255,0.65);padding:6px 14px;border-radius:2px;font-family:var(--sans);font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:white;}
+.hamburger-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:white;font-size:1.2rem;}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--sb-width);background:white;border-right:2px solid var(--rule);overflow-y:auto;z-index:400;transition:transform 0.3s var(--ease);}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:var(--rule);}
+.sidebar-section{padding:16px 12px 4px;}
+.sb-label{font-size:0.57rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:6px 8px 4px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:3px;font-size:0.79rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;user-select:none;}
+.sb-link:hover{color:var(--maroon);background:rgba(107,15,43,0.04);}
+.sb-link.active{color:var(--maroon);background:rgba(107,15,43,0.07);border-left-color:var(--maroon);font-weight:600;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--maroon);color:white;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:10px;min-width:20px;text-align:center;}
+.sb-badge.gold{background:var(--gold);}
+.sb-divider{height:1px;background:var(--rule);margin:8px 16px;}
+.sb-alert-banner{margin:12px;background:rgba(176,74,42,0.08);border:1px solid rgba(176,74,42,0.25);border-radius:3px;padding:8px 12px;font-size:0.72rem;color:var(--danger);font-weight:600;display:flex;align-items:center;gap:6px;}
+
+/* ── MAIN ── */
+.main-wrap{margin-left:var(--sb-width);margin-top:var(--top-h);min-height:calc(100vh - var(--top-h));padding:28px;}
+.page-section{display:none;animation:fadeIn 0.3s ease both;}
+.page-section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ── ADMIN BANNER ── */
+.admin-banner{background:linear-gradient(135deg,#1e0409 0%,var(--maroon-dark) 45%,#2a0a1a 100%);border-radius:5px;padding:28px 36px;display:flex;align-items:center;gap:28px;margin-bottom:26px;position:relative;overflow:hidden;border:1px solid rgba(196,146,42,0.2);}
+.admin-banner::before{content:'';position:absolute;right:-60px;top:-60px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(196,146,42,0.1);}
+.admin-banner::after{content:'';position:absolute;right:40px;bottom:-80px;width:180px;height:180px;border-radius:50%;border:1px solid rgba(196,146,42,0.07);}
+.admin-crest{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.8rem;font-weight:700;color:#1e0409;flex-shrink:0;z-index:1;box-shadow:0 0 0 4px rgba(196,146,42,0.25);}
+.admin-info{flex:1;z-index:1;}
+.admin-lbl{font-size:0.65rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-light);margin-bottom:4px;}
+.admin-name{font-family:var(--serif);font-size:1.6rem;color:white;font-weight:600;line-height:1.1;}
+.admin-meta{display:flex;flex-wrap:wrap;gap:22px;margin-top:12px;}
+.ameta{font-size:0.74rem;color:rgba(255,255,255,0.6);}
+.ameta strong{display:block;font-size:0.6rem;color:rgba(255,255,255,0.35);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.admin-badges{display:flex;flex-direction:column;gap:8px;z-index:1;flex-shrink:0;}
+.badge-secure{background:rgba(42,107,74,0.25);border:1px solid rgba(42,107,74,0.45);color:#7ee0a8;padding:6px 16px;border-radius:20px;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-align:center;}
+.badge-admin{background:rgba(196,146,42,0.2);border:1px solid rgba(196,146,42,0.4);color:var(--gold-light);padding:6px 16px;border-radius:20px;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-align:center;}
+
+/* ── KPI STRIP ── */
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px;}
+.kpi-card{background:white;border-radius:4px;padding:18px 16px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.05);position:relative;overflow:hidden;}
+.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+.kpi-card.k-maroon::after{background:var(--maroon);}
+.kpi-card.k-gold::after{background:var(--gold);}
+.kpi-card.k-green::after{background:var(--success);}
+.kpi-card.k-blue::after{background:var(--info);}
+.kpi-card.k-red::after{background:var(--danger);}
+.kpi-card.k-purple::after{background:#6b2a9b;}
+.kpi-value{font-family:var(--serif);font-size:1.9rem;font-weight:600;color:var(--maroon-dark);line-height:1;}
+.kpi-label{font-size:0.64rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+.kpi-trend{font-size:0.7rem;margin-top:3px;}
+.kpi-trend.up{color:var(--success);}.kpi-trend.down{color:var(--danger);}.kpi-trend.neu{color:var(--muted);}
+
+/* ── COMMON COMPONENTS ── */
+.section-head{font-family:var(--serif);font-size:1.08rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--rule);}
+.portal-card{background:white;border-radius:4px;padding:22px;box-shadow:0 1px 8px rgba(107,15,43,0.06);border:1px solid var(--rule);margin-bottom:20px;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:13px;border-bottom:1.5px solid var(--rule);}
+.card-hd h3{font-family:var(--serif);font-size:1.02rem;font-weight:600;color:var(--maroon-dark);}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:0.63rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--rule);background:var(--cream);}
+.data-table td{font-size:0.82rem;padding:11px 14px;border-bottom:1px solid var(--rule);color:var(--charcoal);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(107,15,43,0.02);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:none;border-radius:2px;font-family:var(--sans);font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--maroon);color:white;}.btn-primary:hover{background:var(--maroon-dark);}
+.btn-outline{background:transparent;color:var(--maroon);border:1.5px solid var(--maroon);}.btn-outline:hover{background:rgba(107,15,43,0.06);}
+.btn-gold{background:var(--gold);color:white;}.btn-gold:hover{background:var(--maroon);}
+.btn-success{background:var(--success);color:white;}.btn-success:hover{background:#1d5038;}
+.btn-danger{background:var(--danger);color:white;}.btn-danger:hover{background:#8a3018;}
+.btn-sm{padding:5px 11px;font-size:0.65rem;}
+.btn-icon{padding:6px 10px;}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:10px;font-size:0.66rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.tag-green{background:#e8f5ee;color:#2a6b4a;border:1px solid rgba(42,107,74,0.2);}
+.tag-red{background:#fde8ec;color:#7a0e1e;border:1px solid rgba(176,74,42,0.2);}
+.tag-gold{background:var(--gold-pale);color:#7a5010;border:1px solid rgba(196,146,42,0.3);}
+.tag-blue{background:#e8f0fd;color:#1a4a6b;border:1px solid rgba(26,74,107,0.2);}
+.tag-grey{background:#f0ede8;color:var(--mid);border:1px solid var(--rule);}
+.tag-purple{background:#f0e8fd;color:#5a1a9b;border:1px solid rgba(107,42,155,0.2);}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.67rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:7px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 13px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.86rem;color:var(--charcoal);background:var(--warm-white);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--maroon);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.msg{border-radius:2px;padding:12px 16px;font-size:0.82rem;margin-top:10px;display:none;}
+.msg.error{background:#fde8ec;color:#7a0e1e;border-left:3px solid var(--danger);}
+.msg.success{background:#e8f5ee;color:#1a5c38;border-left:3px solid var(--success);}
+.msg.warn{background:#fef9ed;color:#7a5010;border-left:3px solid var(--gold);}
+.msg.show{display:block;}
+
+/* ── APPROVAL ITEMS ── */
+.approval-list{display:flex;flex-direction:column;gap:12px;}
+.approval-item{background:white;border-radius:3px;padding:18px 20px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.04);display:flex;gap:16px;align-items:flex-start;}
+.approval-item.urgent{border-left:3px solid var(--danger);}
+.approval-item.pending{border-left:3px solid var(--gold);}
+.approval-icon{font-size:1.6rem;flex-shrink:0;margin-top:2px;}
+.approval-body{flex:1;}
+.approval-body h4{font-size:0.88rem;font-weight:700;color:var(--charcoal);margin-bottom:3px;}
+.approval-body p{font-size:0.79rem;color:var(--muted);line-height:1.6;}
+.approval-meta{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap;}
+.approval-actions{display:flex;gap:8px;flex-shrink:0;align-items:flex-start;flex-wrap:wrap;}
+
+/* ── AUDIT LOG ── */
+.audit-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--rule);}
+.audit-item:last-child{border-bottom:none;}
+.audit-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.audit-dot.green{background:var(--success);}.audit-dot.gold{background:var(--gold);}.audit-dot.red{background:var(--danger);}.audit-dot.blue{background:var(--info);}.audit-dot.grey{background:var(--muted);}
+.audit-content{flex:1;}
+.audit-content h5{font-size:0.83rem;font-weight:700;color:var(--charcoal);margin-bottom:2px;}
+.audit-content p{font-size:0.77rem;color:var(--muted);line-height:1.5;}
+.audit-time{font-size:0.69rem;color:var(--muted);flex-shrink:0;white-space:nowrap;margin-top:4px;}
+
+/* ── ACCESS CONTROL TOGGLES ── */
+.toggle-switch{position:relative;width:42px;height:22px;cursor:pointer;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:22px;transition:0.3s;}
+.toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:0.3s;}
+.toggle-switch input:checked+.toggle-slider{background:var(--success);}
+.toggle-switch input:checked+.toggle-slider:before{transform:translateX(20px);}
+
+/* ── SYSTEM HEALTH ── */
+.health-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.health-card{background:white;border-radius:4px;padding:18px;border:1px solid var(--rule);}
+.health-label{font-size:0.67rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.health-bar-wrap{background:var(--rule);border-radius:4px;height:8px;overflow:hidden;}
+.health-bar{height:100%;border-radius:4px;transition:width 1s var(--ease);}
+.health-val{display:flex;justify-content:space-between;font-size:0.75rem;margin-top:5px;}
+.health-val .num{font-weight:700;color:var(--charcoal);}
+.health-val .status-ok{color:var(--success);font-weight:700;}
+.health-val .status-warn{color:var(--gold);font-weight:700;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.2s ease;}
+.modal-overlay.hidden{display:none;}
+.modal-box{background:white;border-radius:5px;padding:30px;max-width:560px;width:100%;position:relative;max-height:88vh;overflow-y:auto;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted);}
+.modal-title{font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--maroon-dark);margin-bottom:20px;}
+.modal-danger{border-top:3px solid var(--danger);}
+.modal-gold{border-top:3px solid var(--gold);}
+
+/* ── TABS ── */
+.tab-bar{display:flex;border-bottom:2px solid var(--rule);margin-bottom:20px;gap:2px;}
+.tab-btn{padding:9px 18px;font-family:var(--sans);font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);margin-bottom:-2px;transition:all 0.2s;}
+.tab-btn:hover{color:var(--maroon);}
+.tab-btn.active{color:var(--maroon);border-bottom-color:var(--maroon);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ── SEARCH BAR ── */
+.search-bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.search-bar input,.search-bar select{padding:9px 13px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.83rem;background:white;outline:none;transition:border-color 0.2s;}
+.search-bar input{flex:1;min-width:180px;}
+.search-bar input:focus,.search-bar select:focus{border-color:var(--maroon);}
+
+/* ── ROLE COLORS ── */
+.role-student{color:#1a4a6b;}.role-lecturer{color:var(--maroon);}.role-hod{color:#4a1a6b;}.role-dean{color:#2a6b4a;}.role-dsa{color:#6b4a1a;}.role-exec{color:#1a0a0f;}.role-admin{color:#7a0e1e;}
+
+/* ── BROADCAST ── */
+.broadcast-target{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.target-chip{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:var(--cream);border:1.5px solid var(--rule);cursor:pointer;font-size:0.75rem;font-weight:600;color:var(--mid);transition:all 0.2s;}
+.target-chip input[type=checkbox]{accent-color:var(--maroon);}
+.target-chip:hover{border-color:var(--maroon);color:var(--maroon);}
+
+/* ── STAT MINI ── */
+.mini-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.mini-stat{background:var(--cream);border-radius:3px;padding:14px;text-align:center;}
+.mini-stat .v{font-family:var(--serif);font-size:1.6rem;color:var(--maroon-dark);font-weight:600;}
+.mini-stat .l{font-size:0.64rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+
+@media(max-width:1200px){.kpi-row{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.main-wrap{margin-left:0;}.hamburger-toggle{display:block;}}
+@media(max-width:700px){.kpi-row{grid-template-columns:1fr 1fr;}.form-grid,.grid-2,.grid-3,.health-row,.mini-stats{grid-template-columns:1fr;}}
+</style>
+
+  <!-- Shared portal libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="portal-auth.js"></script>
+  <script src="portal-api.js"></script>
+  <script src="portal-shared.js"></script>
+</head>
+<body>
+
+<!-- ════════════════════ TOPBAR ════════════════════ -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-seal">SA</div>
+    <div class="topbar-brand-text">FUMMSA Portal<small>⚡ Super Administrator</small></div>
+  </div>
+  <button class="hamburger-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+  <div class="topbar-right">
+    <div class="topbar-secure">🔒 Secure Session</div>
+    <div class="topbar-notify" onclick="openModal('notifModal')">
+      <span>🔔</span><div class="notify-dot"></div>
+    </div>
+    <div class="topbar-user">
+      <div class="user-meta">
+        <div class="user-name">Super Administrator</div>
+        <div class="user-role">Full System Access</div>
+      </div>
+      <div class="user-avatar">SA</div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- ════════════════════ SIDEBAR ════════════════════ -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-alert-banner">⚠ Restricted — Authorised Access Only</div>
+
+  <div class="sidebar-section">
+    <div class="sb-label">Overview</div>
+    <div class="sb-link active" onclick="showSection('dashboard')"><span class="sb-icon">📊</span> Admin Dashboard</div>
+    <div class="sb-link" onclick="showSection('audit')"><span class="sb-icon">📋</span> Activity Audit Log <span class="sb-badge">24</span></div>
+    <div class="sb-link" onclick="showSection('system-health')"><span class="sb-icon">💚</span> System Health</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sb-label">User Management</div>
+    <div class="sb-link" onclick="showSection('all-users')"><span class="sb-icon">👥</span> All Users</div>
+    <div class="sb-link" onclick="showSection('lecturer-approvals')"><span class="sb-icon">👨‍🏫</span> Lecturer Approvals <span class="sb-badge gold">5</span></div>
+    <div class="sb-link" onclick="showSection('role-assignment')"><span class="sb-icon">🎭</span> Role Assignment</div>
+    <div class="sb-link" onclick="showSection('access-control')"><span class="sb-icon">🔐</span> Portal Access Control</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sb-label">Academic Administration</div>
+    <div class="sb-link" onclick="showSection('faculties')"><span class="sb-icon">🏛️</span> Faculties & Depts.</div>
+    <div class="sb-link" onclick="showSection('course-registry')"><span class="sb-icon">📚</span> Course Registry</div>
+    <div class="sb-link" onclick="showSection('academic-calendar')"><span class="sb-icon">📅</span> Academic Calendar</div>
+    <div class="sb-link" onclick="showSection('programme-changes')"><span class="sb-icon">🔄</span> Programme Changes <span class="sb-badge">3</span></div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sb-label">Finance & Services</div>
+    <div class="sb-link" onclick="showSection('financial-overview')"><span class="sb-icon">💰</span> Financial Overview</div>
+    <div class="sb-link" onclick="showSection('hostel-admin')"><span class="sb-icon">🏠</span> Hostel Administration</div>
+    <div class="sb-link" onclick="showSection('cbt-admin')"><span class="sb-icon">💻</span> CBT Administration</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sb-label">Communications</div>
+    <div class="sb-link" onclick="showSection('broadcast')"><span class="sb-icon">📢</span> Broadcast Announcements</div>
+    <div class="sb-link" onclick="showSection('reports')"><span class="sb-icon">📈</span> System Reports</div>
+  </div>
+
+  <div class="sb-divider"></div>
+
+  <div class="sidebar-section">
+    <div class="sb-label">System</div>
+    <div class="sb-link" onclick="showSection('system-settings')"><span class="sb-icon">⚙️</span> System Settings</div>
+    <div class="sb-link" onclick="showSection('security')"><span class="sb-icon">🛡️</span> Security & Admin Creds</div>
+    <div class="sb-link" onclick="showSection('backup')"><span class="sb-icon">💾</span> Data Backup</div>
+  </div>
+</div>
+
+<!-- ════════════════════ MAIN CONTENT ════════════════════ -->
+<div class="main-wrap">
+
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<div class="page-section active" id="sec-dashboard">
+  <div class="admin-banner">
+    <div class="admin-crest">SA</div>
+    <div class="admin-info">
+      <div class="admin-lbl">⚡ Super Administrator — Full System Control</div>
+      <div class="admin-name">Portal Management Console</div>
+      <div class="admin-meta">
+        <div class="ameta"><strong>Portal Version</strong>FUMMSA v2.4.1</div>
+        <div class="ameta"><strong>Last Login</strong>Today, 08:14 AM</div>
+        <div class="ameta"><strong>Session IP</strong>197.210.xx.xx</div>
+        <div class="ameta"><strong>Academic Session</strong>2024 / 2025</div>
+        <div class="ameta"><strong>Session Expires</strong>In 4 hrs 12 min</div>
+      </div>
+    </div>
+    <div class="admin-badges">
+      <span class="badge-secure">🔒 Secure</span>
+      <span class="badge-admin">⚡ Super Admin</span>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card k-maroon"><div class="kpi-value">8,742</div><div class="kpi-label">Total Students</div><div class="kpi-trend up">↑ 6.5% this session</div></div>
+    <div class="kpi-card k-gold"><div class="kpi-value">342</div><div class="kpi-label">Academic Staff</div><div class="kpi-trend up">↑ 18 new hires</div></div>
+    <div class="kpi-card k-green"><div class="kpi-value">91%</div><div class="kpi-label">Fee Compliance</div><div class="kpi-trend up">↑ 3% from last sem</div></div>
+    <div class="kpi-card k-blue"><div class="kpi-value">7</div><div class="kpi-label">Faculties</div><div class="kpi-trend neu">No change</div></div>
+    <div class="kpi-card k-red"><div class="kpi-value" id="pendingCount">5</div><div class="kpi-label">Pending Approvals</div><div class="kpi-trend down">Require attention</div></div>
+    <div class="kpi-card k-purple"><div class="kpi-value">1,204</div><div class="kpi-label">Active Sessions</div><div class="kpi-trend up">↑ Live now</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="section-head">Pending Lecturer Registrations</div>
+      <div class="approval-list">
+        <div class="approval-item pending">
+          <div class="approval-icon">👨‍🏫</div>
+          <div class="approval-body">
+            <h4>Dr. Musa Ibrahim Aliyu — Lecturer Application</h4>
+            <p>Faculty of Sciences · Dept. of Physics · Senior Lecturer<br/>Email: m.aliyu@university.edu.ng · Submitted: Dec 12, 2024</p>
+            <div class="approval-meta"><span class="tag tag-gold">Pending Review</span><span style="font-size:0.75rem;color:var(--muted);">PhD Physics, UNIMAID 2019</span></div>
+          </div>
+          <div class="approval-actions">
+            <button class="btn btn-success btn-sm" onclick="approveUser('Dr. Musa Aliyu')">✓ Approve</button>
+            <button class="btn btn-danger btn-sm" onclick="openModal('rejectModal')">✕ Reject</button>
+            <button class="btn btn-outline btn-sm" onclick="openModal('viewLecturerModal')">View</button>
+          </div>
+        </div>
+        <div class="approval-item pending">
+          <div class="approval-icon">👩‍🏫</div>
+          <div class="approval-body">
+            <h4>Mrs. Chidinma Eze — Lecturer Application</h4>
+            <p>Faculty of Arts · Dept. of English · Lecturer II<br/>Email: c.eze@university.edu.ng · Submitted: Dec 13, 2024</p>
+            <div class="approval-meta"><span class="tag tag-gold">Pending Review</span><span style="font-size:0.75rem;color:var(--muted);">MSc Linguistics, UI 2020</span></div>
+          </div>
+          <div class="approval-actions">
+            <button class="btn btn-success btn-sm" onclick="approveUser('Mrs. Chidinma Eze')">✓ Approve</button>
+            <button class="btn btn-danger btn-sm" onclick="openModal('rejectModal')">✕ Reject</button>
+            <button class="btn btn-outline btn-sm" onclick="openModal('viewLecturerModal')">View</button>
+          </div>
+        </div>
+        <div class="approval-item pending">
+          <div class="approval-icon">👨‍🏫</div>
+          <div class="approval-body">
+            <h4>Prof. Adaobi Nwachukwu — Professor/HOD Application</h4>
+            <p>Faculty of Medicine · Dept. of Anatomy · Professor<br/>Email: a.nwachukwu@university.edu.ng · Submitted: Dec 14, 2024</p>
+            <div class="approval-meta"><span class="tag tag-gold">Pending Review</span><span style="font-size:0.75rem;color:var(--muted);">PhD Anatomy, ABU 2012</span></div>
+          </div>
+          <div class="approval-actions">
+            <button class="btn btn-success btn-sm" onclick="approveUser('Prof. Adaobi Nwachukwu')">✓ Approve</button>
+            <button class="btn btn-danger btn-sm" onclick="openModal('rejectModal')">✕ Reject</button>
+            <button class="btn btn-outline btn-sm" onclick="openModal('viewLecturerModal')">View</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-head">Live Audit Feed</div>
+      <div class="portal-card" style="padding:16px 20px;">
+        <div class="audit-item"><div class="audit-dot green"></div><div class="audit-content"><h5>Student Course Registration</h5><p>STU/2021/CSC/0047 registered 10 units for 2023/2024 Sem 2</p></div><div class="audit-time">2 min ago</div></div>
+        <div class="audit-item"><div class="audit-dot gold"></div><div class="audit-content"><h5>Score Upload Submitted</h5><p>Dr. Okonkwo uploaded CSC 303 mid-semester scores (81 students)</p></div><div class="audit-time">14 min ago</div></div>
+        <div class="audit-item"><div class="audit-dot red"></div><div class="audit-content"><h5>Portal Access Suspended</h5><p>HOD (Prof. Babatunde) suspended access for STU/2021/CSC/0055 — unpaid fees</p></div><div class="audit-time">28 min ago</div></div>
+        <div class="audit-item"><div class="audit-dot green"></div><div class="audit-content"><h5>Fee Payment Received</h5><p>STU/2022/ENG/0033 paid ₦108,500 via Remita. Ref: REM24121400287</p></div><div class="audit-time">41 min ago</div></div>
+        <div class="audit-item"><div class="audit-dot blue"></div><div class="audit-content"><h5>Programme Change Approved</h5><p>Dean (Faculty of Sciences) approved STU/2022/MTH/0033 transfer to CSC</p></div><div class="audit-time">1 hr ago</div></div>
+        <div class="audit-item"><div class="audit-dot gold"></div><div class="audit-content"><h5>HOD Score Approval</h5><p>Prof. Babatunde approved CSC 301 CA 1 scores — published to students</p></div><div class="audit-time">2 hrs ago</div></div>
+        <button class="btn btn-outline btn-sm" style="margin-top:12px;width:100%;" onclick="showSection('audit')">View Full Audit Log →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head">System-Wide User Breakdown</div>
+  <div class="portal-card">
+    <table class="data-table">
+      <thead><tr><th>Role</th><th>Total Registered</th><th>Active Now</th><th>Suspended</th><th>Pending Approval</th><th>Last Activity</th></tr></thead>
+      <tbody>
+        <tr><td><strong class="role-student">Students</strong></td><td>8,742</td><td>4,312</td><td>67</td><td>—</td><td>Just now</td></tr>
+        <tr><td><strong class="role-lecturer">Lecturers</strong></td><td>286</td><td>142</td><td>3</td><td>4</td><td>8 min ago</td></tr>
+        <tr><td><strong class="role-hod">HODs</strong></td><td>24</td><td>18</td><td>0</td><td>1</td><td>22 min ago</td></tr>
+        <tr><td><strong class="role-dean">Deans of Faculty</strong></td><td>7</td><td>6</td><td>0</td><td>0</td><td>1 hr ago</td></tr>
+        <tr><td><strong class="role-dsa">DSA Staff</strong></td><td>32</td><td>21</td><td>0</td><td>0</td><td>35 min ago</td></tr>
+        <tr><td><strong class="role-exec">University Executives</strong></td><td>12</td><td>4</td><td>0</td><td>0</td><td>3 hrs ago</td></tr>
+        <tr><td><strong class="role-admin">Super Admin</strong></td><td>1</td><td>1</td><td>0</td><td>0</td><td>Active session</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ AUDIT LOG ═══════════ -->
+<div class="page-section" id="sec-audit">
+  <div class="section-head">Full Activity Audit Log</div>
+  <div class="portal-card">
+    <div class="search-bar">
+      <input type="text" placeholder="Search by user, action, or ID…"/>
+      <select><option>All Roles</option><option>Students</option><option>Lecturers</option><option>HODs</option><option>Deans</option><option>DSA</option><option>Executives</option></select>
+      <select><option>All Actions</option><option>Login</option><option>Score Upload</option><option>Fee Payment</option><option>Course Reg.</option><option>Access Change</option></select>
+      <input type="date"/>
+      <button class="btn btn-primary btn-sm">Filter</button>
+      <button class="btn btn-outline btn-sm" onclick="showMsg('exportMsg','success','Audit log exported as CSV.')">⬇ Export CSV</button>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Timestamp</th><th>User</th><th>Role</th><th>Action</th><th>Details</th><th>IP Address</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Dec 15 09:02</td><td>STU/2021/CSC/0047</td><td><span class="tag tag-blue">Student</span></td><td>Course Registration</td><td>Registered 10 units – Sem 2</td><td>197.210.xx.1</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>2</td><td>Dec 15 08:48</td><td>STAFF/CSC/2018/004</td><td><span class="tag tag-red">Lecturer</span></td><td>Score Upload</td><td>CSC 303 mid-semester scores</td><td>197.210.xx.2</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>3</td><td>Dec 15 08:36</td><td>STAFF/CSC/2015/001</td><td><span class="tag tag-purple">HOD</span></td><td>Access Suspended</td><td>STU/2021/CSC/0055 – unpaid fees</td><td>197.210.xx.3</td><td><span class="tag tag-red">Action</span></td></tr>
+        <tr><td>4</td><td>Dec 15 08:22</td><td>STU/2022/ENG/0033</td><td><span class="tag tag-blue">Student</span></td><td>Fee Payment</td><td>₦108,500 via Remita</td><td>105.112.xx.4</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>5</td><td>Dec 15 07:58</td><td>DEAN/SCI/001</td><td><span class="tag tag-green">Dean</span></td><td>Prog. Change Approved</td><td>STU/2022/MTH/0033 → CSC</td><td>197.210.xx.5</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>6</td><td>Dec 15 07:41</td><td>STAFF/CSC/2015/001</td><td><span class="tag tag-purple">HOD</span></td><td>Score Approved</td><td>CSC 301 CA 1 published</td><td>197.210.xx.3</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>7</td><td>Dec 15 07:10</td><td>VC/001</td><td><span class="tag tag-grey">Executive</span></td><td>Login</td><td>Vice Chancellor login</td><td>10.0.0.1</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>8</td><td>Dec 14 22:45</td><td>Unknown</td><td><span class="tag tag-red">N/A</span></td><td>Failed Login</td><td>3 failed attempts – portal-superadmin</td><td>41.58.xx.99</td><td><span class="tag tag-red">Blocked</span></td></tr>
+        <tr><td>9</td><td>Dec 14 19:22</td><td>STU/2021/MTH/0022</td><td><span class="tag tag-blue">Student</span></td><td>Hostel Ballot</td><td>Applied for Hostel A – Single Room</td><td>197.210.xx.7</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>10</td><td>Dec 14 16:10</td><td>DSA/WELFARE/003</td><td><span class="tag tag-gold">DSA</span></td><td>Hostel Allocation</td><td>Batch allocation for 400L students</td><td>197.210.xx.8</td><td><span class="tag tag-green">Success</span></td></tr>
+      </tbody>
+    </table>
+    <div class="msg" id="exportMsg"></div>
+  </div>
+</div>
+
+<!-- ═══════════ SYSTEM HEALTH ═══════════ -->
+<div class="page-section" id="sec-system-health">
+  <div class="section-head">System Health & Infrastructure</div>
+  <div class="health-row">
+    <div class="health-card"><div class="health-label">Server CPU Usage</div><div class="health-bar-wrap"><div class="health-bar" style="width:34%;background:var(--success);"></div></div><div class="health-val"><span class="num">34%</span><span class="status-ok">Healthy</span></div></div>
+    <div class="health-card"><div class="health-label">Memory Usage</div><div class="health-bar-wrap"><div class="health-bar" style="width:58%;background:var(--gold);"></div></div><div class="health-val"><span class="num">58% (11.6 GB / 20 GB)</span><span class="status-warn">Moderate</span></div></div>
+    <div class="health-card"><div class="health-label">Storage Capacity</div><div class="health-bar-wrap"><div class="health-bar" style="width:71%;background:var(--gold);"></div></div><div class="health-val"><span class="num">710 GB / 1 TB used</span><span class="status-warn">Monitor</span></div></div>
+    <div class="health-card"><div class="health-label">Database Connections</div><div class="health-bar-wrap"><div class="health-bar" style="width:28%;background:var(--success);"></div></div><div class="health-val"><span class="num">280 / 1000 connections</span><span class="status-ok">Healthy</span></div></div>
+    <div class="health-card"><div class="health-label">API Response Time</div><div class="health-bar-wrap"><div class="health-bar" style="width:12%;background:var(--success);"></div></div><div class="health-val"><span class="num">~120 ms avg.</span><span class="status-ok">Optimal</span></div></div>
+    <div class="health-card"><div class="health-label">Active User Sessions</div><div class="health-bar-wrap"><div class="health-bar" style="width:60%;background:var(--info);"></div></div><div class="health-val"><span class="num">1,204 active</span><span class="status-ok">Normal</span></div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="portal-card">
+      <div class="card-hd"><h3>Module Status</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Module</th><th>Status</th><th>Last Check</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Student Portal</td><td><span class="tag tag-green">✓ Online</span></td><td>2 min ago</td><td><button class="btn btn-danger btn-sm" onclick="toggleModule('Student Portal')">Disable</button></td></tr>
+          <tr><td>Lecturer Portal</td><td><span class="tag tag-green">✓ Online</span></td><td>2 min ago</td><td><button class="btn btn-danger btn-sm" onclick="toggleModule('Lecturer Portal')">Disable</button></td></tr>
+          <tr><td>Fee Payment Gateway</td><td><span class="tag tag-green">✓ Online</span></td><td>5 min ago</td><td><button class="btn btn-danger btn-sm" onclick="toggleModule('Fee Gateway')">Disable</button></td></tr>
+          <tr><td>Course Registration</td><td><span class="tag tag-green">✓ Online</span></td><td>5 min ago</td><td><button class="btn btn-danger btn-sm" onclick="toggleModule('Course Reg')">Disable</button></td></tr>
+          <tr><td>CBT Software</td><td><span class="tag tag-gold">⚠ Maintenance</span></td><td>1 hr ago</td><td><button class="btn btn-success btn-sm" onclick="toggleModule('CBT')">Enable</button></td></tr>
+          <tr><td>Hostel Balloting</td><td><span class="tag tag-green">✓ Online</span></td><td>3 min ago</td><td><button class="btn btn-danger btn-sm" onclick="toggleModule('Hostel')">Disable</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Recent System Events</h3></div>
+      <div class="audit-item"><div class="audit-dot green"></div><div class="audit-content"><h5>Scheduled Backup Completed</h5><p>Full database backup — 4.2 GB compressed. Stored to cloud.</p></div><div class="audit-time">Today 03:00</div></div>
+      <div class="audit-item"><div class="audit-dot gold"></div><div class="audit-content"><h5>CBT Module Under Maintenance</h5><p>Admin initiated maintenance window for exam schedule update.</p></div><div class="audit-time">Dec 14 22:00</div></div>
+      <div class="audit-item"><div class="audit-dot red"></div><div class="audit-content"><h5>Brute-Force Attempt Blocked</h5><p>3 failed login attempts on super admin panel from IP 41.58.xx.99. IP blocked for 24 hrs.</p></div><div class="audit-time">Dec 14 22:45</div></div>
+      <div class="audit-item"><div class="audit-dot blue"></div><div class="audit-content"><h5>Portal Update Deployed</h5><p>Version 2.4.1 hotfix deployed. Session timeout extended to 8 hrs.</p></div><div class="audit-time">Dec 13 09:15</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ALL USERS ═══════════ -->
+<div class="page-section" id="sec-all-users">
+  <div class="section-head">All System Users</div>
+  <div class="portal-card">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('students-tab','tab-students')">Students</button>
+      <button class="tab-btn" onclick="switchTab('lecturers-tab','tab-lecturers')">Lecturers</button>
+      <button class="tab-btn" onclick="switchTab('hod-tab','tab-hod')">HODs</button>
+      <button class="tab-btn" onclick="switchTab('deans-tab','tab-deans')">Deans</button>
+      <button class="tab-btn" onclick="switchTab('exec-tab','tab-exec')">Executives</button>
+      <button class="tab-btn" onclick="switchTab('dsa-tab','tab-dsa')">DSA Staff</button>
+    </div>
+
+    <!-- STUDENTS -->
+    <div class="tab-panel active" id="tab-students">
+      <div class="search-bar"><input type="text" placeholder="Search students…"/><select><option>All Faculties</option><option>Sciences</option><option>Arts</option><option>Engineering</option><option>Law</option></select><select><option>All Levels</option><option>100L</option><option>200L</option><option>300L</option><option>400L</option></select><select><option>All Statuses</option><option>Active</option><option>Suspended</option><option>Graduated</option></select><button class="btn btn-primary btn-sm">Search</button></div>
+      <table class="data-table">
+        <thead><tr><th>Matric No.</th><th>Name</th><th>Faculty</th><th>Level</th><th>Fees</th><th>Course Reg.</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td>STU/2021/CSC/0047</td><td>Adeyemi Olasubomi</td><td>Sciences</td><td>300</td><td><span class="tag tag-green">Paid</span></td><td><span class="tag tag-green">Done</span></td><td><span class="tag tag-green">Active</span></td><td><div style="display:flex;gap:4px;"><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button><button class="btn btn-danger btn-sm" onclick="suspendUser('STU/2021/CSC/0047')">Suspend</button></div></td></tr>
+          <tr><td>STU/2021/CSC/0055</td><td>Ibrahim Musa Danjuma</td><td>Sciences</td><td>300</td><td><span class="tag tag-red">Unpaid</span></td><td><span class="tag tag-red">Pending</span></td><td><span class="tag tag-red">Suspended</span></td><td><div style="display:flex;gap:4px;"><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button><button class="btn btn-success btn-sm" onclick="restoreUser('STU/2021/CSC/0055')">Restore</button></div></td></tr>
+          <tr><td>STU/2022/ENG/0033</td><td>Chukwuemeka Okeke</td><td>Engineering</td><td>200</td><td><span class="tag tag-green">Paid</span></td><td><span class="tag tag-green">Done</span></td><td><span class="tag tag-green">Active</span></td><td><div style="display:flex;gap:4px;"><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button><button class="btn btn-danger btn-sm" onclick="suspendUser('STU/2022/ENG/0033')">Suspend</button></div></td></tr>
+          <tr><td>STU/2020/LAW/0010</td><td>Amaka Obiora</td><td>Law</td><td>400</td><td><span class="tag tag-green">Paid</span></td><td><span class="tag tag-green">Done</span></td><td><span class="tag tag-green">Active</span></td><td><div style="display:flex;gap:4px;"><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button><button class="btn btn-danger btn-sm" onclick="suspendUser('STU/2020/LAW/0010')">Suspend</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- LECTURERS -->
+    <div class="tab-panel" id="tab-lecturers">
+      <div class="search-bar"><input type="text" placeholder="Search lecturers…"/><select><option>All Faculties</option></select><select><option>All Status</option><option>Active</option><option>Pending</option><option>Suspended</option></select></div>
+      <table class="data-table">
+        <thead><tr><th>Staff ID</th><th>Name</th><th>Department</th><th>Rank</th><th>Account Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td>STAFF/CSC/2018/004</td><td>Dr. James Okonkwo</td><td>Computer Science</td><td>Senior Lecturer</td><td><span class="tag tag-green">Active</span></td><td><div style="display:flex;gap:4px;"><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button><button class="btn btn-danger btn-sm" onclick="suspendUser('Dr. Okonkwo')">Suspend</button></div></td></tr>
+          <tr><td>STAFF/CSC/2019/007</td><td>Dr. Aminu Musa</td><td>Computer Science</td><td>Lecturer I</td><td><span class="tag tag-gold">On Leave</span></td><td><div style="display:flex;gap:4px;"><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button><button class="btn btn-danger btn-sm">Suspend</button></div></td></tr>
+          <tr><td>—</td><td>Dr. Musa Aliyu</td><td>Physics</td><td>Senior Lecturer</td><td><span class="tag tag-gold">Pending Approval</span></td><td><div style="display:flex;gap:4px;"><button class="btn btn-success btn-sm" onclick="approveUser('Dr. Musa Aliyu')">Approve</button><button class="btn btn-danger btn-sm" onclick="openModal('rejectModal')">Reject</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- HODs -->
+    <div class="tab-panel" id="tab-hod">
+      <table class="data-table">
+        <thead><tr><th>Staff ID</th><th>Name</th><th>Department</th><th>Faculty</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td>STAFF/CSC/2015/001</td><td>Prof. A. Babatunde</td><td>Computer Science</td><td>Sciences</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit Role</button></td></tr>
+          <tr><td>STAFF/MTH/2016/002</td><td>Dr. K. Lawal</td><td>Mathematics</td><td>Sciences</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit Role</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DEANS -->
+    <div class="tab-panel" id="tab-deans">
+      <table class="data-table">
+        <thead><tr><th>Staff ID</th><th>Name</th><th>Faculty</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td>STAFF/SCI/2012/001</td><td>Prof. Ngozi Adamu</td><td>Faculty of Sciences</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button></td></tr>
+          <tr><td>STAFF/ART/2013/001</td><td>Prof. Garba Usman</td><td>Faculty of Arts</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button></td></tr>
+          <tr><td>STAFF/ENG/2011/001</td><td>Prof. Emeka Nwosu</td><td>Faculty of Engineering</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editUserModal')">Edit</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- EXECUTIVES -->
+    <div class="tab-panel" id="tab-exec">
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Name</th><th>Position</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td>VC/001</td><td>Prof. Adewale Ogundimu</td><td>Vice Chancellor</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+          <tr><td>DVC/001</td><td>Prof. Fatima Lawal</td><td>Deputy Vice Chancellor (Academic)</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+          <tr><td>REG/001</td><td>Dr. Bello Abubakar</td><td>Registrar</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+          <tr><td>BUR/001</td><td>Mrs. Ngozi Okpara</td><td>Bursar</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DSA -->
+    <div class="tab-panel" id="tab-dsa">
+      <table class="data-table">
+        <thead><tr><th>Staff ID</th><th>Name</th><th>Unit</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td>DSA/WELFARE/001</td><td>Mr. Kingsley Obi</td><td>Student Welfare</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+          <tr><td>DSA/HOSTEL/001</td><td>Mrs. Aisha Bello</td><td>Hostel Management</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ LECTURER APPROVALS ═══════════ -->
+<div class="page-section" id="sec-lecturer-approvals">
+  <div class="section-head">Lecturer Registration Approvals</div>
+  <div class="portal-card">
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:18px;">All lecturer registrations require Super Admin approval before access is granted to the portal. Review applications below carefully.</p>
+    <div class="approval-list" id="lecturerApprovalList">
+      <div class="approval-item pending" id="lappl-1">
+        <div class="approval-icon">👨‍🏫</div>
+        <div class="approval-body">
+          <h4>Dr. Musa Ibrahim Aliyu</h4>
+          <p><strong>Faculty:</strong> Sciences &nbsp;|&nbsp; <strong>Dept:</strong> Physics &nbsp;|&nbsp; <strong>Role Applied For:</strong> Senior Lecturer<br/><strong>Email:</strong> m.aliyu@university.edu.ng &nbsp;|&nbsp; <strong>Phone:</strong> +234 803 111 2233<br/><strong>Qualification:</strong> PhD Physics, UNIMAID 2019 &nbsp;|&nbsp; <strong>Submitted:</strong> Dec 12, 2024</p>
+          <div class="approval-meta"><span class="tag tag-gold">Pending Review</span></div>
+        </div>
+        <div class="approval-actions">
+          <button class="btn btn-success btn-sm" onclick="approveUser('Dr. Musa Aliyu','lappl-1')">✓ Approve & Create Account</button>
+          <button class="btn btn-danger btn-sm" onclick="openModal('rejectModal')">✕ Reject</button>
+          <button class="btn btn-outline btn-sm" onclick="openModal('viewLecturerModal')">View Full Details</button>
+        </div>
+      </div>
+      <div class="approval-item pending" id="lappl-2">
+        <div class="approval-icon">👩‍🏫</div>
+        <div class="approval-body">
+          <h4>Mrs. Chidinma Eze</h4>
+          <p><strong>Faculty:</strong> Arts &nbsp;|&nbsp; <strong>Dept:</strong> English &nbsp;|&nbsp; <strong>Role Applied For:</strong> Lecturer II<br/><strong>Email:</strong> c.eze@university.edu.ng &nbsp;|&nbsp; <strong>Phone:</strong> +234 807 445 6677<br/><strong>Qualification:</strong> MSc Linguistics, UI 2020 &nbsp;|&nbsp; <strong>Submitted:</strong> Dec 13, 2024</p>
+          <div class="approval-meta"><span class="tag tag-gold">Pending Review</span></div>
+        </div>
+        <div class="approval-actions">
+          <button class="btn btn-success btn-sm" onclick="approveUser('Mrs. Chidinma Eze','lappl-2')">✓ Approve & Create Account</button>
+          <button class="btn btn-danger btn-sm" onclick="openModal('rejectModal')">✕ Reject</button>
+          <button class="btn btn-outline btn-sm" onclick="openModal('viewLecturerModal')">View Full Details</button>
+        </div>
+      </div>
+      <div class="approval-item pending" id="lappl-3">
+        <div class="approval-icon">👨‍🏫</div>
+        <div class="approval-body">
+          <h4>Prof. Adaobi Nwachukwu</h4>
+          <p><strong>Faculty:</strong> Medicine &nbsp;|&nbsp; <strong>Dept:</strong> Anatomy &nbsp;|&nbsp; <strong>Role Applied For:</strong> Professor / HOD<br/><strong>Email:</strong> a.nwachukwu@university.edu.ng &nbsp;|&nbsp; <strong>Phone:</strong> +234 802 334 4455<br/><strong>Qualification:</strong> PhD Anatomy, ABU 2012 &nbsp;|&nbsp; <strong>Submitted:</strong> Dec 14, 2024</p>
+          <div class="approval-meta"><span class="tag tag-gold">Pending Review</span></div>
+        </div>
+        <div class="approval-actions">
+          <button class="btn btn-success btn-sm" onclick="approveUser('Prof. Adaobi Nwachukwu','lappl-3')">✓ Approve & Create Account</button>
+          <button class="btn btn-danger btn-sm" onclick="openModal('rejectModal')">✕ Reject</button>
+          <button class="btn btn-outline btn-sm" onclick="openModal('viewLecturerModal')">View Full Details</button>
+        </div>
+      </div>
+    </div>
+    <div class="msg" id="approvalMsg"></div>
+  </div>
+</div>
+
+<!-- ═══════════ ROLE ASSIGNMENT ═══════════ -->
+<div class="page-section" id="sec-role-assignment">
+  <div class="section-head">Role Assignment & Promotion</div>
+  <div class="grid-2">
+    <div class="portal-card">
+      <div class="card-hd"><h3>Assign / Change User Role</h3></div>
+      <div class="form-group"><label>User ID / Staff ID</label><input type="text" placeholder="e.g. STAFF/CSC/2018/004"/></div>
+      <div class="form-group"><label>Current Role</label><input type="text" placeholder="Auto-populated on lookup…" readonly/></div>
+      <div class="form-group"><label>New Role</label>
+        <select>
+          <option value="">— Select New Role —</option>
+          <option>Student</option>
+          <option>Lecturer</option>
+          <option>Senior Lecturer</option>
+          <option>HOD (Head of Department)</option>
+          <option>Dean of Faculty</option>
+          <option>DSA Staff</option>
+          <option>University Executive</option>
+          <option>Registrar</option>
+          <option>Bursar</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Reason / Authority</label><textarea rows="2" placeholder="e.g. Promoted per Senate Resolution #2024-112"></textarea></div>
+      <button class="btn btn-primary" onclick="showMsg('roleMsg','success','Role updated. User will be notified of their new access level.')">Update Role</button>
+      <div class="msg" id="roleMsg"></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Recent Role Changes</h3></div>
+      <table class="data-table">
+        <thead><tr><th>User</th><th>From</th><th>To</th><th>By</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td>Prof. Babatunde</td><td>Senior Lecturer</td><td>HOD</td><td>Super Admin</td><td>Jan 2024</td></tr>
+          <tr><td>Prof. Ngozi Adamu</td><td>HOD</td><td>Dean</td><td>Super Admin</td><td>Mar 2023</td></tr>
+          <tr><td>Dr. Aminu Musa</td><td>Lecturer II</td><td>Lecturer I</td><td>Super Admin</td><td>Jul 2024</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ACCESS CONTROL ═══════════ -->
+<div class="page-section" id="sec-access-control">
+  <div class="section-head">Global Portal Access Control</div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>Module-Level Access Switches</h3><span style="font-size:0.78rem;color:var(--muted);">Changes take effect immediately across the entire university.</span></div>
+    <table class="data-table">
+      <thead><tr><th>Portal Module</th><th>Scope</th><th>Enabled</th><th>Last Changed</th><th>Changed By</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Course Registration</strong></td><td>All Students</td><td><label class="toggle-switch"><input type="checkbox" checked onchange="moduleToggle(this,'Course Registration')"><span class="toggle-slider"></span></label></td><td>Sep 1, 2024</td><td>Super Admin</td></tr>
+        <tr><td><strong>School Fees Payment</strong></td><td>All Students</td><td><label class="toggle-switch"><input type="checkbox" checked onchange="moduleToggle(this,'Fee Payment')"><span class="toggle-slider"></span></label></td><td>Sep 1, 2024</td><td>Super Admin</td></tr>
+        <tr><td><strong>Result Viewing</strong></td><td>All Students</td><td><label class="toggle-switch"><input type="checkbox" checked onchange="moduleToggle(this,'Results')"><span class="toggle-slider"></span></label></td><td>Dec 1, 2024</td><td>Super Admin</td></tr>
+        <tr><td><strong>Hostel Balloting</strong></td><td>Eligible Students</td><td><label class="toggle-switch"><input type="checkbox" checked onchange="moduleToggle(this,'Hostel')"><span class="toggle-slider"></span></label></td><td>Dec 10, 2024</td><td>Super Admin</td></tr>
+        <tr><td><strong>CBT Examinations</strong></td><td>All Students</td><td><label class="toggle-switch"><input type="checkbox" onchange="moduleToggle(this,'CBT')"><span class="toggle-slider"></span></label></td><td>Dec 14, 2024</td><td>Super Admin</td></tr>
+        <tr><td><strong>Score Upload (Lecturers)</strong></td><td>All Lecturers</td><td><label class="toggle-switch"><input type="checkbox" checked onchange="moduleToggle(this,'Score Upload')"><span class="toggle-slider"></span></label></td><td>Sep 2, 2024</td><td>Super Admin</td></tr>
+        <tr><td><strong>Programme Change Requests</strong></td><td>All Students</td><td><label class="toggle-switch"><input type="checkbox" checked onchange="moduleToggle(this,'Prog. Change')"><span class="toggle-slider"></span></label></td><td>Sep 1, 2024</td><td>Super Admin</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="portal-card">
+    <div class="card-hd"><h3>Individual User Access Control</h3></div>
+    <div class="search-bar"><input type="text" placeholder="Enter Matric No. or Staff ID…"/><button class="btn btn-primary btn-sm" onclick="openModal('userAccessModal')">Look Up</button></div>
+    <div style="background:var(--cream);border-radius:3px;padding:14px;font-size:0.82rem;color:var(--muted);">Search for a user above to manage their individual portal access, reset password, or view activity history.</div>
+  </div>
+
+  <div class="portal-card">
+    <div class="card-hd"><h3>Emergency Controls</h3></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-danger" onclick="emergencyAction('lock all student portals')">🔒 Lock ALL Student Portals</button>
+      <button class="btn btn-danger" onclick="emergencyAction('lock lecturer portals')">🔒 Lock ALL Lecturer Portals</button>
+      <button class="btn btn-success" onclick="emergencyAction('restore all portals')">🔓 Restore All Portals</button>
+      <button class="btn btn-gold" onclick="emergencyAction('put portal in maintenance mode')">🛠 Maintenance Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FACULTIES & DEPTS ═══════════ -->
+<div class="page-section" id="sec-faculties">
+  <div class="section-head">Faculties & Departments</div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>Registered Faculties</h3><button class="btn btn-primary btn-sm" onclick="openModal('addFacultyModal')">+ Add Faculty</button></div>
+    <table class="data-table">
+      <thead><tr><th>Faculty</th><th>Dean</th><th>Departments</th><th>Students</th><th>Staff</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td>Faculty of Sciences</td><td>Prof. N. Adamu</td><td>6</td><td>1,842</td><td>94</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editFacultyModal')">Edit</button></td></tr>
+        <tr><td>Faculty of Engineering</td><td>Prof. E. Nwosu</td><td>4</td><td>1,204</td><td>67</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editFacultyModal')">Edit</button></td></tr>
+        <tr><td>Faculty of Arts</td><td>Prof. G. Usman</td><td>5</td><td>987</td><td>58</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editFacultyModal')">Edit</button></td></tr>
+        <tr><td>Faculty of Law</td><td>Prof. A. Ibrahim</td><td>3</td><td>542</td><td>34</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editFacultyModal')">Edit</button></td></tr>
+        <tr><td>Faculty of Medicine</td><td>Prof. S. Bako</td><td>5</td><td>673</td><td>82</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editFacultyModal')">Edit</button></td></tr>
+        <tr><td>Faculty of Social Sciences</td><td>Prof. T. Adeyemi</td><td>5</td><td>889</td><td>49</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editFacultyModal')">Edit</button></td></tr>
+        <tr><td>Faculty of Education</td><td>Prof. M. Aliyu</td><td>3</td><td>605</td><td>38</td><td><span class="tag tag-green">Active</span></td><td><button class="btn btn-outline btn-sm" onclick="openModal('editFacultyModal')">Edit</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ COURSE REGISTRY ═══════════ -->
+<div class="page-section" id="sec-course-registry">
+  <div class="section-head">Course Registry</div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>All Registered Courses</h3><button class="btn btn-primary btn-sm" onclick="openModal('addCourseModal')">+ Add Course</button></div>
+    <div class="search-bar"><input type="text" placeholder="Search course…"/><select><option>All Faculties</option></select><select><option>All Levels</option><option>100L</option><option>200L</option><option>300L</option><option>400L</option><option>500L</option></select><button class="btn btn-primary btn-sm">Search</button></div>
+    <table class="data-table">
+      <thead><tr><th>Course Code</th><th>Title</th><th>Faculty</th><th>Dept.</th><th>Units</th><th>Level</th><th>Type</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td>CSC 301</td><td>Data Structures & Algorithms</td><td>Sciences</td><td>CSC</td><td>3</td><td>300</td><td>C</td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>GST 201</td><td>Communication in English</td><td>All</td><td>General Studies</td><td>2</td><td>200</td><td>C</td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>ENG 301</td><td>Fluid Mechanics</td><td>Engineering</td><td>Civil</td><td>3</td><td>300</td><td>C</td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>LAW 401</td><td>Constitutional Law II</td><td>Law</td><td>Public Law</td><td>3</td><td>400</td><td>C</td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ ACADEMIC CALENDAR ═══════════ -->
+<div class="page-section" id="sec-academic-calendar">
+  <div class="section-head">Academic Calendar Management</div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>2024/2025 Academic Session</h3><button class="btn btn-primary btn-sm" onclick="openModal('calendarModal')">+ Add Event</button></div>
+    <table class="data-table">
+      <thead><tr><th>Event</th><th>Start Date</th><th>End Date</th><th>Affects</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td>First Semester Begins</td><td>Sep 2, 2024</td><td>—</td><td>All Students & Staff</td><td><span class="tag tag-green">Passed</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>Course Registration Window</td><td>Sep 2, 2024</td><td>Sep 30, 2024</td><td>Students</td><td><span class="tag tag-green">Closed</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>First Semester Exams</td><td>Jan 13, 2025</td><td>Jan 31, 2025</td><td>Students</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>Second Semester Begins</td><td>Feb 10, 2025</td><td>—</td><td>All</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>Second Semester Course Reg.</td><td>Feb 10, 2025</td><td>Mar 7, 2025</td><td>Students</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>Second Semester Exams</td><td>Jun 9, 2025</td><td>Jun 27, 2025</td><td>Students</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>Convocation Ceremony</td><td>Aug 22, 2025</td><td>Aug 23, 2025</td><td>All</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ PROGRAMME CHANGES ═══════════ -->
+<div class="page-section" id="sec-programme-changes">
+  <div class="section-head">Programme Change Requests — Final Review</div>
+  <div class="portal-card">
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;">These have been approved by HOD and Dean. Super Admin approval finalises the change and updates all academic records.</p>
+    <table class="data-table">
+      <thead><tr><th>Student</th><th>From</th><th>To Faculty</th><th>To Dept./Prog.</th><th>HOD</th><th>Dean</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>STU/2022/MTH/0033</td><td>Mathematics</td><td>Sciences</td><td>Computer Science</td><td><span class="tag tag-green">Approved</span></td><td><span class="tag tag-green">Approved</span></td><td><div style="display:flex;gap:4px;"><button class="btn btn-success btn-sm" onclick="showMsg('pcMsg','success','Programme change finalised. Academic records updated.')">Finalise</button><button class="btn btn-danger btn-sm">Override Deny</button></div></td></tr>
+        <tr><td>STU/2021/ART/0019</td><td>History</td><td>Social Sciences</td><td>Political Science</td><td><span class="tag tag-green">Approved</span></td><td><span class="tag tag-gold">Pending Dean</span></td><td><span style="font-size:0.78rem;color:var(--muted);">Awaiting Dean</span></td></tr>
+      </tbody>
+    </table>
+    <div class="msg" id="pcMsg"></div>
+  </div>
+</div>
+
+<!-- ═══════════ FINANCIAL OVERVIEW ═══════════ -->
+<div class="page-section" id="sec-financial-overview">
+  <div class="section-head">Financial Overview</div>
+  <div class="mini-stats">
+    <div class="mini-stat"><div class="v">₦912M</div><div class="l">Total Collected This Session</div></div>
+    <div class="mini-stat"><div class="v">8,012</div><div class="l">Students Fee-Compliant</div></div>
+    <div class="mini-stat"><div class="v">730</div><div class="l">Outstanding Balances</div></div>
+    <div class="mini-stat"><div class="v">₦79M</div><div class="l">Outstanding Amount</div></div>
+  </div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>Recent Transactions</h3><button class="btn btn-outline btn-sm" onclick="showMsg('finExportMsg','success','Financial report exported.')">⬇ Export Report</button></div>
+    <table class="data-table">
+      <thead><tr><th>Ref. No.</th><th>Student</th><th>Amount</th><th>Type</th><th>Channel</th><th>Date</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>REM24121400287</td><td>STU/2022/ENG/0033</td><td>₦108,500</td><td>Tuition – 2nd Sem</td><td>Remita</td><td>Dec 14, 2024</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>REM24121300184</td><td>STU/2021/CSC/0047</td><td>₦108,500</td><td>Tuition – 2nd Sem</td><td>Remita</td><td>Dec 13, 2024</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>REM24121200099</td><td>STU/2020/LAW/0010</td><td>₦110,000</td><td>Tuition – 2nd Sem</td><td>Bank Transfer</td><td>Dec 12, 2024</td><td><span class="tag tag-green">Success</span></td></tr>
+        <tr><td>REM24121100044</td><td>STU/2021/MTH/0022</td><td>₦108,500</td><td>Tuition – 2nd Sem</td><td>Remita</td><td>Dec 11, 2024</td><td><span class="tag tag-gold">Pending Verification</span></td></tr>
+      </tbody>
+    </table>
+    <div class="msg" id="finExportMsg"></div>
+  </div>
+</div>
+
+<!-- ═══════════ HOSTEL ADMIN ═══════════ -->
+<div class="page-section" id="sec-hostel-admin">
+  <div class="section-head">Hostel Administration</div>
+  <div class="mini-stats">
+    <div class="mini-stat"><div class="v">4</div><div class="l">Hostels</div></div>
+    <div class="mini-stat"><div class="v">2,400</div><div class="l">Total Bed Spaces</div></div>
+    <div class="mini-stat"><div class="v">1,872</div><div class="l">Allocated</div></div>
+    <div class="mini-stat"><div class="v">528</div><div class="l">Vacant</div></div>
+  </div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>Balloting Control</h3></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+      <div style="padding:14px;border:1px solid var(--rule);border-radius:3px;"><div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Balloting Window</div><div style="display:flex;gap:10px;"><input type="date" style="flex:1;padding:8px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.82rem;"/><input type="date" style="flex:1;padding:8px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.82rem;"/></div></div>
+      <div style="padding:14px;border:1px solid var(--rule);border-radius:3px;"><div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Balloting Status</div><div style="display:flex;gap:8px;"><button class="btn btn-success btn-sm" onclick="showMsg('hostelMsg','success','Balloting window opened. Students can now apply.')">Open Balloting</button><button class="btn btn-danger btn-sm" onclick="showMsg('hostelMsg','error','Balloting closed.')">Close Balloting</button><button class="btn btn-primary btn-sm" onclick="showMsg('hostelMsg','success','Random allocation complete.')">Run Allocation</button></div></div>
+    </div>
+    <div class="msg" id="hostelMsg"></div>
+    <table class="data-table">
+      <thead><tr><th>Hostel</th><th>Gender</th><th>Total Rooms</th><th>Occupied</th><th>Vacant</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td>Hostel A</td><td>Male</td><td>300</td><td>278</td><td>22</td><td>Self-Contained</td></tr>
+        <tr><td>Hostel B</td><td>Male</td><td>400</td><td>362</td><td>38</td><td>Shared (2-bed)</td></tr>
+        <tr><td>Hostel C</td><td>Female</td><td>350</td><td>330</td><td>20</td><td>Self-Contained</td></tr>
+        <tr><td>Hostel D</td><td>Female</td><td>550</td><td>480</td><td>70</td><td>Shared (3-bed)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ CBT ADMIN ═══════════ -->
+<div class="page-section" id="sec-cbt-admin">
+  <div class="section-head">CBT Administration</div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>CBT System Control</h3><button class="btn btn-primary btn-sm" onclick="openModal('addCbtModal')">+ Schedule Exam</button></div>
+    <div style="display:flex;gap:10px;margin-bottom:16px;">
+      <button class="btn btn-success" onclick="showMsg('cbtMsg','success','CBT module enabled. Students can now access.')">Enable CBT Module</button>
+      <button class="btn btn-danger" onclick="showMsg('cbtMsg','error','CBT module disabled.')">Disable CBT Module</button>
+      <button class="btn btn-gold" onclick="showMsg('cbtMsg','warn','CBT placed in maintenance mode.')">Maintenance Mode</button>
+    </div>
+    <div class="msg" id="cbtMsg"></div>
+    <table class="data-table">
+      <thead><tr><th>Course</th><th>Exam Date</th><th>Time</th><th>Venue</th><th>Enrolled</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td>CSC 301 – Data Structures</td><td>Jan 13, 2025</td><td>09:00–11:00</td><td>CBT Lab 1</td><td>74</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>CSC 303 – Operating Systems</td><td>Jan 15, 2025</td><td>11:00–13:00</td><td>CBT Lab 2</td><td>81</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>GST 301 – Entrepreneurship</td><td>Jan 17, 2025</td><td>14:00–16:00</td><td>CBT Lab 3</td><td>412</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        <tr><td>MTH 301 – Numerical Analysis</td><td>Jan 20, 2025</td><td>09:00–11:00</td><td>CBT Lab 1</td><td>96</td><td><span class="tag tag-gold">Upcoming</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════ BROADCAST ═══════════ -->
+<div class="page-section" id="sec-broadcast">
+  <div class="section-head">Broadcast Announcements</div>
+  <div class="grid-2">
+    <div class="portal-card">
+      <div class="card-hd"><h3>New Announcement</h3></div>
+      <div class="form-group"><label>Title</label><input type="text" placeholder="Announcement title…" id="bcTitle"/></div>
+      <div class="form-group"><label>Priority</label><select id="bcPriority"><option>Normal</option><option>Important</option><option>Urgent</option></select></div>
+      <div class="form-group"><label>Target Audience</label>
+        <div class="broadcast-target">
+          <label class="target-chip"><input type="checkbox" checked/> All Students</label>
+          <label class="target-chip"><input type="checkbox"/> All Lecturers</label>
+          <label class="target-chip"><input type="checkbox"/> HODs</label>
+          <label class="target-chip"><input type="checkbox"/> Deans</label>
+          <label class="target-chip"><input type="checkbox"/> DSA Staff</label>
+          <label class="target-chip"><input type="checkbox"/> Executives</label>
+          <label class="target-chip"><input type="checkbox"/> Entire University</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Message</label><textarea rows="5" placeholder="Write your announcement…" id="bcMessage"></textarea></div>
+      <div class="form-group"><label>Publish Date</label><input type="datetime-local"/></div>
+      <button class="btn btn-primary" onclick="publishBroadcast()">📢 Publish Announcement</button>
+      <div class="msg" id="bcMsg"></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Recent Announcements</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Title</th><th>Target</th><th>Published</th><th>By</th></tr></thead>
+        <tbody id="announcementsList">
+          <tr><td>Course Registration Deadline</td><td>All Students</td><td>Dec 18, 2024</td><td>Super Admin</td></tr>
+          <tr><td>School Fees Payment Opens</td><td>All Students</td><td>Dec 15, 2024</td><td>Super Admin</td></tr>
+          <tr><td>Score Submission Deadline</td><td>All Lecturers</td><td>Dec 14, 2024</td><td>Super Admin</td></tr>
+          <tr><td>Hostel Balloting Window</td><td>Eligible Students</td><td>Dec 10, 2024</td><td>Super Admin</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ REPORTS ═══════════ -->
+<div class="page-section" id="sec-reports">
+  <div class="section-head">System Reports</div>
+  <div class="grid-3">
+    <div class="portal-card" style="padding:18px;"><div style="font-size:1.5rem;margin-bottom:8px;">📊</div><h4 style="font-family:var(--serif);color:var(--maroon-dark);margin-bottom:6px;">University-Wide Performance</h4><p style="font-size:0.79rem;color:var(--muted);margin-bottom:14px;">GPA distributions, pass rates, all faculties cross-compared.</p><button class="btn btn-primary btn-sm" onclick="showMsg('rptMsg','success','Report generated. Downloading…')">Generate</button></div>
+    <div class="portal-card" style="padding:18px;"><div style="font-size:1.5rem;margin-bottom:8px;">💰</div><h4 style="font-family:var(--serif);color:var(--maroon-dark);margin-bottom:6px;">Full Financial Report</h4><p style="font-size:0.79rem;color:var(--muted);margin-bottom:14px;">Fee collection, outstanding balances, payment channels.</p><button class="btn btn-primary btn-sm" onclick="showMsg('rptMsg','success','Financial report generated.')">Generate</button></div>
+    <div class="portal-card" style="padding:18px;"><div style="font-size:1.5rem;margin-bottom:8px;">👥</div><h4 style="font-family:var(--serif);color:var(--maroon-dark);margin-bottom:6px;">User Statistics Report</h4><p style="font-size:0.79rem;color:var(--muted);margin-bottom:14px;">All role counts, active sessions, suspended accounts.</p><button class="btn btn-primary btn-sm" onclick="showMsg('rptMsg','success','User report generated.')">Generate</button></div>
+    <div class="portal-card" style="padding:18px;"><div style="font-size:1.5rem;margin-bottom:8px;">🏠</div><h4 style="font-family:var(--serif);color:var(--maroon-dark);margin-bottom:6px;">Hostel Occupancy Report</h4><p style="font-size:0.79rem;color:var(--muted);margin-bottom:14px;">Room-by-room allocation, vacancies, complaints.</p><button class="btn btn-primary btn-sm" onclick="showMsg('rptMsg','success','Hostel report generated.')">Generate</button></div>
+    <div class="portal-card" style="padding:18px;"><div style="font-size:1.5rem;margin-bottom:8px;">🔍</div><h4 style="font-family:var(--serif);color:var(--maroon-dark);margin-bottom:6px;">Security & Audit Report</h4><p style="font-size:0.79rem;color:var(--muted);margin-bottom:14px;">Failed logins, suspicious activity, blocked IPs.</p><button class="btn btn-primary btn-sm" onclick="showMsg('rptMsg','success','Security report generated.')">Generate</button></div>
+    <div class="portal-card" style="padding:18px;"><div style="font-size:1.5rem;margin-bottom:8px;">💻</div><h4 style="font-family:var(--serif);color:var(--maroon-dark);margin-bottom:6px;">CBT Exam Report</h4><p style="font-size:0.79rem;color:var(--muted);margin-bottom:14px;">Scheduled exams, completion rates, no-show records.</p><button class="btn btn-primary btn-sm" onclick="showMsg('rptMsg','success','CBT report generated.')">Generate</button></div>
+  </div>
+  <div class="msg" id="rptMsg"></div>
+</div>
+
+<!-- ═══════════ SYSTEM SETTINGS ═══════════ -->
+<div class="page-section" id="sec-system-settings">
+  <div class="section-head">System Settings</div>
+  <div class="grid-2">
+    <div class="portal-card">
+      <div class="card-hd"><h3>General Configuration</h3></div>
+      <div class="form-group"><label>University Full Name</label><input type="text" value="Federal University — FUMMSA"/></div>
+      <div class="form-group"><label>Current Academic Session</label><input type="text" value="2024/2025"/></div>
+      <div class="form-group"><label>Current Semester</label><select><option>First Semester</option><option selected>Second Semester</option></select></div>
+      <div class="form-group"><label>Student Session Timeout</label><select><option>30 minutes</option><option selected>1 hour</option><option>2 hours</option><option>4 hours</option></select></div>
+      <div class="form-group"><label>Max Login Attempts (before lockout)</label><input type="number" value="3"/></div>
+      <div class="form-group"><label>Maintenance Mode Message</label><textarea rows="2" placeholder="Message shown when portal is in maintenance mode…"></textarea></div>
+      <button class="btn btn-primary" onclick="showMsg('settingsMsg','success','Settings saved successfully.')">Save Settings</button>
+      <div class="msg" id="settingsMsg"></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Email & Notification Settings</h3></div>
+      <div class="form-group"><label>SMTP Server</label><input type="text" value="smtp.university.edu.ng"/></div>
+      <div class="form-group"><label>SMTP Port</label><input type="text" value="587"/></div>
+      <div class="form-group"><label>No-Reply Email</label><input type="email" value="noreply@university.edu.ng"/></div>
+      <div class="form-group"><label>Admin Notification Email</label><input type="email" value="superadmin@university.edu.ng"/></div>
+      <div class="form-group"><label>SMS Gateway API Key</label><input type="password" value="••••••••••••••••"/></div>
+      <button class="btn btn-primary" onclick="showMsg('emailMsg','success','Email settings saved.')">Save Email Config</button>
+      <div class="msg" id="emailMsg"></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Fee Configuration</h3></div>
+      <div class="form-grid">
+        <div class="form-group"><label>Undergraduate Tuition (₦)</label><input type="number" value="85000"/></div>
+        <div class="form-group"><label>Development Levy (₦)</label><input type="number" value="15000"/></div>
+        <div class="form-group"><label>Library Fee (₦)</label><input type="number" value="3500"/></div>
+        <div class="form-group"><label>ICT Fee (₦)</label><input type="number" value="5000"/></div>
+        <div class="form-group"><label>Late Payment Surcharge (%)</label><input type="number" value="10"/></div>
+        <div class="form-group"><label>Remita Merchant Code</label><input type="text" value="FUMMSA-7724"/></div>
+      </div>
+      <button class="btn btn-primary" onclick="showMsg('feeMsg','success','Fee settings saved.')">Save Fee Config</button>
+      <div class="msg" id="feeMsg"></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Course Registration Limits</h3></div>
+      <div class="form-grid">
+        <div class="form-group"><label>Max Credit Units (100L)</label><input type="number" value="24"/></div>
+        <div class="form-group"><label>Max Credit Units (200L+)</label><input type="number" value="24"/></div>
+        <div class="form-group"><label>Min Units to Proceed</label><input type="number" value="12"/></div>
+        <div class="form-group"><label>Registration Open Window</label><input type="number" value="30" min="1"/> <small style="color:var(--muted);font-size:0.72rem;">days from semester start</small></div>
+      </div>
+      <button class="btn btn-primary" onclick="showMsg('regLimitMsg','success','Registration settings saved.')">Save</button>
+      <div class="msg" id="regLimitMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SECURITY ═══════════ -->
+<div class="page-section" id="sec-security">
+  <div class="section-head">Security & Administrator Credentials</div>
+  <div class="grid-2">
+    <div class="portal-card">
+      <div class="card-hd"><h3>Change Super Admin Password</h3></div>
+      <div style="background:#fde8ec;border:1px solid rgba(176,74,42,0.25);border-radius:3px;padding:12px;font-size:0.8rem;color:#7a0e1e;margin-bottom:16px;">⚠ <strong>Warning:</strong> This is the master password. Only one person should have access. After change, log out and back in on all devices.</div>
+      <div class="form-group"><label>Current Password</label><input type="password" placeholder="Current password"/></div>
+      <div class="form-group"><label>New Password</label><input type="password" placeholder="Minimum 16 characters, mixed case, numbers, symbols"/></div>
+      <div class="form-group"><label>Confirm New Password</label><input type="password" placeholder="Repeat new password"/></div>
+      <button class="btn btn-danger" onclick="openModal('confirmPwModal')">Change Master Password</button>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Session & Access Security</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Security Setting</th><th>Value</th><th>Edit</th></tr></thead>
+        <tbody>
+          <tr><td>Admin Session Timeout</td><td>4 hours</td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+          <tr><td>2-Factor Authentication</td><td><span class="tag tag-green">Enabled (Email OTP)</span></td><td><button class="btn btn-outline btn-sm">Config</button></td></tr>
+          <tr><td>IP Whitelist for Admin</td><td>197.210.0.0/24</td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+          <tr><td>Blocked IPs</td><td>3 blocked</td><td><button class="btn btn-outline btn-sm" onclick="openModal('blockedIPsModal')">View</button></td></tr>
+          <tr><td>Login Lockout Threshold</td><td>3 attempts</td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Recent Login History (Super Admin)</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Date & Time</th><th>IP Address</th><th>Device</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Dec 15, 2024 – 08:14</td><td>197.210.xx.1</td><td>Chrome / Windows 11</td><td><span class="tag tag-green">Success</span></td></tr>
+          <tr><td>Dec 14, 2024 – 22:45</td><td>41.58.xx.99</td><td>Unknown / Linux</td><td><span class="tag tag-red">Failed — Blocked</span></td></tr>
+          <tr><td>Dec 14, 2024 – 07:30</td><td>197.210.xx.1</td><td>Chrome / Windows 11</td><td><span class="tag tag-green">Success</span></td></tr>
+          <tr><td>Dec 13, 2024 – 08:02</td><td>197.210.xx.1</td><td>Chrome / Windows 11</td><td><span class="tag tag-green">Success</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Two-Factor Authentication</h3></div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">2FA is currently enabled. A one-time code is sent to your registered email on each login.</p>
+      <div class="form-group"><label>2FA Delivery Method</label><select><option selected>Email OTP</option><option>Authenticator App (TOTP)</option><option>SMS OTP</option></select></div>
+      <div class="form-group"><label>Admin Recovery Email</label><input type="email" value="superadmin.recovery@university.edu.ng"/></div>
+      <button class="btn btn-primary" onclick="showMsg('tfaMsg','success','2FA settings updated.')">Save 2FA Settings</button>
+      <div class="msg" id="tfaMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ DATA BACKUP ═══════════ -->
+<div class="page-section" id="sec-backup">
+  <div class="section-head">Data Backup & Recovery</div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>Backup Controls</h3></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
+      <button class="btn btn-primary" onclick="showMsg('backupMsg','success','Full database backup initiated. This may take a few minutes.')">💾 Run Full Backup Now</button>
+      <button class="btn btn-outline" onclick="showMsg('backupMsg','success','Incremental backup complete.')">⚡ Incremental Backup</button>
+      <button class="btn btn-gold" onclick="showMsg('backupMsg','warn','Please confirm before restoring from backup.')">↩ Restore from Backup</button>
+    </div>
+    <div class="msg" id="backupMsg"></div>
+    <table class="data-table">
+      <thead><tr><th>Backup Date</th><th>Type</th><th>Size</th><th>Storage</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>Dec 15, 2024 – 03:00</td><td>Full (Scheduled)</td><td>4.2 GB</td><td>Cloud (AWS S3)</td><td><span class="tag tag-green">✓ Complete</span></td><td><button class="btn btn-outline btn-sm">Download</button></td></tr>
+        <tr><td>Dec 14, 2024 – 03:00</td><td>Full (Scheduled)</td><td>4.1 GB</td><td>Cloud (AWS S3)</td><td><span class="tag tag-green">✓ Complete</span></td><td><button class="btn btn-outline btn-sm">Download</button></td></tr>
+        <tr><td>Dec 13, 2024 – 03:00</td><td>Full (Scheduled)</td><td>4.0 GB</td><td>Cloud (AWS S3)</td><td><span class="tag tag-green">✓ Complete</span></td><td><button class="btn btn-outline btn-sm">Download</button></td></tr>
+        <tr><td>Dec 12, 2024 – 12:00</td><td>Incremental (Manual)</td><td>182 MB</td><td>Local + Cloud</td><td><span class="tag tag-green">✓ Complete</span></td><td><button class="btn btn-outline btn-sm">Download</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="portal-card">
+    <div class="card-hd"><h3>Automatic Backup Schedule</h3></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Full Backup Frequency</label><select><option>Daily at 03:00 AM</option><option>Every 12 Hours</option><option>Weekly</option></select></div>
+      <div class="form-group"><label>Incremental Backup</label><select><option>Every 6 Hours</option><option>Every 12 Hours</option><option>Disabled</option></select></div>
+      <div class="form-group"><label>Retention Period</label><select><option>7 Days</option><option>30 Days</option><option>90 Days</option></select></div>
+      <div class="form-group"><label>Cloud Storage Destination</label><select><option>AWS S3</option><option>Google Cloud Storage</option><option>Local NAS Only</option></select></div>
+    </div>
+    <button class="btn btn-primary" onclick="showMsg('scheduleMsg','success','Backup schedule updated.')">Save Schedule</button>
+    <div class="msg" id="scheduleMsg"></div>
+  </div>
+</div>
+
+</div><!-- /main-wrap -->
+
+<!-- ════════════════════ MODALS ════════════════════ -->
+
+<!-- Reject Lecturer -->
+<div class="modal-overlay hidden modal-danger" id="rejectModal">
+  <div class="modal-box modal-danger">
+    <button class="modal-close" onclick="closeModal('rejectModal')">✕</button>
+    <div class="modal-title">Reject Lecturer Application</div>
+    <div class="form-group"><label>Reason for Rejection</label><textarea rows="4" placeholder="State clear reason. This will be sent to the applicant via email."></textarea></div>
+    <div class="form-group"><label>Notify Applicant via</label><select><option>Email</option><option>Email + SMS</option></select></div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button class="btn btn-danger" onclick="closeModal('rejectModal');showMsg('approvalMsg','error','Application rejected. Applicant has been notified.')">Confirm Rejection</button>
+      <button class="btn btn-outline" onclick="closeModal('rejectModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Lecturer Details -->
+<div class="modal-overlay hidden" id="viewLecturerModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('viewLecturerModal')">✕</button>
+    <div class="modal-title">Lecturer Application — Full Details</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.84rem;line-height:1.9;">
+      <div><strong>Full Name:</strong> Dr. Musa Ibrahim Aliyu</div>
+      <div><strong>Email:</strong> m.aliyu@university.edu.ng</div>
+      <div><strong>Phone:</strong> +234 803 111 2233</div>
+      <div><strong>Faculty:</strong> Faculty of Sciences</div>
+      <div><strong>Department:</strong> Physics</div>
+      <div><strong>Role Applied For:</strong> Senior Lecturer</div>
+      <div><strong>Qualification:</strong> PhD Physics, UNIMAID 2019</div>
+      <div><strong>Additional:</strong> MSc Physics, ABU 2015</div>
+      <div><strong>Submitted:</strong> Dec 12, 2024 at 10:35 AM</div>
+      <div><strong>Application IP:</strong> 197.210.xx.44</div>
+    </div>
+    <div style="margin-top:16px;padding:12px;background:var(--cream);border-radius:3px;font-size:0.8rem;color:var(--mid);">No supporting documents uploaded with this application.</div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-success" onclick="approveUser('Dr. Musa Aliyu');closeModal('viewLecturerModal')">✓ Approve</button>
+      <button class="btn btn-danger" onclick="closeModal('viewLecturerModal');openModal('rejectModal')">✕ Reject</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User -->
+<div class="modal-overlay hidden" id="editUserModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('editUserModal')">✕</button>
+    <div class="modal-title">Edit User Account</div>
+    <div class="form-group"><label>Full Name</label><input type="text" value="Adeyemi Olasubomi Emmanuel"/></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Email</label><input type="email" value="a.olasubomi@student.university.edu.ng"/></div>
+      <div class="form-group"><label>Phone</label><input type="tel" value="+234 810 000 0000"/></div>
+      <div class="form-group"><label>Faculty</label><select><option selected>Sciences</option><option>Engineering</option><option>Arts</option></select></div>
+      <div class="form-group"><label>Department</label><select><option selected>Computer Science</option></select></div>
+      <div class="form-group"><label>Level</label><select><option>100</option><option>200</option><option selected>300</option><option>400</option></select></div>
+      <div class="form-group"><label>Account Status</label><select><option selected>Active</option><option>Suspended</option><option>Graduated</option></select></div>
+    </div>
+    <div class="form-group"><label>Admin Notes</label><textarea rows="2"></textarea></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" onclick="closeModal('editUserModal');showMsg('editUserMsg','success','User record updated.')">Save Changes</button>
+      <button class="btn btn-danger btn-sm" onclick="closeModal('editUserModal')">Reset Password</button>
+    </div>
+    <div class="msg" id="editUserMsg"></div>
+  </div>
+</div>
+
+<!-- Confirm Password Change -->
+<div class="modal-overlay hidden modal-danger" id="confirmPwModal">
+  <div class="modal-box modal-danger">
+    <button class="modal-close" onclick="closeModal('confirmPwModal')">✕</button>
+    <div class="modal-title">⚠ Confirm Master Password Change</div>
+    <p style="font-size:0.84rem;color:var(--mid);line-height:1.6;margin-bottom:16px;">You are about to change the Super Administrator master password. This will immediately invalidate all current admin sessions. Make sure you have the new password saved securely before proceeding.</p>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-danger" onclick="closeModal('confirmPwModal');showMsg('pwChangeMsg','success','Master password changed. You have been logged out of all sessions.')">Confirm — Change Password</button>
+      <button class="btn btn-outline" onclick="closeModal('confirmPwModal')">Cancel</button>
+    </div>
+    <div class="msg" id="pwChangeMsg"></div>
+  </div>
+</div>
+
+<!-- Blocked IPs -->
+<div class="modal-overlay hidden" id="blockedIPsModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('blockedIPsModal')">✕</button>
+    <div class="modal-title">Blocked IP Addresses</div>
+    <table class="data-table">
+      <thead><tr><th>IP Address</th><th>Reason</th><th>Blocked On</th><th>Expires</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>41.58.xx.99</td><td>3 failed admin login attempts</td><td>Dec 14, 22:45</td><td>Dec 15, 22:45</td><td><button class="btn btn-success btn-sm" onclick="alert('IP unblocked.')">Unblock</button></td></tr>
+        <tr><td>102.90.xx.44</td><td>Suspicious pattern – repeated 404s</td><td>Dec 12, 14:00</td><td>Dec 19, 14:00</td><td><button class="btn btn-success btn-sm" onclick="alert('IP unblocked.')">Unblock</button></td></tr>
+        <tr><td>197.157.xx.12</td><td>DDoS detection trigger</td><td>Dec 10, 09:22</td><td>Permanent</td><td><button class="btn btn-success btn-sm" onclick="alert('IP unblocked.')">Unblock</button></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px;">
+      <div class="form-group"><label>Manually Block IP</label><div style="display:flex;gap:8px;"><input type="text" placeholder="Enter IP address…"/><button class="btn btn-danger btn-sm">Block</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- User Access Modal -->
+<div class="modal-overlay hidden" id="userAccessModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('userAccessModal')">✕</button>
+    <div class="modal-title">Individual User Access — STU/2021/CSC/0047</div>
+    <div style="font-size:0.84rem;line-height:1.8;margin-bottom:16px;"><strong>Name:</strong> Adeyemi Olasubomi Emmanuel<br/><strong>Matric:</strong> STU/2021/CSC/0047<br/><strong>Current Status:</strong> <span class="tag tag-green">Active</span></div>
+    <table class="data-table" style="margin-bottom:14px;">
+      <thead><tr><th>Module</th><th>Access</th><th>Toggle</th></tr></thead>
+      <tbody>
+        <tr><td>Course Registration</td><td><span class="tag tag-green">Allowed</span></td><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td></tr>
+        <tr><td>Results Viewing</td><td><span class="tag tag-green">Allowed</span></td><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td></tr>
+        <tr><td>Fee Payment</td><td><span class="tag tag-green">Allowed</span></td><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td></tr>
+        <tr><td>Hostel Balloting</td><td><span class="tag tag-green">Allowed</span></td><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-danger btn-sm" onclick="closeModal('userAccessModal');alert('Full portal access suspended.')">Suspend All Access</button>
+      <button class="btn btn-primary btn-sm" onclick="closeModal('userAccessModal');alert('Password reset email sent.')">Reset Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Faculty Modal -->
+<div class="modal-overlay hidden" id="addFacultyModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('addFacultyModal')">✕</button>
+    <div class="modal-title">Add New Faculty</div>
+    <div class="form-group"><label>Faculty Name</label><input type="text" placeholder="e.g. Faculty of Pharmacy"/></div>
+    <div class="form-group"><label>Faculty Code</label><input type="text" placeholder="e.g. PHARM"/></div>
+    <div class="form-group"><label>Dean (Staff ID)</label><input type="text" placeholder="e.g. STAFF/PHARM/2022/001"/></div>
+    <div class="form-group"><label>Establishment Date</label><input type="date"/></div>
+    <button class="btn btn-primary" onclick="closeModal('addFacultyModal');showMsg('facMsg','success','New faculty created successfully.')">Create Faculty</button>
+    <div class="msg" id="facMsg"></div>
+  </div>
+</div>
+
+<!-- Add Course Modal -->
+<div class="modal-overlay hidden" id="addCourseModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('addCourseModal')">✕</button>
+    <div class="modal-title">Add Course to Registry</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Course Code</label><input type="text" placeholder="e.g. CSC 403"/></div>
+      <div class="form-group"><label>Credit Units</label><input type="number" min="1" max="6" value="3"/></div>
+    </div>
+    <div class="form-group"><label>Course Title</label><input type="text" placeholder="Full course title…"/></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Faculty</label><select><option>Sciences</option><option>Engineering</option><option>Arts</option><option>All (General Studies)</option></select></div>
+      <div class="form-group"><label>Department</label><input type="text" placeholder="Dept. code or General"/></div>
+      <div class="form-group"><label>Level</label><select><option>100</option><option>200</option><option>300</option><option>400</option><option>500</option></select></div>
+      <div class="form-group"><label>Type</label><select><option>Compulsory</option><option>Elective</option></select></div>
+    </div>
+    <button class="btn btn-primary" onclick="closeModal('addCourseModal')">Add to Registry</button>
+  </div>
+</div>
+
+<!-- Academic Calendar Modal -->
+<div class="modal-overlay hidden" id="calendarModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('calendarModal')">✕</button>
+    <div class="modal-title">Add Academic Calendar Event</div>
+    <div class="form-group"><label>Event Title</label><input type="text" placeholder="e.g. Mid-Semester Break"/></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Start Date</label><input type="date"/></div>
+      <div class="form-group"><label>End Date (if applicable)</label><input type="date"/></div>
+    </div>
+    <div class="form-group"><label>Affects</label><select><option>All Students & Staff</option><option>Students Only</option><option>Staff Only</option></select></div>
+    <div class="form-group"><label>Notes</label><textarea rows="2"></textarea></div>
+    <button class="btn btn-primary" onclick="closeModal('calendarModal')">Add Event</button>
+  </div>
+</div>
+
+<!-- CBT Exam Modal -->
+<div class="modal-overlay hidden" id="addCbtModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('addCbtModal')">✕</button>
+    <div class="modal-title">Schedule CBT Examination</div>
+    <div class="form-group"><label>Course Code</label><input type="text" placeholder="e.g. CSC 301"/></div>
+    <div class="form-group"><label>Course Title</label><input type="text" placeholder="Auto-populate or enter…"/></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Exam Date</label><input type="date"/></div>
+      <div class="form-group"><label>Start Time</label><input type="time"/></div>
+      <div class="form-group"><label>Duration (mins)</label><input type="number" value="120"/></div>
+      <div class="form-group"><label>Venue / Lab</label><select><option>CBT Lab 1</option><option>CBT Lab 2</option><option>CBT Lab 3</option></select></div>
+    </div>
+    <button class="btn btn-primary" onclick="closeModal('addCbtModal')">Schedule Exam</button>
+  </div>
+</div>
+
+<!-- Notifications Modal -->
+<div class="modal-overlay hidden" id="notifModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('notifModal')">✕</button>
+    <div class="modal-title">System Notifications</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="padding:12px;background:#fde8ec;border-radius:3px;font-size:0.84rem;border-left:3px solid var(--danger);"><strong>Security Alert:</strong> 3 failed login attempts on super admin account detected — IP 41.58.xx.99 blocked. <em style="color:var(--muted);">Dec 14, 22:45</em></div>
+      <div style="padding:12px;background:#fef9ed;border-radius:3px;font-size:0.84rem;border-left:3px solid var(--gold);"><strong>5 Lecturer Registrations</strong> awaiting your approval. <em style="color:var(--muted);">Review now</em></div>
+      <div style="padding:12px;background:#e8f5ee;border-radius:3px;font-size:0.84rem;border-left:3px solid var(--success);"><strong>Scheduled Backup Completed</strong> successfully — 4.2 GB. <em style="color:var(--muted);">Today 03:00</em></div>
+      <div style="padding:12px;background:#e8f0fd;border-radius:3px;font-size:0.84rem;border-left:3px solid var(--info);"><strong>Storage Warning:</strong> Server storage at 71% capacity. Consider expanding. <em style="color:var(--muted);">Dec 14</em></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ JAVASCRIPT ════════════════════ -->
+<script>
+/* ── Navigation ── */
+function showSection(id) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById('sec-' + id);
+  if (sec) sec.classList.add('active');
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  event && event.currentTarget && event.currentTarget.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ── Modals ── */
+function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); });
+});
+
+/* ── Tabs ── */
+function switchTab(panelId, tabId) {
+  const wrap = document.getElementById(panelId).closest('.portal-card');
+  wrap.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  wrap.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+/* ── Messages ── */
+function showMsg(id, type, text) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'msg ' + type + ' show';
+  if (text) el.textContent = text;
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+/* ── User Actions ── */
+function approveUser(name, elId) {
+  if (!confirm(`Approve ${name} and create their portal account?`)) return;
+  if (elId) {
+    const el = document.getElementById(elId);
+    if (el) el.style.display = 'none';
+  }
+  const cnt = document.getElementById('pendingCount');
+  if (cnt) cnt.textContent = Math.max(0, parseInt(cnt.textContent) - 1);
+  showMsg('approvalMsg', 'success', `✓ ${name} approved. Login credentials sent to their email.`);
+}
+
+function suspendUser(uid) {
+  if (!confirm(`Suspend portal access for ${uid}?`)) return;
+  showMsg('editUserMsg', 'error', `Portal access for ${uid} has been suspended.`);
+}
+
+function restoreUser(uid) {
+  if (!confirm(`Restore portal access for ${uid}?`)) return;
+  showMsg('editUserMsg', 'success', `Portal access for ${uid} has been restored.`);
+}
+
+/* ── Toggles ── */
+function moduleToggle(cb, name) {
+  const action = cb.checked ? 'enabled' : 'disabled';
+  alert(`${name} module has been ${action} system-wide.`);
+}
+
+function toggleModule(name) {
+  const action = confirm(`Toggle the ${name} module?`);
+  if (action) alert(`${name} module status changed.`);
+}
+
+function emergencyAction(action) {
+  if (!confirm(`EMERGENCY ACTION: ${action.toUpperCase()}?\n\nThis affects ALL users. Confirm?`)) return;
+  alert(`Emergency action executed: ${action}. All affected users have been notified.`);
+}
+
+/* ── Broadcast ── */
+function publishBroadcast() {
+  const title = document.getElementById('bcTitle').value.trim();
+  const msg = document.getElementById('bcMessage').value.trim();
+  if (!title || !msg) { showMsg('bcMsg', 'error', 'Please fill in the title and message.'); return; }
+  const tbody = document.getElementById('announcementsList');
+  const row = tbody.insertRow(0);
+  row.innerHTML = `<td>${title}</td><td>Selected Groups</td><td>Just now</td><td>Super Admin</td>`;
+  document.getElementById('bcTitle').value = '';
+  document.getElementById('bcMessage').value = '';
+  showMsg('bcMsg', 'success', '✓ Announcement published. All selected users have been notified.');
+}
+
+/* ── Logout ── */
+function doLogout() {
+  if (!confirm('End super admin session and log out?')) return;
+  window.location.href = 'portal-login.html';
+}
+
+/* ── Sidebar hamburger ── */
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+/* ── Animate health bars on load ── */
+window.addEventListener('load', () => {
+  document.querySelectorAll('.health-bar').forEach(b => {
+    const w = b.style.width; b.style.width = '0';
+    setTimeout(() => b.style.width = w, 100);
+  });
+});
+</script>
+</body>
+</html>

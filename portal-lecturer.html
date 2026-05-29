@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecturer Portal – FUMMSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#4a0a1e;--maroon-mid:#800f30;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;--cream:#FAF7F2;
+  --warm-white:#FFFDF9;--charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.14);--success:#2a6b4a;--danger:#B04A2A;--info:#1a4a6b;
+  --serif:'Source Serif 4',Georgia,serif;--sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);--sb-width:240px;--top-h:60px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:#F0EBE5;color:var(--charcoal);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top-h);background:var(--maroon-dark);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 0;z-index:500;border-bottom:2px solid rgba(196,146,42,0.25);}
+.topbar-brand{display:flex;align-items:center;gap:12px;width:var(--sb-width);padding:0 20px;border-right:1px solid rgba(255,255,255,0.08);height:100%;}
+.topbar-brand img{width:34px;height:34px;border-radius:50%;object-fit:contain;}
+.topbar-brand-text{font-family:var(--serif);color:white;font-size:1rem;font-weight:600;}
+.topbar-brand-text small{display:block;font-family:var(--sans);font-size:0.58rem;color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-notify{position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.7);font-size:1rem;transition:all 0.2s;}
+.topbar-notify:hover{background:rgba(255,255,255,0.12);}
+.notify-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--gold);border-radius:50%;border:1.5px solid var(--maroon-dark);}
+.topbar-user{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--gold-light);font-size:0.85rem;overflow:hidden;flex-shrink:0;}
+.user-avatar img{width:100%;height:100%;object-fit:cover;}
+.user-meta{text-align:right;}
+.user-name{font-size:0.8rem;font-weight:600;color:white;}
+.user-role{font-size:0.62rem;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase;}
+.btn-logout{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:2px;font-family:var(--sans);font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:white;}
+.hamburger-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:white;font-size:1.2rem;}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--sb-width);background:white;border-right:1.5px solid var(--rule);overflow-y:auto;z-index:400;transition:transform 0.3s var(--ease);}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:var(--rule);}
+.sidebar-section{padding:16px 12px 4px;}
+.sb-label{font-size:0.58rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:6px 8px 4px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:3px;font-size:0.8rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;user-select:none;}
+.sb-link:hover{color:var(--maroon);background:rgba(107,15,43,0.04);}
+.sb-link.active{color:var(--maroon);background:rgba(107,15,43,0.06);border-left-color:var(--maroon);font-weight:600;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--maroon);color:white;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sb-divider{height:1px;background:var(--rule);margin:8px 16px;}
+
+/* ── MAIN ── */
+.main-wrap{margin-left:var(--sb-width);margin-top:var(--top-h);min-height:calc(100vh - var(--top-h));padding:28px;}
+.page-section{display:none;animation:fadeIn 0.3s ease both;}
+.page-section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ── PROFILE CARD ── */
+.profile-header{background:var(--maroon-dark);border-radius:5px;padding:28px 32px;display:flex;align-items:center;gap:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.profile-header::before{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(196,146,42,0.15);}
+.profile-header::after{content:'';position:absolute;right:20px;bottom:-40px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(196,146,42,0.1);}
+.profile-photo{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:2rem;color:var(--gold-light);overflow:hidden;flex-shrink:0;z-index:1;}
+.profile-photo img{width:100%;height:100%;object-fit:cover;}
+.profile-info{flex:1;z-index:1;}
+.profile-name{font-family:var(--serif);font-size:1.5rem;color:white;font-weight:600;}
+.profile-sub{font-size:0.75rem;color:var(--gold-light);letter-spacing:0.1em;margin:4px 0 12px;text-transform:uppercase;}
+.profile-meta{display:flex;flex-wrap:wrap;gap:20px;}
+.pmeta-item{font-size:0.75rem;color:rgba(255,255,255,0.65);}
+.pmeta-item strong{display:block;font-size:0.65rem;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.status-active{background:rgba(42,107,74,0.3);color:#7ee0a8;border:1px solid rgba(42,107,74,0.4);}
+
+/* ── STAT ROW ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:white;border-radius:4px;padding:20px 22px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.05);}
+.stat-value{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--maroon-dark);line-height:1;}
+.stat-label{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+.stat-sub{font-size:0.72rem;color:var(--success);margin-top:4px;}
+
+/* ── SECTION HEAD ── */
+.section-head{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--rule);}
+
+/* ── CARDS ── */
+.portal-card{background:white;border-radius:4px;padding:24px;box-shadow:0 1px 8px rgba(107,15,43,0.06);border:1px solid var(--rule);margin-bottom:20px;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--rule);}
+.card-hd h3{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--maroon-dark);}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--rule);background:var(--cream);}
+.data-table td{font-size:0.82rem;padding:11px 14px;border-bottom:1px solid var(--rule);color:var(--charcoal);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(107,15,43,0.02);}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:0.68rem;font-weight:700;letter-spacing:0.05em;}
+.badge-active{background:#e8f5ee;color:#1a5c38;}
+.badge-pending{background:var(--gold-pale);color:#7a5200;}
+.badge-closed{background:#fde8ec;color:#7a0e1e;}
+.badge-info{background:#e8f0fe;color:#1a3a7a;}
+
+/* ── COURSE GRID ── */
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px;}
+.course-card{background:white;border:1.5px solid var(--rule);border-radius:4px;padding:20px;box-shadow:0 1px 6px rgba(107,15,43,0.05);transition:all 0.25s;}
+.course-card:hover{border-color:var(--maroon);transform:translateY(-2px);box-shadow:0 6px 20px rgba(107,15,43,0.1);}
+.course-code{font-size:0.65rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.course-title{font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:10px;}
+.course-meta{font-size:0.75rem;color:var(--muted);display:flex;gap:14px;}
+.course-actions{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);}
+
+/* ── FORM ── */
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:7px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.88rem;color:var(--charcoal);background:var(--warm-white);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--maroon);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+/* ── BUTTONS ── */
+.btn{padding:10px 20px;border:none;border-radius:2px;font-family:var(--sans);font-weight:700;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--maroon);color:white;}
+.btn-primary:hover{background:var(--maroon-dark);}
+.btn-secondary{background:transparent;border:1.5px solid var(--maroon);color:var(--maroon);}
+.btn-secondary:hover{background:var(--maroon);color:white;}
+.btn-gold{background:var(--gold);color:white;}
+.btn-gold:hover{background:#a8791f;}
+.btn-sm{padding:6px 14px;font-size:0.72rem;}
+.btn-danger{background:var(--danger);color:white;}
+
+/* ── ANNOUNCE ── */
+.announce-list{display:flex;flex-direction:column;gap:12px;}
+.announce-item{background:white;border-radius:3px;padding:16px 20px;border-left:4px solid var(--maroon);box-shadow:0 1px 6px rgba(107,15,43,0.05);}
+.announce-item.gold{border-left-color:var(--gold);}
+.announce-body h4{font-size:0.88rem;font-weight:700;color:var(--charcoal);margin-bottom:4px;}
+.announce-body p{font-size:0.8rem;color:var(--muted);line-height:1.6;}
+.announce-date{font-size:0.68rem;color:var(--muted);margin-top:6px;}
+
+/* ── ATTENDANCE ── */
+.att-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:6px;margin-top:12px;}
+.att-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;cursor:pointer;transition:transform 0.15s;border:2px solid transparent;}
+.att-dot:hover{transform:scale(1.1);}
+.att-present{background:#e8f5ee;color:#1a5c38;border-color:#b2dfca;}
+.att-absent{background:#fde8ec;color:#7a0e1e;border-color:#f5b8c4;}
+.att-excuse{background:var(--gold-pale);color:#7a5200;border-color:#e8c97a;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--charcoal);color:white;padding:14px 22px;border-radius:3px;font-size:0.82rem;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.3s var(--ease);pointer-events:none;max-width:360px;}
+.toast.show{transform:none;opacity:1;}
+.toast.success{background:var(--success);}
+.toast.error{background:var(--danger);}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:800;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:4px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;}
+.modal-head{background:var(--maroon-dark);color:white;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;}
+.modal-head h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;}
+.modal-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:1.2rem;cursor:pointer;}
+.modal-body{padding:24px;}
+
+/* ── UPLOAD AREA ── */
+.upload-area{border:2px dashed rgba(107,15,43,0.2);border-radius:3px;padding:32px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--cream);}
+.upload-area:hover{border-color:var(--maroon);background:rgba(107,15,43,0.03);}
+.upload-icon{font-size:2.5rem;margin-bottom:12px;}
+.upload-text{font-size:0.82rem;color:var(--muted);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .stat-row{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+  .form-row-3{grid-template-columns:1fr 1fr;}
+  .hamburger-toggle{display:block;}
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:none;}
+  .main-wrap{margin-left:0;}
+}
+@media(max-width:600px){
+  .main-wrap{padding:16px;}
+  .stat-row{grid-template-columns:1fr 1fr;}
+}
+</style>
+
+  <!-- Shared portal libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="portal-auth.js"></script>
+  <script src="portal-api.js"></script>
+  <script src="portal-shared.js"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="logo.png" alt="FUMMSA" onerror="this.style.display='none'">
+    <div class="topbar-brand-text">FUMMSA<small>Lecturer Portal</small></div>
+  </div>
+  <div class="topbar-right">
+    <button class="hamburger-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+    <div class="topbar-notify">🔔<span class="notify-dot"></span></div>
+    <div class="topbar-user">
+      <div class="user-avatar" id="topAvatar">DR</div>
+      <div class="user-meta">
+        <div class="user-name" id="topName">Dr. Fatimah Adeyemi</div>
+        <div class="user-role">Lecturer</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sb-label">Overview</div>
+    <div class="sb-link active" onclick="showSection('dashboard',this)"><span class="sb-icon">📊</span> Dashboard</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Teaching</div>
+    <div class="sb-link" onclick="showSection('courses',this)"><span class="sb-icon">📚</span> My Courses</div>
+    <div class="sb-link" onclick="showSection('attendance',this)"><span class="sb-icon">✅</span> Attendance</div>
+    <div class="sb-link" onclick="showSection('grades',this)"><span class="sb-icon">📋</span> Grade Entry <span class="sb-badge">3</span></div>
+    <div class="sb-link" onclick="showSection('materials',this)"><span class="sb-icon">📁</span> Course Materials</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Requests & Comms</div>
+    <div class="sb-link" onclick="showSection('requests',this)"><span class="sb-icon">📩</span> My Requests</div>
+    <div class="sb-link" onclick="showSection('petitions',this)"><span class="sb-icon">🧾</span> Student Petitions <span class="sb-badge">2</span></div>
+    <div class="sb-link" onclick="showSection('announcements',this)"><span class="sb-icon">📢</span> Announcements</div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sidebar-section">
+    <div class="sb-label">Account</div>
+    <div class="sb-link" onclick="showSection('profile',this)"><span class="sb-icon">👤</span> My Profile</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrap">
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="sec-dashboard" class="page-section active">
+    <!-- Profile Card -->
+    <div class="profile-header">
+      <div class="profile-photo" id="bigAvatar">DR</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Dr. Fatimah Adeyemi</div>
+        <div class="profile-sub" id="profileStaffId">Staff ID: STAFF/ANAT/2019/004 &nbsp;|&nbsp; Senior Lecturer</div>
+        <div class="profile-meta">
+          <div class="pmeta-item"><strong>Faculty</strong><span id="profileFaculty">Basic Medical Sciences</span></div>
+          <div class="pmeta-item"><strong>Department</strong><span id="profileDept">Human Anatomy</span></div>
+          <div class="pmeta-item"><strong>Specialization</strong>Neuroanatomy</div>
+          <div class="pmeta-item"><strong>Status</strong><span class="status-badge status-active">● Active</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Courses Assigned</div>
+        <div class="stat-sub">This semester</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">312</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-sub">Across all courses</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--gold)">3</div>
+        <div class="stat-label">Grades Pending</div>
+        <div class="stat-sub">Submission due 30 Jun</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">88%</div>
+        <div class="stat-label">Avg Attendance</div>
+        <div class="stat-sub">This semester</div>
+      </div>
+    </div>
+
+    <!-- Upcoming Classes -->
+    <div class="section-head">Upcoming Classes This Week</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Course</th><th>Title</th><th>Date / Time</th><th>Venue</th><th>Students</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ANAT 301</strong></td><td>Gross Anatomy I</td><td>Mon, 02 Jun · 8:00 AM</td><td>LH 1</td><td>86</td></tr>
+          <tr><td><strong>ANAT 302</strong></td><td>Neuroanatomy</td><td>Tue, 03 Jun · 10:00 AM</td><td>LH 2</td><td>72</td></tr>
+          <tr><td><strong>ANAT 201</strong></td><td>Histology</td><td>Wed, 04 Jun · 2:00 PM</td><td>Histo Lab</td><td>91</td></tr>
+          <tr><td><strong>ANAT 401</strong></td><td>Clinical Anatomy</td><td>Thu, 05 Jun · 9:00 AM</td><td>LH 1</td><td>63</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Recent Student Petitions -->
+    <div class="section-head">Recent Student Petitions</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Matric No.</th><th>Course</th><th>Petition Type</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Aisha Bello Muhammad</td><td>2023/MED/0042</td><td>ANAT 301</td>
+            <td><span class="badge badge-pending">Attendance Appeal</span></td><td>28 May 2025</td>
+            <td><button class="btn btn-sm btn-primary" onclick="showToast('Petition reviewed.','success')">Review</button></td>
+          </tr>
+          <tr>
+            <td>Chukwuemeka Obi</td><td>2023/MED/0088</td><td>ANAT 302</td>
+            <td><span class="badge badge-pending">Exam Deferral</span></td><td>26 May 2025</td>
+            <td><button class="btn btn-sm btn-primary" onclick="showToast('Petition reviewed.','success')">Review</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div><!-- /dashboard -->
+
+  <!-- ═══ MY COURSES ═══ -->
+  <div id="sec-courses" class="page-section">
+    <div class="section-head">My Courses — 2024/2025 Second Semester</div>
+    <div class="course-grid">
+      <div class="course-card">
+        <div class="course-code">ANAT 301 · 3 Units</div>
+        <div class="course-title">Gross Anatomy I</div>
+        <div class="course-meta"><span>86 Students</span><span>Mon / Wed</span></div>
+        <div class="course-actions">
+          <button class="btn btn-sm btn-primary" onclick="showSection('attendance',null)">Attendance</button>
+          <button class="btn btn-sm btn-secondary" onclick="showSection('grades',null)">Grades</button>
+          <button class="btn btn-sm btn-gold" onclick="showSection('materials',null)">Materials</button>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-code">ANAT 302 · 4 Units</div>
+        <div class="course-title">Neuroanatomy</div>
+        <div class="course-meta"><span>72 Students</span><span>Tue / Thu</span></div>
+        <div class="course-actions">
+          <button class="btn btn-sm btn-primary" onclick="showSection('attendance',null)">Attendance</button>
+          <button class="btn btn-sm btn-secondary" onclick="showSection('grades',null)">Grades</button>
+          <button class="btn btn-sm btn-gold" onclick="showSection('materials',null)">Materials</button>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-code">ANAT 201 · 3 Units</div>
+        <div class="course-title">Histology & Cell Biology</div>
+        <div class="course-meta"><span>91 Students</span><span>Wed / Fri</span></div>
+        <div class="course-actions">
+          <button class="btn btn-sm btn-primary" onclick="showSection('attendance',null)">Attendance</button>
+          <button class="btn btn-sm btn-secondary" onclick="showSection('grades',null)">Grades</button>
+          <button class="btn btn-sm btn-gold" onclick="showSection('materials',null)">Materials</button>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-code">ANAT 401 · 3 Units</div>
+        <div class="course-title">Clinical Anatomy</div>
+        <div class="course-meta"><span>63 Students</span><span>Thu</span></div>
+        <div class="course-actions">
+          <button class="btn btn-sm btn-primary" onclick="showSection('attendance',null)">Attendance</button>
+          <button class="btn btn-sm btn-secondary" onclick="showSection('grades',null)">Grades</button>
+          <button class="btn btn-sm btn-gold" onclick="showSection('materials',null)">Materials</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ATTENDANCE ═══ -->
+  <div id="sec-attendance" class="page-section">
+    <div class="section-head">Attendance Management</div>
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>Record Attendance</h3>
+        <span style="font-size:0.78rem;color:var(--muted);">Click a student name to toggle P / A / E</span>
+      </div>
+      <div class="form-row" style="margin-bottom:16px;">
+        <div class="form-group" style="margin:0">
+          <label>Select Course</label>
+          <select id="attCourse">
+            <option>ANAT 301 – Gross Anatomy I</option>
+            <option>ANAT 302 – Neuroanatomy</option>
+            <option>ANAT 201 – Histology</option>
+            <option>ANAT 401 – Clinical Anatomy</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label>Date</label>
+          <input type="date" id="attDate">
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="attTable">
+          <thead><tr><th>#</th><th>Matric No.</th><th>Full Name</th><th>Status</th></tr></thead>
+          <tbody id="attBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="submitAttendance()">Save Attendance</button>
+        <button class="btn btn-secondary" onclick="exportAttendance()">Export CSV</button>
+      </div>
+    </div>
+
+    <div class="portal-card">
+      <div class="card-hd"><h3>Attendance Summary</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Course</th><th>Classes Held</th><th>Avg Attendance</th><th>Below 75%</th></tr></thead>
+        <tbody>
+          <tr><td>ANAT 301</td><td>18</td><td>91%</td><td>4 students</td></tr>
+          <tr><td>ANAT 302</td><td>16</td><td>85%</td><td>7 students</td></tr>
+          <tr><td>ANAT 201</td><td>20</td><td>88%</td><td>5 students</td></tr>
+          <tr><td>ANAT 401</td><td>14</td><td>79%</td><td>11 students</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ GRADE ENTRY ═══ -->
+  <div id="sec-grades" class="page-section">
+    <div class="section-head">Grade Entry</div>
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>Enter / Update Scores</h3>
+        <span class="badge badge-pending">Submission Deadline: 30 Jun 2025</span>
+      </div>
+      <div class="form-row" style="margin-bottom:16px;">
+        <div class="form-group" style="margin:0">
+          <label>Select Course</label>
+          <select id="gradeCourse" onchange="loadGradeTable()">
+            <option value="ANAT301">ANAT 301 – Gross Anatomy I</option>
+            <option value="ANAT302">ANAT 302 – Neuroanatomy</option>
+            <option value="ANAT201">ANAT 201 – Histology</option>
+            <option value="ANAT401">ANAT 401 – Clinical Anatomy</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label>Assessment Type</label>
+          <select id="gradeType">
+            <option>First CA (30%)</option>
+            <option>Second CA (30%)</option>
+            <option>Final Exam (40%)</option>
+          </select>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="gradeTable">
+          <thead><tr><th>S/N</th><th>Matric No.</th><th>Full Name</th><th>Score (/100)</th><th>Grade</th></tr></thead>
+          <tbody id="gradeBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;">
+        <button class="btn btn-primary" onclick="submitGrades()">Submit Grades</button>
+        <button class="btn btn-secondary" onclick="showToast('Template downloaded.','success')">Download Template</button>
+        <button class="btn btn-gold" onclick="showToast('Scores imported.','success')">Import CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ COURSE MATERIALS ═══ -->
+  <div id="sec-materials" class="page-section">
+    <div class="section-head">Course Materials</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Upload New Material</h3></div>
+      <div class="form-row" style="margin-bottom:14px;">
+        <div class="form-group" style="margin:0">
+          <label>Course</label>
+          <select><option>ANAT 301</option><option>ANAT 302</option><option>ANAT 201</option><option>ANAT 401</option></select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label>Material Type</label>
+          <select><option>Lecture Slides</option><option>Past Questions</option><option>Practical Manual</option><option>Reading List</option><option>Assignment</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Title / Description</label>
+        <input type="text" placeholder="e.g. Week 3 – Brachial Plexus Slides">
+      </div>
+      <div class="upload-area" onclick="showToast('File browser opened.','success')">
+        <div class="upload-icon">📎</div>
+        <div class="upload-text">Click or drag files here to upload<br><small>PDF, PPTX, DOCX, ZIP (max 50 MB)</small></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:14px;" onclick="showToast('Material uploaded and visible to students.','success')">Upload Material</button>
+    </div>
+
+    <div class="portal-card">
+      <div class="card-hd"><h3>Uploaded Materials</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Course</th><th>Title</th><th>Type</th><th>Date</th><th>Downloads</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>ANAT 301</td><td>Week 1 – Introduction Slides</td><td>Lecture Slides</td><td>05 Feb 2025</td><td>79</td><td><button class="btn btn-sm btn-danger" onclick="showToast('Material removed.','success')">Remove</button></td></tr>
+          <tr><td>ANAT 302</td><td>Neuroanatomy Past Questions 2023</td><td>Past Questions</td><td>10 Feb 2025</td><td>68</td><td><button class="btn btn-sm btn-danger" onclick="showToast('Material removed.','success')">Remove</button></td></tr>
+          <tr><td>ANAT 201</td><td>Histology Practical Manual</td><td>Practical Manual</td><td>15 Feb 2025</td><td>88</td><td><button class="btn btn-sm btn-danger" onclick="showToast('Material removed.','success')">Remove</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ MY REQUESTS ═══ -->
+  <div id="sec-requests" class="page-section">
+    <div class="section-head">My Requests</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Submit New Request</h3></div>
+      <div class="form-group">
+        <label>Request Type</label>
+        <select id="reqType">
+          <option>Annual Leave</option>
+          <option>Sick Leave</option>
+          <option>Conference / Training Leave</option>
+          <option>Examination Invigilation Schedule</option>
+          <option>Course Material Printing</option>
+          <option>Lab Equipment Request</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>From Date</label><input type="date"></div>
+        <div class="form-group"><label>To Date (if applicable)</label><input type="date"></div>
+      </div>
+      <div class="form-group">
+        <label>Details / Justification</label>
+        <textarea rows="4" placeholder="Please describe your request in detail…"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="submitRequest()">Submit Request</button>
+    </div>
+
+    <div class="portal-card">
+      <div class="card-hd"><h3>Request History</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Type</th><th>Date Submitted</th><th>Period</th><th>Status</th><th>Remarks</th></tr></thead>
+        <tbody>
+          <tr><td>Annual Leave</td><td>15 Apr 2025</td><td>21 Apr – 02 May</td><td><span class="badge badge-active">Approved</span></td><td>Approved by HOD</td></tr>
+          <tr><td>Conference Leave</td><td>02 Mar 2025</td><td>10 – 14 Mar</td><td><span class="badge badge-active">Approved</span></td><td>NAS 2025 Conference</td></tr>
+          <tr><td>Lab Equipment Request</td><td>20 May 2025</td><td>–</td><td><span class="badge badge-pending">Pending</span></td><td>Awaiting HOD review</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ STUDENT PETITIONS ═══ -->
+  <div id="sec-petitions" class="page-section">
+    <div class="section-head">Student Petitions</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Student</th><th>Matric</th><th>Course</th><th>Type</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Aisha Bello Muhammad</td><td>2023/MED/0042</td><td>ANAT 301</td>
+            <td>Attendance Appeal</td><td>28 May 2025</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+            <td style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-primary" onclick="showToast('Petition approved.','success')">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="showToast('Petition declined.','error')">Decline</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Chukwuemeka Obi</td><td>2023/MED/0088</td><td>ANAT 302</td>
+            <td>Exam Deferral</td><td>26 May 2025</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+            <td style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-primary" onclick="showToast('Petition approved.','success')">Approve</button>
+              <button class="btn btn-sm btn-danger" onclick="showToast('Petition declined.','error')">Decline</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ ANNOUNCEMENTS ═══ -->
+  <div id="sec-announcements" class="page-section">
+    <div class="section-head">Announcements</div>
+    <div class="announce-list">
+      <div class="announce-item">
+        <div class="announce-body"><h4>Grade Submission Deadline – 30 June 2025</h4><p>All lecturers are reminded to submit final exam scores and CA scores on the portal not later than 30 June 2025.</p><div class="announce-date">📅 20 May 2025 · Academic Office</div></div>
+      </div>
+      <div class="announce-item gold">
+        <div class="announce-body"><h4>2025/2026 Timetabling – Submit Availability</h4><p>Please submit your teaching availability for the 2025/2026 academic session via the Requests section before 15 June 2025.</p><div class="announce-date">📅 18 May 2025 · HOD — Anatomy</div></div>
+      </div>
+      <div class="announce-item">
+        <div class="announce-body"><h4>Faculty Seminar – Advances in Medical Education</h4><p>A faculty seminar on advances in medical education pedagogy is scheduled for 12 June 2025 at 10:00 AM in the Senate Chamber.</p><div class="announce-date">📅 14 May 2025 · Dean of Faculty</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MY PROFILE ═══ -->
+  <div id="sec-profile" class="page-section">
+    <div class="section-head">My Profile</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Personal Information</h3></div>
+      <div style="display:flex;gap:24px;margin-bottom:20px;align-items:flex-start;">
+        <div>
+          <div class="profile-photo" id="profilePhoto" style="width:100px;height:100px;font-size:2.2rem;cursor:pointer;border:3px solid var(--gold);background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));display:flex;align-items:center;justify-content:center;font-family:var(--serif);color:var(--gold-light);border-radius:50%;overflow:hidden;">DR</div>
+          <label style="display:block;text-align:center;font-size:0.72rem;color:var(--maroon);margin-top:8px;cursor:pointer;" for="photoIn">Change Photo</label>
+          <input type="file" id="photoIn" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+        </div>
+        <div style="flex:1;">
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input type="text" value="Fatimah"></div>
+            <div class="form-group"><label>Last Name</label><input type="text" value="Adeyemi"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Email Address</label><input type="email" value="fatimah.adeyemi@fummsa.edu.ng"></div>
+            <div class="form-group"><label>Phone Number</label><input type="tel" value="0801 234 5678"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Academic Rank</label><select><option>Professor</option><option selected>Senior Lecturer</option><option>Lecturer I</option><option>Lecturer II</option><option>Assistant Lecturer</option></select></div>
+            <div class="form-group"><label>Qualifications</label><input type="text" value="MBBS, M.Sc Anatomy, PhD"></div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="showToast('Profile updated successfully.','success')">Save Changes</button>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Change Password</h3></div>
+      <div class="form-row">
+        <div class="form-group"><label>Current Password</label><input type="password" placeholder="••••••••"></div>
+        <div class="form-group"><label>New Password</label><input type="password" placeholder="Min 8 characters"></div>
+      </div>
+      <div class="form-group"><label>Confirm New Password</label><input type="password" placeholder="Re-enter new password" style="max-width:320px;"></div>
+      <button class="btn btn-primary" onclick="showToast('Password changed successfully.','success')">Update Password</button>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Supabase credentials loaded from supabase-config.js
+let db;
+try{db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}catch(e){}
+
+// Load user
+(function(){
+  const u=JSON.parse(sessionStorage.getItem('fummsa_user')||'{}');
+  if(u.name){
+    const initials=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('topName').textContent=u.name;
+    document.getElementById('profileName').textContent=u.name;
+    document.getElementById('topAvatar').textContent=initials;
+    document.getElementById('bigAvatar').textContent=initials;
+  }
+  // Set today's date for attendance
+  const d=new Date();
+  const el=document.getElementById('attDate');
+  if(el) el.value=d.toISOString().split('T')[0];
+  buildAttendanceTable();
+  loadGradeTable();
+})();
+
+const DEMO_STUDENTS=[
+  {matric:'2023/MED/0042',name:'Aisha Bello Muhammad'},
+  {matric:'2023/MED/0051',name:'Babatunde Olasubomi'},
+  {matric:'2023/MED/0063',name:'Chisom Nwachukwu'},
+  {matric:'2023/MED/0078',name:'Damilola Adeyinka'},
+  {matric:'2023/MED/0088',name:'Emeka Obi'},
+  {matric:'2023/MED/0095',name:'Fatima Sule'},
+  {matric:'2023/MED/0102',name:'Gbenga Afolabi'},
+  {matric:'2023/MED/0114',name:'Halima Yahaya'},
+];
+
+function buildAttendanceTable(){
+  const st=['P','A','E'];
+  const colors=['att-present','att-absent','att-excuse'];
+  document.getElementById('attBody').innerHTML=DEMO_STUDENTS.map((s,i)=>{
+    const idx=Math.random()>0.15?0:1;
+    return `<tr>
+      <td>${i+1}</td><td>${s.matric}</td><td>${s.name}</td>
+      <td><span class="badge ${idx===0?'badge-active':'badge-closed'}" style="cursor:pointer;" onclick="toggleAtt(this)" data-idx="${idx}">${st[idx]}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleAtt(el){
+  const states=[{l:'P',c:'badge-active'},{l:'A',c:'badge-closed'},{l:'E',c:'badge-pending'}];
+  let idx=(parseInt(el.dataset.idx)+1)%3;
+  el.dataset.idx=idx;
+  el.className='badge '+states[idx].c;
+  el.textContent=states[idx].l;
+  el.style.cursor='pointer';
+}
+
+function submitAttendance(){showToast('✅ Attendance saved for '+document.getElementById('attCourse').value,'success');}
+function exportAttendance(){showToast('📥 Attendance CSV exported.','success');}
+
+function loadGradeTable(){
+  document.getElementById('gradeBody').innerHTML=DEMO_STUDENTS.map((s,i)=>{
+    const score=Math.floor(Math.random()*40+55);
+    const grade=score>=70?'A':score>=60?'B':score>=50?'C':score>=45?'D':'F';
+    return `<tr><td>${i+1}</td><td>${s.matric}</td><td>${s.name}</td>
+      <td><input type="number" min="0" max="100" value="${score}" style="width:80px;padding:6px 10px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:0.85rem;" oninput="updateGrade(this)"></td>
+      <td><span class="grade grade-${grade.toLowerCase()}">${grade}</span></td></tr>`;
+  }).join('');
+}
+
+function updateGrade(el){
+  const score=parseInt(el.value);
+  const g=score>=70?'A':score>=60?'B':score>=50?'C':score>=45?'D':'F';
+  const sp=el.closest('tr').querySelector('.grade');
+  sp.textContent=g;
+  sp.className='grade grade-'+g.toLowerCase();
+}
+
+function submitGrades(){showToast('📋 Grades submitted successfully.','success');}
+function submitRequest(){showToast('📩 Request submitted. Awaiting HOD review.','success');}
+
+function showSection(name, el){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  const sec=document.getElementById('sec-'+name);
+  if(sec) sec.classList.add('active');
+  if(el) el.classList.add('active');
+  document.querySelector('.sidebar').classList.remove('open');
+}
+
+function previewPhoto(input){
+  if(input.files&&input.files[0]){
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=`<img src="${e.target.result}" alt="Photo">`;
+      document.getElementById('profilePhoto').innerHTML=img;
+      document.getElementById('bigAvatar').innerHTML=img;
+      document.getElementById('topAvatar').innerHTML=img;
+    };
+    r.readAsDataURL(input.files[0]);
+  }
+}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type+' show';
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+function doLogout(){
+  clearFummsaSession();
+}
+</script>
+</body>
+</html>

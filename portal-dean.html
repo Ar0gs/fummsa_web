@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dean of Faculty Portal – FUMMSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --maroon:#6B0F2B;--maroon-dark:#4a0a1e;--maroon-mid:#800f30;--maroon-light:#9B1545;
+  --gold:#C4922A;--gold-light:#E8B84B;--gold-pale:#F5E6C0;--cream:#FAF7F2;
+  --warm-white:#FFFDF9;--charcoal:#1A1008;--mid:#4A3728;--muted:#8A7260;
+  --rule:rgba(107,15,43,0.14);--success:#2a6b4a;--danger:#B04A2A;--info:#1a4a6b;
+  --serif:'Source Serif 4',Georgia,serif;--sans:'Libre Franklin',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);--sb-width:248px;--top-h:60px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:#F0EBE5;color:var(--charcoal);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top-h);background:var(--maroon-dark);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 0;z-index:500;border-bottom:2px solid rgba(196,146,42,0.25);}
+.topbar-brand{display:flex;align-items:center;gap:12px;width:var(--sb-width);padding:0 20px;border-right:1px solid rgba(255,255,255,0.08);height:100%;}
+.topbar-brand img{width:34px;height:34px;border-radius:50%;object-fit:contain;}
+.topbar-brand-text{font-family:var(--serif);color:white;font-size:1rem;font-weight:600;}
+.topbar-brand-text small{display:block;font-family:var(--sans);font-size:0.58rem;color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-notify{position:relative;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.7);font-size:1rem;transition:all 0.2s;}
+.topbar-notify:hover{background:rgba(255,255,255,0.12);}
+.notify-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--gold);border-radius:50%;border:1.5px solid var(--maroon-dark);}
+.topbar-user{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;color:var(--gold-light);font-size:0.85rem;overflow:hidden;flex-shrink:0;}
+.user-avatar img{width:100%;height:100%;object-fit:cover;}
+.user-meta{text-align:right;}
+.user-name{font-size:0.8rem;font-weight:600;color:white;}
+.user-role{font-size:0.62rem;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase;}
+.btn-logout{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:2px;font-family:var(--sans);font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:white;}
+.hamburger-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:white;font-size:1.2rem;}
+
+.sidebar{position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--sb-width);background:white;border-right:1.5px solid var(--rule);overflow-y:auto;z-index:400;transition:transform 0.3s var(--ease);}
+.sidebar::-webkit-scrollbar{width:3px;}.sidebar::-webkit-scrollbar-thumb{background:var(--rule);}
+.sidebar-section{padding:16px 12px 4px;}
+.sb-label{font-size:0.58rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:6px 8px 4px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:3px;font-size:0.8rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;user-select:none;}
+.sb-link:hover{color:var(--maroon);background:rgba(107,15,43,0.04);}
+.sb-link.active{color:var(--maroon);background:rgba(107,15,43,0.06);border-left-color:var(--maroon);font-weight:600;}
+.sb-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--maroon);color:white;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sb-divider{height:1px;background:var(--rule);margin:8px 16px;}
+
+.main-wrap{margin-left:var(--sb-width);margin-top:var(--top-h);min-height:calc(100vh - var(--top-h));padding:28px;}
+.page-section{display:none;animation:fadeIn 0.3s ease both;}
+.page-section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.profile-header{background:var(--maroon-dark);border-radius:5px;padding:28px 32px;display:flex;align-items:center;gap:28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.profile-header::before{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(196,146,42,0.15);}
+.profile-header::after{content:'';position:absolute;right:20px;bottom:-40px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(196,146,42,0.1);}
+.profile-photo{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:2rem;color:var(--gold-light);overflow:hidden;flex-shrink:0;z-index:1;}
+.profile-photo img{width:100%;height:100%;object-fit:cover;}
+.profile-info{flex:1;z-index:1;}
+.profile-name{font-family:var(--serif);font-size:1.5rem;color:white;font-weight:600;}
+.profile-sub{font-size:0.75rem;color:var(--gold-light);letter-spacing:0.1em;margin:4px 0 12px;text-transform:uppercase;}
+.profile-meta{display:flex;flex-wrap:wrap;gap:20px;}
+.pmeta-item{font-size:0.75rem;color:rgba(255,255,255,0.65);}
+.pmeta-item strong{display:block;font-size:0.65rem;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.status-active{background:rgba(42,107,74,0.3);color:#7ee0a8;border:1px solid rgba(42,107,74,0.4);}
+
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:white;border-radius:4px;padding:20px 22px;border:1px solid var(--rule);box-shadow:0 1px 6px rgba(107,15,43,0.05);}
+.stat-value{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--maroon-dark);line-height:1;}
+.stat-label{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+.stat-sub{font-size:0.72rem;color:var(--success);margin-top:4px;}
+
+.section-head{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--rule);}
+
+.portal-card{background:white;border-radius:4px;padding:24px;box-shadow:0 1px 8px rgba(107,15,43,0.06);border:1px solid var(--rule);margin-bottom:20px;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--rule);}
+.card-hd h3{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--maroon-dark);}
+
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:2px solid var(--rule);background:var(--cream);}
+.data-table td{font-size:0.82rem;padding:11px 14px;border-bottom:1px solid var(--rule);color:var(--charcoal);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(107,15,43,0.02);}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:0.68rem;font-weight:700;}
+.badge-active{background:#e8f5ee;color:#1a5c38;}
+.badge-pending{background:var(--gold-pale);color:#7a5200;}
+.badge-closed{background:#fde8ec;color:#7a0e1e;}
+
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:7px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid rgba(107,15,43,0.15);border-radius:2px;font-family:var(--sans);font-size:0.88rem;color:var(--charcoal);background:var(--warm-white);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--maroon);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+.btn{padding:10px 20px;border:none;border-radius:2px;font-family:var(--sans);font-weight:700;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--maroon);color:white;}
+.btn-primary:hover{background:var(--maroon-dark);}
+.btn-secondary{background:transparent;border:1.5px solid var(--maroon);color:var(--maroon);}
+.btn-secondary:hover{background:var(--maroon);color:white;}
+.btn-gold{background:var(--gold);color:white;}
+.btn-sm{padding:6px 14px;font-size:0.72rem;}
+.btn-danger{background:var(--danger);color:white;}
+.btn-success{background:var(--success);color:white;}
+
+/* Dept cards */
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:24px;}
+.dept-card{background:white;border:1.5px solid var(--rule);border-radius:4px;padding:20px 22px;box-shadow:0 1px 6px rgba(107,15,43,0.05);border-top:4px solid var(--maroon);}
+.dept-name{font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--maroon-dark);margin-bottom:8px;}
+.dept-meta{font-size:0.78rem;color:var(--muted);display:flex;gap:16px;margin-bottom:12px;}
+.dept-actions{display:flex;gap:8px;}
+
+.toast{position:fixed;bottom:28px;right:28px;background:var(--charcoal);color:white;padding:14px 22px;border-radius:3px;font-size:0.82rem;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all 0.3s var(--ease);pointer-events:none;max-width:360px;}
+.toast.show{transform:none;opacity:1;}
+.toast.success{background:var(--success);}
+.toast.error{background:var(--danger);}
+
+@media(max-width:900px){
+  .stat-row{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+  .hamburger-toggle{display:block;}
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:none;}
+  .main-wrap{margin-left:0;}
+}
+</style>
+
+  <!-- Shared portal libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="portal-auth.js"></script>
+  <script src="portal-api.js"></script>
+  <script src="portal-shared.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="logo.png" alt="FUMMSA" onerror="this.style.display='none'">
+    <div class="topbar-brand-text">FUMMSA<small>Dean's Portal</small></div>
+  </div>
+  <div class="topbar-right">
+    <button class="hamburger-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+    <div class="topbar-notify">🔔<span class="notify-dot"></span></div>
+    <div class="topbar-user">
+      <div class="user-avatar" id="topAvatar">DA</div>
+      <div class="user-meta">
+        <div class="user-name" id="topName">Prof. Dr. Amaka Okonkwo</div>
+        <div class="user-role">Dean of Faculty</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+  </div>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sb-label">Overview</div>
+    <div class="sb-link active" onclick="showSection('dashboard',this)"><span class="sb-icon">📊</span> Dashboard</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Faculty Management</div>
+    <div class="sb-link" onclick="showSection('departments',this)"><span class="sb-icon">🏫</span> Departments</div>
+    <div class="sb-link" onclick="showSection('staff',this)"><span class="sb-icon">👥</span> Faculty Staff</div>
+    <div class="sb-link" onclick="showSection('students',this)"><span class="sb-icon">👨‍🎓</span> Student Statistics</div>
+    <div class="sb-link" onclick="showSection('approvals',this)"><span class="sb-icon">✅</span> Approvals <span class="sb-badge">5</span></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Academic</div>
+    <div class="sb-link" onclick="showSection('exams',this)"><span class="sb-icon">📝</span> Examination Oversight</div>
+    <div class="sb-link" onclick="showSection('performance',this)"><span class="sb-icon">📈</span> Faculty Performance</div>
+    <div class="sb-link" onclick="showSection('programmes',this)"><span class="sb-icon">🎓</span> Programmes</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sb-label">Communication</div>
+    <div class="sb-link" onclick="showSection('announcements',this)"><span class="sb-icon">📢</span> Announcements</div>
+    <div class="sb-link" onclick="showSection('memos',this)"><span class="sb-icon">📋</span> Memos</div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sidebar-section">
+    <div class="sb-label">Account</div>
+    <div class="sb-link" onclick="showSection('profile',this)"><span class="sb-icon">👤</span> My Profile</div>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="sec-dashboard" class="page-section active">
+    <div class="profile-header">
+      <div class="profile-photo" id="bigAvatar">DA</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Prof. Dr. Amaka Okonkwo</div>
+        <div class="profile-sub">Dean — Faculty of Basic Medical Sciences &nbsp;|&nbsp; DEAN/BMS/2022</div>
+        <div class="profile-meta">
+          <div class="pmeta-item"><strong>Faculty</strong>Basic Medical Sciences</div>
+          <div class="pmeta-item"><strong>Departments</strong>6 Departments</div>
+          <div class="pmeta-item"><strong>Tenure</strong>2022 – Present</div>
+          <div class="pmeta-item"><strong>Status</strong><span class="status-badge status-active">● Active Dean</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-value">1,842</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-sub">Across all departments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Departments</div>
+        <div class="stat-sub">Under this faculty</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">94</div>
+        <div class="stat-label">Academic Staff</div>
+        <div class="stat-sub">Full & Part-time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--gold)">5</div>
+        <div class="stat-label">Pending Approvals</div>
+        <div class="stat-sub">Require your action</div>
+      </div>
+    </div>
+
+    <!-- Dept Summary -->
+    <div class="section-head">Department Summary</div>
+    <div class="dept-grid">
+      <div class="dept-card">
+        <div class="dept-name">Human Anatomy</div>
+        <div class="dept-meta"><span>342 Students</span><span>18 Staff</span></div>
+        <div class="dept-actions">
+          <button class="btn btn-sm btn-secondary" onclick="showSection('departments',null)">View Details</button>
+        </div>
+      </div>
+      <div class="dept-card" style="border-top-color:var(--gold)">
+        <div class="dept-name">Physiology</div>
+        <div class="dept-meta"><span>318 Students</span><span>15 Staff</span></div>
+        <div class="dept-actions">
+          <button class="btn btn-sm btn-secondary" onclick="showSection('departments',null)">View Details</button>
+        </div>
+      </div>
+      <div class="dept-card">
+        <div class="dept-name">Biochemistry</div>
+        <div class="dept-meta"><span>296 Students</span><span>14 Staff</span></div>
+        <div class="dept-actions">
+          <button class="btn btn-sm btn-secondary" onclick="showSection('departments',null)">View Details</button>
+        </div>
+      </div>
+      <div class="dept-card" style="border-top-color:var(--info)">
+        <div class="dept-name">Pharmacology</div>
+        <div class="dept-meta"><span>271 Students</span><span>13 Staff</span></div>
+        <div class="dept-actions">
+          <button class="btn btn-sm btn-secondary" onclick="showSection('departments',null)">View Details</button>
+        </div>
+      </div>
+      <div class="dept-card">
+        <div class="dept-name">Microbiology</div>
+        <div class="dept-meta"><span>308 Students</span><span>16 Staff</span></div>
+        <div class="dept-actions">
+          <button class="btn btn-sm btn-secondary" onclick="showSection('departments',null)">View Details</button>
+        </div>
+      </div>
+      <div class="dept-card" style="border-top-color:var(--success)">
+        <div class="dept-name">Pathology</div>
+        <div class="dept-meta"><span>307 Students</span><span>18 Staff</span></div>
+        <div class="dept-actions">
+          <button class="btn btn-sm btn-secondary" onclick="showSection('departments',null)">View Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">Pending Approvals</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Type</th><th>Submitted By</th><th>Department</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Programme Change Request</td><td>HOD, Anatomy</td><td>Human Anatomy</td><td>26 May 2025</td>
+            <td style="display:flex;gap:6px;"><button class="btn btn-sm btn-success" onclick="showToast('Approved.','success')">Approve</button><button class="btn btn-sm btn-danger" onclick="showToast('Declined.','error')">Decline</button></td></tr>
+          <tr><td>New Course Proposal</td><td>Dr. Ngozi Eze</td><td>Human Anatomy</td><td>24 May 2025</td>
+            <td style="display:flex;gap:6px;"><button class="btn btn-sm btn-success" onclick="showToast('Approved.','success')">Approve</button><button class="btn btn-sm btn-danger" onclick="showToast('Declined.','error')">Decline</button></td></tr>
+          <tr><td>Staff Promotion</td><td>HOD, Physiology</td><td>Physiology</td><td>22 May 2025</td>
+            <td style="display:flex;gap:6px;"><button class="btn btn-sm btn-success" onclick="showToast('Approved.','success')">Approve</button><button class="btn btn-sm btn-danger" onclick="showToast('Declined.','error')">Decline</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ DEPARTMENTS ═══ -->
+  <div id="sec-departments" class="page-section">
+    <div class="section-head">Departments — Faculty of Basic Medical Sciences</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Department</th><th>HOD</th><th>Students</th><th>Staff</th><th>Courses</th><th>Avg GPA</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Human Anatomy</strong></td><td>Prof. Rasheed Musa</td><td>342</td><td>18</td><td>12</td><td>3.52</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td><strong>Physiology</strong></td><td>Prof. Chidinma Okafor</td><td>318</td><td>15</td><td>10</td><td>3.48</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td><strong>Biochemistry</strong></td><td>Prof. Olumide Adegbite</td><td>296</td><td>14</td><td>11</td><td>3.60</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td><strong>Pharmacology</strong></td><td>Prof. Aisha Garba</td><td>271</td><td>13</td><td>9</td><td>3.45</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td><strong>Microbiology</strong></td><td>Prof. Emeka Osuji</td><td>308</td><td>16</td><td>11</td><td>3.55</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td><strong>Pathology</strong></td><td>Prof. Kemi Adeyemi</td><td>307</td><td>18</td><td>10</td><td>3.62</td><td><span class="badge badge-active">Active</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ FACULTY STAFF ═══ -->
+  <div id="sec-staff" class="page-section">
+    <div class="section-head">Faculty Staff Directory</div>
+    <div class="portal-card">
+      <div class="card-hd">
+        <h3>All Academic Staff</h3>
+        <select style="padding:8px 12px;border:1.5px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:0.82rem;" onchange="showToast('Filter applied.','success')">
+          <option>All Departments</option>
+          <option>Human Anatomy</option><option>Physiology</option><option>Biochemistry</option>
+        </select>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Rank</th><th>Department</th><th>Qualifications</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Prof. Rasheed Musa</td><td>Professor / HOD</td><td>Human Anatomy</td><td>MBBS, PhD Anatomy</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>Dr. Fatimah Adeyemi</td><td>Senior Lecturer</td><td>Human Anatomy</td><td>MBBS, M.Sc, PhD</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>Prof. Chidinma Okafor</td><td>Professor / HOD</td><td>Physiology</td><td>MBBS, PhD Physiology</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>Dr. Biodun Salami</td><td>Lecturer I</td><td>Human Anatomy</td><td>MBBS, M.Sc</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>Dr. Seun Adebayo</td><td>Assistant Lecturer</td><td>Human Anatomy</td><td>MBBS</td><td><span class="badge badge-pending">On Leave</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ STUDENT STATISTICS ═══ -->
+  <div id="sec-students" class="page-section">
+    <div class="section-head">Student Statistics — Faculty Overview</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-value">1,842</div><div class="stat-label">Total Students</div></div>
+      <div class="stat-card"><div class="stat-value">3.54</div><div class="stat-label">Faculty Avg GPA</div></div>
+      <div class="stat-card"><div class="stat-value">83%</div><div class="stat-label">Pass Rate</div></div>
+      <div class="stat-card"><div class="stat-value">89%</div><div class="stat-label">Attendance Rate</div></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Enrollment by Level</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Level</th><th>Students</th><th>Male</th><th>Female</th><th>Avg GPA</th><th>Pass Rate</th></tr></thead>
+        <tbody>
+          <tr><td>100L</td><td>486</td><td>242</td><td>244</td><td>3.18</td><td>79%</td></tr>
+          <tr><td>200L</td><td>412</td><td>205</td><td>207</td><td>3.38</td><td>83%</td></tr>
+          <tr><td>300L</td><td>368</td><td>186</td><td>182</td><td>3.55</td><td>87%</td></tr>
+          <tr><td>400L</td><td>318</td><td>161</td><td>157</td><td>3.67</td><td>91%</td></tr>
+          <tr><td>500L</td><td>258</td><td>130</td><td>128</td><td>3.78</td><td>94%</td></tr>
+        </tbody>
+      </table>
+      <button class="btn btn-secondary" style="margin-top:14px;" onclick="showToast('Statistics exported.','success')">Export Report</button>
+    </div>
+  </div>
+
+  <!-- ═══ APPROVALS ═══ -->
+  <div id="sec-approvals" class="page-section">
+    <div class="section-head">Pending Approvals</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Type</th><th>Requestor</th><th>Dept</th><th>Details</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Programme Change</td><td>HOD, Anatomy</td><td>Human Anatomy</td><td>2 student requests</td><td>26 May 2025</td>
+            <td style="display:flex;gap:6px;"><button class="btn btn-sm btn-success" onclick="showToast('Approved.','success')">Approve</button><button class="btn btn-sm btn-danger" onclick="showToast('Declined.','error')">Decline</button></td></tr>
+          <tr><td>New Course</td><td>Dr. Ngozi Eze</td><td>Human Anatomy</td><td>ANAT 502 – Surgical Anatomy</td><td>24 May 2025</td>
+            <td style="display:flex;gap:6px;"><button class="btn btn-sm btn-success" onclick="showToast('Approved.','success')">Approve</button><button class="btn btn-sm btn-danger" onclick="showToast('Declined.','error')">Decline</button></td></tr>
+          <tr><td>Staff Promotion</td><td>HOD, Physiology</td><td>Physiology</td><td>Dr. Abiodun Salami → Snr Lecturer</td><td>22 May 2025</td>
+            <td style="display:flex;gap:6px;"><button class="btn btn-sm btn-success" onclick="showToast('Approved.','success')">Approve</button><button class="btn btn-sm btn-danger" onclick="showToast('Declined.','error')">Decline</button></td></tr>
+          <tr><td>Leave Request</td><td>Dr. Kemi Adeyemi</td><td>Pathology</td><td>Conference, 10–14 Jun</td><td>20 May 2025</td>
+            <td style="display:flex;gap:6px;"><button class="btn btn-sm btn-success" onclick="showToast('Approved.','success')">Approve</button><button class="btn btn-sm btn-danger" onclick="showToast('Declined.','error')">Decline</button></td></tr>
+          <tr><td>Exam Deferral</td><td>Dr. Emeka Osuji</td><td>Microbiology</td><td>3 student exam deferrals</td><td>19 May 2025</td>
+            <td style="display:flex;gap:6px;"><button class="btn btn-sm btn-success" onclick="showToast('Approved.','success')">Approve</button><button class="btn btn-sm btn-danger" onclick="showToast('Declined.','error')">Decline</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ EXAMINATION OVERSIGHT ═══ -->
+  <div id="sec-exams" class="page-section">
+    <div class="section-head">Examination Oversight</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Exam Timetable — 2024/2025 Second Semester</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Course</th><th>Dept</th><th>Date</th><th>Time</th><th>Venue</th><th>Invigilator(s)</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>ANAT 301</td><td>Anatomy</td><td>10 Jul 2025</td><td>9:00 AM</td><td>Main Hall A</td><td>Dr. Adeyemi</td><td><span class="badge badge-active">Scheduled</span></td></tr>
+          <tr><td>PHYS 301</td><td>Physiology</td><td>11 Jul 2025</td><td>9:00 AM</td><td>Main Hall B</td><td>Dr. Okafor</td><td><span class="badge badge-active">Scheduled</span></td></tr>
+          <tr><td>BIOC 301</td><td>Biochemistry</td><td>12 Jul 2025</td><td>9:00 AM</td><td>Main Hall A</td><td>Dr. Salami</td><td><span class="badge badge-active">Scheduled</span></td></tr>
+          <tr><td>ANAT 401</td><td>Anatomy</td><td>14 Jul 2025</td><td>2:00 PM</td><td>CBT Centre</td><td>Dr. Eze</td><td><span class="badge badge-pending">Pending Confirmation</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Grade Submission Status</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Department</th><th>Total Courses</th><th>Grades Submitted</th><th>Outstanding</th><th>Progress</th></tr></thead>
+        <tbody>
+          <tr><td>Human Anatomy</td><td>12</td><td>10</td><td>2</td><td style="color:var(--success)">83%</td></tr>
+          <tr><td>Physiology</td><td>10</td><td>10</td><td>0</td><td style="color:var(--success)">100%</td></tr>
+          <tr><td>Biochemistry</td><td>11</td><td>9</td><td>2</td><td style="color:var(--gold)">82%</td></tr>
+          <tr><td>Pharmacology</td><td>9</td><td>7</td><td>2</td><td style="color:var(--gold)">78%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ FACULTY PERFORMANCE ═══ -->
+  <div id="sec-performance" class="page-section">
+    <div class="section-head">Faculty Performance Overview</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-value">3.54</div><div class="stat-label">Faculty Avg GPA</div><div class="stat-sub">↑ 0.08 from last semester</div></div>
+      <div class="stat-card"><div class="stat-value">83%</div><div class="stat-label">Overall Pass Rate</div><div class="stat-sub">↑ 2% from last semester</div></div>
+      <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">First Class Students</div><div class="stat-sub">GPA ≥ 4.50</div></div>
+      <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Carryover Students</div><div class="stat-sub">Repeat courses</div></div>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Department Performance Comparison</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Department</th><th>Avg GPA</th><th>Pass Rate</th><th>First Class</th><th>Carryovers</th><th>Trend</th></tr></thead>
+        <tbody>
+          <tr><td>Human Anatomy</td><td>3.52</td><td>82%</td><td>1</td><td>4</td><td style="color:var(--success)">↑ Improving</td></tr>
+          <tr><td>Physiology</td><td>3.48</td><td>80%</td><td>0</td><td>3</td><td style="color:var(--muted)">→ Stable</td></tr>
+          <tr><td>Biochemistry</td><td>3.60</td><td>86%</td><td>2</td><td>2</td><td style="color:var(--success)">↑ Improving</td></tr>
+          <tr><td>Pharmacology</td><td>3.45</td><td>79%</td><td>0</td><td>2</td><td style="color:var(--danger)">↓ Declining</td></tr>
+          <tr><td>Microbiology</td><td>3.55</td><td>83%</td><td>1</td><td>0</td><td style="color:var(--success)">↑ Improving</td></tr>
+          <tr><td>Pathology</td><td>3.62</td><td>87%</td><td>0</td><td>1</td><td style="color:var(--muted)">→ Stable</td></tr>
+        </tbody>
+      </table>
+      <button class="btn btn-secondary" style="margin-top:14px;" onclick="showToast('Performance report exported.','success')">Export Report</button>
+    </div>
+  </div>
+
+  <!-- ═══ PROGRAMMES ═══ -->
+  <div id="sec-programmes" class="page-section">
+    <div class="section-head">Programmes — Basic Medical Sciences</div>
+    <div class="portal-card">
+      <table class="data-table">
+        <thead><tr><th>Programme</th><th>Duration</th><th>Degree</th><th>Students</th><th>Accreditation</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Medicine & Surgery (MBBS)</td><td>6 Years</td><td>MBBS</td><td>1,842</td><td>MDCN / NUC</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>Biomedical Science (B.Sc)</td><td>4 Years</td><td>B.Sc</td><td>342</td><td>NUC</td><td><span class="badge badge-active">Active</span></td></tr>
+          <tr><td>Medical Laboratory Science</td><td>5 Years</td><td>B.MLS</td><td>180</td><td>MLSCN / NUC</td><td><span class="badge badge-active">Active</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ ANNOUNCEMENTS ═══ -->
+  <div id="sec-announcements" class="page-section">
+    <div class="section-head">Faculty Announcements</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Post Faculty Announcement</h3></div>
+      <div class="form-group"><label>Subject</label><input type="text" placeholder="e.g. End of Semester Reminder"></div>
+      <div class="form-group"><label>Target Audience</label>
+        <select><option>Entire Faculty (Staff & Students)</option><option>All HODs</option><option>All Lecturers</option><option>All Students</option></select>
+      </div>
+      <div class="form-group"><label>Message</label><textarea rows="5" placeholder="Type your message here…"></textarea></div>
+      <button class="btn btn-primary" onclick="showToast('📢 Announcement posted to faculty.','success')">Post Announcement</button>
+    </div>
+  </div>
+
+  <!-- ═══ MEMOS ═══ -->
+  <div id="sec-memos" class="page-section">
+    <div class="section-head">Internal Memos</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Compose Memo</h3></div>
+      <div class="form-row">
+        <div class="form-group"><label>To (Recipient)</label>
+          <select><option>All HODs</option><option>HOD, Human Anatomy</option><option>HOD, Physiology</option><option>HOD, Biochemistry</option></select>
+        </div>
+        <div class="form-group"><label>Priority</label>
+          <select><option>Normal</option><option>High</option><option>Urgent</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Subject</label><input type="text" placeholder="Memo subject…"></div>
+      <div class="form-group"><label>Body</label><textarea rows="6" placeholder="Write memo body here…"></textarea></div>
+      <button class="btn btn-primary" onclick="showToast('📋 Memo sent.','success')">Send Memo</button>
+    </div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Recent Memos</h3></div>
+      <table class="data-table">
+        <thead><tr><th>Subject</th><th>Sent To</th><th>Date</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>Grade Submission Deadline Reminder</td><td>All HODs</td><td>20 May 2025</td><td><span class="badge badge-active">Normal</span></td></tr>
+          <tr><td>Faculty Seminar Preparation</td><td>All HODs</td><td>14 May 2025</td><td><span class="badge badge-pending">High</span></td></tr>
+          <tr><td>2025/2026 Timetabling Preparation</td><td>HOD, Anatomy</td><td>10 May 2025</td><td><span class="badge badge-active">Normal</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ PROFILE ═══ -->
+  <div id="sec-profile" class="page-section">
+    <div class="section-head">My Profile</div>
+    <div class="portal-card">
+      <div class="card-hd"><h3>Personal Information</h3></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" value="Amaka"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" value="Okonkwo"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email</label><input type="email" value="a.okonkwo@fummsa.edu.ng"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" value="0802 345 6789"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Office</label><input type="text" value="Dean's Office, Faculty Block B"></div>
+        <div class="form-group"><label>Qualifications</label><input type="text" value="MBBS, M.Sc, PhD, FMCPATH"></div>
+      </div>
+      <button class="btn btn-primary" onclick="showToast('Profile updated.','success')">Save Changes</button>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const u=JSON.parse(sessionStorage.getItem('fummsa_user')||'{}');
+  if(u.name){
+    const init=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('topName').textContent=u.name;
+    document.getElementById('profileName').textContent=u.name;
+    document.getElementById('topAvatar').textContent=init;
+    document.getElementById('bigAvatar').textContent=init;
+  }
+})();
+
+function showSection(name,el){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  const sec=document.getElementById('sec-'+name);
+  if(sec) sec.classList.add('active');
+  if(el) el.classList.add('active');
+  document.querySelector('.sidebar').classList.remove('open');
+}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type+' show';
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+function doLogout(){sessionStorage.removeItem('fummsa_user');window.location.href='portal-login.html';}
+</script>
+</body>
+</html>
