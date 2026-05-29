@@ -655,32 +655,18 @@ a{color:inherit;text-decoration:none;}
 
 <script>
 // ── GLOBALS ──────────────────────────────────────────────────
-let db = null;
+// NOTE: `db` is already declared globally by supabase-config.js — do NOT redeclare
 let currentUser = null;
 let selectedCourses = new Set();
 let selectedHostel = null;
 
 // ── INIT ─────────────────────────────────────────────────────
 (function init() {
-  // Read session
-  const raw = sessionStorage.getItem('fummsa_user');
-  if (!raw) { window.location.href = 'index.html'; return; }
+  // Use shared auth guard
+  currentUser = requireAuth(['student']);
+  if (!currentUser) return; // requireAuth redirects if not authenticated
 
-  currentUser = JSON.parse(raw);
-
-  if (currentUser.role !== 'student') {
-    window.location.href = 'index.html';
-    return;
-  }
-
-  // Boot Supabase client if config is available
-  try {
-    if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined') {
-      db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
-  } catch (e) {
-    console.warn('Supabase not initialised:', e);
-  }
+  // If Supabase library not loaded, db will be null (demo mode) — that's fine
 
   loadProfile();
   loadCourses(1);
@@ -1042,8 +1028,20 @@ function showSection(name, clickedEl) {
   document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
   const sec = document.getElementById('sec-' + name);
   if (sec) sec.classList.add('active');
-  if (clickedEl) clickedEl.classList.add('active');
-  document.querySelector('.sidebar').classList.remove('open');
+  // Support both: direct el param and data-section attribute
+  if (clickedEl) {
+    clickedEl.classList.add('active');
+  } else {
+    const link = document.querySelector(`.sb-link[data-section="${name}"]`);
+    if (link) link.classList.add('active');
+  }
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  if (sb) sb.classList.remove('open');
+  if (ov) ov.classList.remove('open');
+  document.body.style.overflow = '';
+  // Fire optional loader
+  if (typeof window[`onShow_${name}`] === 'function') window[`onShow_${name}`]();
 }
 
 // ── PAYMENT ───────────────────────────────────────────────────
@@ -1114,9 +1112,7 @@ function showToast(msg, type = 'success') {
 
 // ── LOGOUT ────────────────────────────────────────────────────
 function doLogout() {
-  sessionStorage.removeItem('fummsa_user');
-  if (typeof clearFummsaSession === 'function') clearFummsaSession();
-  window.location.href = 'index.html';
+  fummsaLogout();
 }
 </script>
 </body>
