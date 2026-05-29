@@ -192,7 +192,7 @@ a{color:inherit;text-decoration:none;}
   </div>
   <button class="hamburger-toggle" onclick="toggleSidebar()">☰</button>
   <div class="topbar-right">
-    <div class="topbar-notify" onclick="showSection('approvals')">
+    <div class="topbar-notify" onclick="showSection('approvals',null)">
       <span>🔔</span><div class="notify-dot"></div>
     </div>
     <div class="topbar-user">
@@ -210,33 +210,33 @@ a{color:inherit;text-decoration:none;}
 <div class="sidebar" id="sidebar">
   <div class="sidebar-section">
     <div class="sb-label">Overview</div>
-    <div class="sb-link active" onclick="showSection('dashboard')"><span class="sb-icon">📊</span> Executive Dashboard</div>
-    <div class="sb-link" onclick="showSection('approvals')"><span class="sb-icon">✅</span> Pending Approvals <span class="sb-badge" id="approvalBadge">4</span></div>
-    <div class="sb-link" onclick="showSection('university-stats')"><span class="sb-icon">🏛️</span> University Overview</div>
+    <div class="sb-link active" onclick="showSection('dashboard',this)"><span class="sb-icon">📊</span> Executive Dashboard</div>
+    <div class="sb-link" onclick="showSection('approvals',this)"><span class="sb-icon">✅</span> Pending Approvals <span class="sb-badge" id="approvalBadge">4</span></div>
+    <div class="sb-link" onclick="showSection('university-stats',this)"><span class="sb-icon">🏛️</span> University Overview</div>
   </div>
   <div class="sidebar-section">
     <div class="sb-label">Academic</div>
-    <div class="sb-link" onclick="showSection('faculties')"><span class="sb-icon">🎓</span> Faculty Reports</div>
-    <div class="sb-link" onclick="showSection('academic-calendar')"><span class="sb-icon">📅</span> Academic Calendar</div>
-    <div class="sb-link" onclick="showSection('staff-overview')"><span class="sb-icon">👥</span> Staff Overview</div>
-    <div class="sb-link" onclick="showSection('student-affairs')"><span class="sb-icon">👩‍🎓</span> Student Affairs Summary</div>
+    <div class="sb-link" onclick="showSection('faculties',this)"><span class="sb-icon">🎓</span> Faculty Reports</div>
+    <div class="sb-link" onclick="showSection('academic-calendar',this)"><span class="sb-icon">📅</span> Academic Calendar</div>
+    <div class="sb-link" onclick="showSection('staff-overview',this)"><span class="sb-icon">👥</span> Staff Overview</div>
+    <div class="sb-link" onclick="showSection('student-affairs',this)"><span class="sb-icon">👩‍🎓</span> Student Affairs Summary</div>
   </div>
   <div class="sidebar-section">
     <div class="sb-label">Finance & Admin</div>
-    <div class="sb-link" onclick="showSection('budget')"><span class="sb-icon">💰</span> Budget & Finances</div>
-    <div class="sb-link" onclick="showSection('projects')"><span class="sb-icon">🏗️</span> Capital Projects</div>
-    <div class="sb-link" onclick="showSection('audit')"><span class="sb-icon">🔍</span> Audit & Compliance</div>
+    <div class="sb-link" onclick="showSection('budget',this)"><span class="sb-icon">💰</span> Budget & Finances</div>
+    <div class="sb-link" onclick="showSection('projects',this)"><span class="sb-icon">🏗️</span> Capital Projects</div>
+    <div class="sb-link" onclick="showSection('audit',this)"><span class="sb-icon">🔍</span> Audit & Compliance</div>
   </div>
   <div class="sidebar-section">
     <div class="sb-label">Communication</div>
-    <div class="sb-link" onclick="showSection('broadcast')"><span class="sb-icon">📢</span> University Broadcast</div>
-    <div class="sb-link" onclick="showSection('meetings')"><span class="sb-icon">🗓️</span> Senate / Council Minutes</div>
-    <div class="sb-link" onclick="showSection('memos')"><span class="sb-icon">📄</span> Official Memos</div>
+    <div class="sb-link" onclick="showSection('broadcast',this)"><span class="sb-icon">📢</span> University Broadcast</div>
+    <div class="sb-link" onclick="showSection('meetings',this)"><span class="sb-icon">🗓️</span> Senate / Council Minutes</div>
+    <div class="sb-link" onclick="showSection('memos',this)"><span class="sb-icon">📄</span> Official Memos</div>
   </div>
   <div class="sb-divider"></div>
   <div class="sidebar-section">
-    <div class="sb-link" onclick="showSection('profile')"><span class="sb-icon">👤</span> My Profile</div>
-    <div class="sb-link" onclick="showSection('settings')"><span class="sb-icon">⚙️</span> Settings</div>
+    <div class="sb-link" onclick="showSection('profile',this)"><span class="sb-icon">👤</span> My Profile</div>
+    <div class="sb-link" onclick="showSection('settings',this)"><span class="sb-icon">⚙️</span> Settings</div>
   </div>
 </div>
 
@@ -292,7 +292,7 @@ a{color:inherit;text-decoration:none;}
       <div>
         <div class="section-head">Pending Approvals</div>
         <div class="approval-list" id="dashApprovalList"></div>
-        <button class="btn btn-outline" style="margin-top:12px;" onclick="showSection('approvals')">View All Approvals →</button>
+        <button class="btn btn-outline" style="margin-top:12px;" onclick="showSection('approvals',null)">View All Approvals →</button>
       </div>
       <div>
         <div class="section-head">Recent Activity Log</div>
@@ -745,7 +745,7 @@ const EXEC_ROLES={
 (function init(){
   const currentUser = requireAuth(['executive']);
   if (!currentUser) return;
-  try{ db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY); }catch(e){}
+  try{ db=supabase.createClient(FUMMSA_SUPABASE_URL, FUMMSA_SUPABASE_ANON_KEY); }catch(e){}
   const raw=sessionStorage.getItem('fummsa_user');
   if(raw){ user=JSON.parse(raw); applyUserData(); }
   else { user={name:'Prof. Adewale Ogundimu',role:'vc'}; }
@@ -767,12 +767,12 @@ function applyUserData(){
   document.getElementById('execInitials').textContent=initials;
 }
 
-function showSection(id){
+function showSection(id, el){
   document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
   const sec=document.getElementById('sec-'+id);
   if(sec) sec.classList.add('active');
-  event && event.currentTarget && event.currentTarget.classList && event.currentTarget.classList.add('active');
+  if(el && el.classList) el.classList.add('active');
   if(window.innerWidth<900) closeSidebar();
 }
 
