@@ -15,7 +15,7 @@
 
 /**
  * Check that a user is logged in and has one of the allowed roles.
- * If not logged in  → redirect to portal-login.html
+ * If not logged in  → redirect to index.html
  * If wrong role     → redirect to their correct portal
  * If portal locked  → show locked overlay (students only)
  *
@@ -27,13 +27,13 @@ function requireAuth(allowedRoles) {
 
   // Not logged in
   if (!user || !user.id) {
-    window.location.replace('portal-login.html');
+    window.location.replace('index.html');
     return null;
   }
 
   // Wrong portal for this role
   if (allowedRoles && allowedRoles.length && !allowedRoles.includes(user.role)) {
-    const correctPortal = FUMMSA_ROLE_PORTALS[user.role] || 'portal-login.html';
+    const correctPortal = FUMMSA_ROLE_PORTALS[user.role] || 'index.html';
     window.location.replace(correctPortal);
     return null;
   }
