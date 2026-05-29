@@ -549,13 +549,24 @@ input:checked+.toggle-slider:before{transform:translateX(20px);}
 
 <script>
 (function(){
-  const u=JSON.parse(sessionStorage.getItem('fummsa_user')||'{}');
-  if(u.name){
-    const init=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    document.getElementById('topName').textContent=u.name;
-    document.getElementById('profileName').textContent=u.name;
+  if(typeof requireAuth==='function'){
+    const u=requireAuth(['hod']);
+    if(!u) return;
+    const name=u.name||'Prof. Rasheed Musa';
+    const init=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('topName').textContent=name;
+    document.getElementById('profileName').textContent=name;
     document.getElementById('topAvatar').textContent=init;
     document.getElementById('bigAvatar').textContent=init;
+  } else {
+    const u=JSON.parse(sessionStorage.getItem('fummsa_user')||'{}');
+    if(u.name){
+      const init=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('topName').textContent=u.name;
+      document.getElementById('profileName').textContent=u.name;
+      document.getElementById('topAvatar').textContent=init;
+      document.getElementById('bigAvatar').textContent=init;
+    }
   }
   buildStudentTable();
   buildAccessTable();
@@ -642,16 +653,21 @@ function showSection(name,el){
   const sec=document.getElementById('sec-'+name);
   if(sec) sec.classList.add('active');
   if(el) el.classList.add('active');
-  document.querySelector('.sidebar').classList.remove('open');
+  const sb=document.getElementById('sidebar');
+  if(sb) sb.classList.remove('open');
+  window.scrollTo(0,0);
 }
 
 function showToast(msg,type='success'){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className='toast '+type+' show';
-  setTimeout(()=>t.classList.remove('show'),3500);
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
-function doLogout(){sessionStorage.removeItem('fummsa_user');window.location.href='index.html';}
+function doLogout(){
+  if(typeof fummsaLogout==='function') fummsaLogout();
+  else { sessionStorage.removeItem('fummsa_user');window.location.href='portal-login.html'; }
+}
 </script>
 </body>
 </html>
