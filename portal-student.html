@@ -664,12 +664,12 @@ let selectedHostel = null;
 (function init() {
   // Read session
   const raw = sessionStorage.getItem('fummsa_user');
-  if (!raw) { window.location.href = 'portal-login.html'; return; }
+  if (!raw) { window.location.href = 'index.html'; return; }
 
   currentUser = JSON.parse(raw);
 
   if (currentUser.role !== 'student') {
-    window.location.href = 'portal-login.html';
+    window.location.href = 'index.html';
     return;
   }
 
@@ -1116,7 +1116,7 @@ function showToast(msg, type = 'success') {
 function doLogout() {
   sessionStorage.removeItem('fummsa_user');
   if (typeof clearFummsaSession === 'function') clearFummsaSession();
-  window.location.href = 'portal-login.html';
+  window.location.href = 'index.html';
 }
 </script>
 </body>
