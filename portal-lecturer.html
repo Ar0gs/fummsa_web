@@ -627,19 +627,26 @@ a{color:inherit;text-decoration:none;}
 <div class="toast" id="toast"></div>
 
 <script>
-// Supabase credentials loaded from supabase-config.js
-let db;
-try{db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}catch(e){}
-
 // Load user
 (function(){
-  const u=JSON.parse(sessionStorage.getItem('fummsa_user')||'{}');
-  if(u.name){
-    const initials=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    document.getElementById('topName').textContent=u.name;
-    document.getElementById('profileName').textContent=u.name;
+  if(typeof requireAuth==='function'){
+    const u=requireAuth(['lecturer','hod']);
+    if(!u) return;
+    const name=u.name||'Dr. Fatimah Adeyemi';
+    const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('topName').textContent=name;
+    document.getElementById('profileName').textContent=name;
     document.getElementById('topAvatar').textContent=initials;
     document.getElementById('bigAvatar').textContent=initials;
+  } else {
+    const u=JSON.parse(sessionStorage.getItem('fummsa_user')||'{}');
+    if(u.name){
+      const initials=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('topName').textContent=u.name;
+      document.getElementById('profileName').textContent=u.name;
+      document.getElementById('topAvatar').textContent=initials;
+      document.getElementById('bigAvatar').textContent=initials;
+    }
   }
   // Set today's date for attendance
   const d=new Date();
