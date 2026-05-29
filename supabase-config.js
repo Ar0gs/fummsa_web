@@ -64,5 +64,5 @@ function setFummsaUser(userData) {
 function clearFummsaSession() {
   sessionStorage.removeItem(FUMMSA_SESSION_KEY);
   if (db) db.auth.signOut().catch(() => {});
-  window.location.href = 'portal-login.html';
+  window.location.href = 'index.html';
 }
