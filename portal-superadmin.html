@@ -479,12 +479,12 @@ a{color:inherit;text-decoration:none;}
   <div class="section-head">All System Users</div>
   <div class="portal-card">
     <div class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('students-tab','tab-students')">Students</button>
-      <button class="tab-btn" onclick="switchTab('lecturers-tab','tab-lecturers')">Lecturers</button>
-      <button class="tab-btn" onclick="switchTab('hod-tab','tab-hod')">HODs</button>
-      <button class="tab-btn" onclick="switchTab('deans-tab','tab-deans')">Deans</button>
-      <button class="tab-btn" onclick="switchTab('exec-tab','tab-exec')">Executives</button>
-      <button class="tab-btn" onclick="switchTab('dsa-tab','tab-dsa')">DSA Staff</button>
+      <button class="tab-btn active" onclick="switchTab('students-tab',this)">Students</button>
+      <button class="tab-btn" onclick="switchTab('lecturers-tab',this)">Lecturers</button>
+      <button class="tab-btn" onclick="switchTab('hod-tab',this)">HODs</button>
+      <button class="tab-btn" onclick="switchTab('deans-tab',this)">Deans</button>
+      <button class="tab-btn" onclick="switchTab('exec-tab',this)">Executives</button>
+      <button class="tab-btn" onclick="switchTab('dsa-tab',this)">DSA Staff</button>
     </div>
 
     <!-- STUDENTS -->
@@ -1235,24 +1235,48 @@ function showSection(id) {
   const sec = document.getElementById('sec-' + id);
   if (sec) sec.classList.add('active');
   document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
-  event && event.currentTarget && event.currentTarget.classList.add('active');
+  // highlight the matching sidebar link by data-section or onclick text
+  const link = document.querySelector(`.sb-link[onclick*="'${id}'"]`);
+  if (link) link.classList.add('active');
+  // close mobile sidebar
+  const sb = document.getElementById('sidebar');
+  if (sb) sb.classList.remove('open');
   window.scrollTo(0, 0);
 }
 
-/* ── Modals ── */
-function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); });
+/* ── Modals — use .hidden class (matches this portal's CSS) ── */
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) { m.classList.add('hidden'); document.body.style.overflow = ''; }
+}
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay:not(.hidden)').forEach(m => {
+      m.classList.add('hidden');
+    });
+    document.body.style.overflow = '';
+  }
 });
 
 /* ── Tabs ── */
-function switchTab(panelId, tabId) {
-  const wrap = document.getElementById(panelId).closest('.portal-card');
+function switchTab(panelId, clickedBtn) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const wrap = panel.closest('.portal-card') || panel.parentElement;
   wrap.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   wrap.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(panelId).classList.add('active');
-  event.currentTarget.classList.add('active');
+  panel.classList.add('active');
+  if (clickedBtn) clickedBtn.classList.add('active');
 }
 
 /* ── Messages ── */
@@ -1318,8 +1342,23 @@ function publishBroadcast() {
 /* ── Logout ── */
 function doLogout() {
   if (!confirm('End super admin session and log out?')) return;
-  window.location.href = 'index.html';
+  if (typeof fummsaLogout === 'function') fummsaLogout();
+  else { sessionStorage.removeItem('fummsa_user'); window.location.href = 'portal-login.html'; }
 }
+
+/* ── Init ── */
+(function initSuperAdmin() {
+  if (typeof requireAuth === 'function') {
+    const user = requireAuth(['superadmin']);
+    if (!user) return;
+    const name = user.name || 'Super Administrator';
+    const init = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const nameEl = document.getElementById('topbarUserName') || document.getElementById('topName');
+    if (nameEl) nameEl.textContent = name;
+    const avatarEl = document.getElementById('topbarAvatar') || document.getElementById('topAvatar');
+    if (avatarEl) avatarEl.textContent = init;
+  }
+})()
 
 /* ── Sidebar hamburger ── */
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
